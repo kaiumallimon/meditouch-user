@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:meditouch/common/widgets/widget_motion.dart';
 import 'package:meditouch/features/startup/welcome/logics/welcome_cubit.dart';
 import 'package:meditouch/features/startup/welcome/presentation/widgets/textstyles.dart';
@@ -77,20 +76,27 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
     final bloc = BlocProvider.of<WelcomeCubit>(context);
 
+    final screenSize = MediaQuery.of(context).size;
+    final height = screenSize.height;
+    final width = screenSize.width;
+
     return Scaffold(
       body: SafeArea(
         child: ValueListenableBuilder<int>(
           valueListenable: currentIndexNotifier,
           builder: (context, state, _) {
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              padding: EdgeInsets.symmetric(
+                horizontal: width * 0.05,
+                vertical: height * 0.02,
+              ),
               child: Column(
                 children: [
                   WidgetMotion(
                     key: ValueKey('image-$state'),
                     direction: 'right',
                     child: SizedBox(
-                      height: MediaQuery.of(context).size.height * .5,
+                      height: height * 0.5,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
                         child: Stack(
@@ -107,12 +113,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: height * 0.03),
                   WidgetMotion(
                     key: ValueKey('title-$state'),
                     direction: 'left',
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.02),
                       child: Text(
                         onboardSlogans[state]['title']!,
                         textAlign: TextAlign.center,
@@ -120,12 +126,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: height * 0.02),
                   WidgetMotion(
                     key: ValueKey('subtitle-$state'),
                     direction: 'left',
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      padding: EdgeInsets.symmetric(horizontal: width * 0.02),
                       child: Text(
                         onboardSlogans[state]['subtitle']!,
                         textAlign: TextAlign.center,
@@ -133,13 +139,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  SizedBox(height: height * 0.04),
                   if (state != 2)
                     WidgetMotion(
                       key: ValueKey('button-$state'),
                       direction: 'up',
                       child: WelcomeNextButton(
-                        size: const Size(200, 50),
+                        size: Size(width * 0.5, height * 0.06),
                         color: theme.primary,
                         textColor: theme.onPrimary,
                         text: 'Continue',
@@ -148,32 +154,36 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         },
                       ),
                     ),
-
                   if (state == 2)
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Proper spacing
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: List.generate(
                         2,
                             (index) {
-                          return Expanded( // Ensures buttons are flexible and spaced nicely
+                          return Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10), // Adds spacing
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: width * 0.02),
                               child: WidgetMotion(
                                 key: ValueKey('button-$state-$index'),
-                                direction:  index==0?'left':'right',
+                                direction: index == 0 ? 'left' : 'right',
                                 child: WelcomeButton(
-                                  hasBorder: index==0?false:true,
-                                  size: const Size(double.infinity, 50), // Button adapts to parent width
-                                  color: index==0?theme.primary: theme.surface,
-                                  textColor:index==0? theme.onPrimary:theme.onSurface,
+                                  hasBorder: index != 0,
+                                  size: Size(double.infinity, height * 0.06),
+                                  color: index == 0
+                                      ? theme.primary
+                                      : theme.surface,
+                                  textColor: index == 0
+                                      ? theme.onPrimary
+                                      : theme.onSurface,
                                   text: index == 0 ? 'Register' : 'Login',
                                   onPressed: () {
                                     if (index == 0) {
-                                      // Navigate to Login
-
+                                      Navigator.of(context)
+                                          .pushReplacementNamed('/register');
                                     } else {
-                                      // Navigate to Register
-                                      Navigator.of(context).pushReplacementNamed('/login');
+                                      Navigator.of(context)
+                                          .pushReplacementNamed('/login');
                                     }
 
                                     setWelcomePageWatched();
@@ -185,7 +195,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         },
                       ),
                     ),
-
                 ],
               ),
             );
@@ -195,13 +204,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
-
-
-
-  // mark the welcome screen as viewed by the user
   void setWelcomePageWatched() async {
     var settingsBox = await Hive.openBox('settings');
-    await settingsBox.put('watchedWelcomePage', true); // Store the flag
+    await settingsBox.put('watchedWelcomePage', true);
     print('Saved');
   }
 }
