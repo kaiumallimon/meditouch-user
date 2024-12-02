@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
 import 'package:meditouch/features/startup/splash/logics/splash_bloc.dart';
 import 'package:meditouch/common/widgets/gradient_bg.dart';
 
@@ -19,10 +20,16 @@ class SplashScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
           child: BlocListener<SplashBloc, SplashState>(
-        listener: (context, state) {
+        listener: (context, state) async {
           // check the state
           if (state is SplashLoadedState) {
-            Navigator.pushReplacementNamed(context, "/welcome");
+            // check if the user already watched the welcomepage once
+
+            if (await getWelcomePageWatched()) {
+              Navigator.pushReplacementNamed(context, "/login");
+            } else {
+              Navigator.pushReplacementNamed(context, "/welcome");
+            }
           }
         },
         child: Stack(
@@ -45,5 +52,11 @@ class SplashScreen extends StatelessWidget {
         ),
       )),
     );
+  }
+
+  // get the welcome page watched or not flag
+  Future<bool> getWelcomePageWatched() async {
+    var settingsBox = await Hive.openBox('settings');
+    return await settingsBox.get('watchedWelcomePage', defaultValue: false);
   }
 }
