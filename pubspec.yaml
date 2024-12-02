@@ -24,6 +24,8 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   build_runner: ^2.4.13
+  video_player: ^2.9.2
+  r_icon_pro: ^1.0.3
 
 dev_dependencies:
   flutter_test:
