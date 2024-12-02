@@ -26,6 +26,7 @@ dependencies:
   build_runner: ^2.4.13
   video_player: ^2.9.2
   r_icon_pro: ^1.0.3
+  image_picker: ^1.1.2
 
 dev_dependencies:
   flutter_test:
