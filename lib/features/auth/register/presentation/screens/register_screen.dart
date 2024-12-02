@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:meditouch/common/widgets/custom_button.dart';
+import 'package:meditouch/common/widgets/widget_motion.dart';
 import 'package:meditouch/features/auth/login/presentation/widgets/custom_emailfield.dart';
 import 'package:meditouch/features/auth/login/presentation/widgets/custom_passwordfield.dart';
 import 'package:meditouch/features/auth/register/presentation/widgets/custom_datepicker.dart';
@@ -20,13 +21,8 @@ class RegisterScreen extends StatelessWidget {
     //get theme
     final theme = Theme.of(context).colorScheme;
 
-    // get device size
-    final size = MediaQuery.of(context).size;
-
     // set status bar color
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      // statusBarColor: theme.surface,
-      // statusBarIconBrightness: theme.brightness,
       systemNavigationBarColor: theme.surface,
       systemNavigationBarIconBrightness: theme.brightness,
     ));
@@ -38,108 +34,131 @@ class RegisterScreen extends StatelessWidget {
         foregroundColor: theme.onPrimary,
         toolbarHeight: 70,
         leading: IconButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: Icon(CupertinoIcons.back)),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(CupertinoIcons.back),
+        ),
       ),
       body: SafeArea(
-          child: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-        child: Column(
-          children: [
-            const Text(
-                'Fill the information below to continue setting up your account.'),
-            const SizedBox(
-              height: 25,
-            ),
-            CustomTextfield(
-                iconData: Icons.abc,
-                hint: "Full name",
-                size: Size(350, 50),
-                bgColor: theme.primary.withOpacity(.1),
-                fgColor: theme.onSurface,
-                controller: _nameController),
-            const SizedBox(
-              height: 10,
-            ),
-            CustomTextfield(
-                iconData: Icons.numbers,
-                hint: "Phone number",
-                size: Size(350, 50),
-                bgColor: theme.primary.withOpacity(.1),
-                fgColor: theme.onSurface,
-                controller: _phoneController),
-            const SizedBox(
-              height: 10,
-            ),
-            CustomTextfield(
-                iconData: Icons.mail_outline,
-                hint: "Email address",
-                size: Size(350, 50),
-                bgColor: theme.primary.withOpacity(.1),
-                fgColor: theme.onSurface,
-                controller: _emailController),
-            const SizedBox(
-              height: 10,
-            ),
-            CustomDatePicker(
-                label: "Select Date",
-                width: 350,
-                height: 50,
-                bgColor: theme.primary.withOpacity(.1),
-                fgColor: theme.onSurface,
-                hasBorder: false),
-            const SizedBox(
-              height: 10,
-            ),
-            GenderPicker(
-                width: 350,
-                height: 50,
-                bgColor: theme.primary.withOpacity(.1),
-                fgColor: theme.onSurface,
-                hasBorder: false),
-            const SizedBox(
-              height: 10,
-            ),
-            CustomPasswordfield(
-                hint: "Password",
-                size: Size(350, 50),
-                bgColor: theme.primary.withOpacity(.1),
-                fgColor: theme.onSurface,
-                controller: _passwordController),
-            const SizedBox(
-              height: 10,
-            ),
-            CustomPasswordfield(
-                hint: "Confirm Password",
-                size: Size(350, 50),
-                bgColor: theme.primary.withOpacity(.1),
-                fgColor: theme.onSurface,
-                controller: _confirmpasswordController),
-            const SizedBox(
-              height: 10,
-            ),
-            CustomImagePicker(
-                width: 350,
-                height: 50,
-                bgColor: theme.primary.withOpacity(.1),
-                fgColor: theme.onSurface,
-                hasBorder: false),
-            const SizedBox(
-              height: 20,
-            ),
-            CustomButton(
-                size: Size(350, 50),
-                text: "Sign up",
-                onPressed: () {},
-                bgColor: theme.primary,
-                fgColor: theme.onPrimary,
-                isLoading: false)
-          ],
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+          child: Column(
+            children: [
+              WidgetMotion(
+                direction: "left",
+                child: const Text(
+                    'Fill the information below to continue setting up your account.'),
+              ),
+              const SizedBox(height: 25),
+              WidgetMotion(
+                direction: "right",
+                child: CustomTextfield(
+                  iconData: Icons.abc,
+                  hint: "Full name",
+                  size: const Size(350, 50),
+                  bgColor: theme.primary.withOpacity(.1),
+                  fgColor: theme.onSurface,
+                  controller: _nameController,
+                ),
+              ),
+              const SizedBox(height: 10),
+              WidgetMotion(
+                direction: "left",
+                child: CustomTextfield(
+                  iconData: Icons.numbers,
+                  hint: "Phone number",
+                  size: const Size(350, 50),
+                  bgColor: theme.primary.withOpacity(.1),
+                  fgColor: theme.onSurface,
+                  controller: _phoneController,
+                ),
+              ),
+              const SizedBox(height: 10),
+              WidgetMotion(
+                direction: "right",
+                child: CustomTextfield(
+                  iconData: Icons.mail_outline,
+                  hint: "Email address",
+                  size: const Size(350, 50),
+                  bgColor: theme.primary.withOpacity(.1),
+                  fgColor: theme.onSurface,
+                  controller: _emailController,
+                ),
+              ),
+              const SizedBox(height: 10),
+              WidgetMotion(
+                direction: "left",
+                child: CustomDatePicker(
+                  label: "Select Date",
+                  width: 350,
+                  height: 50,
+                  bgColor: theme.primary.withOpacity(.1),
+                  fgColor: theme.onSurface,
+                  hasBorder: false,
+                ),
+              ),
+              const SizedBox(height: 10),
+              WidgetMotion(
+                direction: "right",
+                child: GenderPicker(
+                  width: 350,
+                  height: 50,
+                  bgColor: theme.primary.withOpacity(.1),
+                  fgColor: theme.onSurface,
+                  hasBorder: false,
+                ),
+              ),
+              const SizedBox(height: 10),
+              WidgetMotion(
+                direction: "left",
+                child: CustomPasswordfield(
+                  hint: "Password",
+                  size: const Size(350, 50),
+                  bgColor: theme.primary.withOpacity(.1),
+                  fgColor: theme.onSurface,
+                  controller: _passwordController,
+                ),
+              ),
+              const SizedBox(height: 10),
+              WidgetMotion(
+                direction: "right",
+                child: CustomPasswordfield(
+                  hint: "Confirm Password",
+                  size: const Size(350, 50),
+                  bgColor: theme.primary.withOpacity(.1),
+                  fgColor: theme.onSurface,
+                  controller: _confirmpasswordController,
+                ),
+              ),
+              const SizedBox(height: 10),
+              WidgetMotion(
+                direction: "left",
+                child: CustomImagePicker(
+                  width: 350,
+                  height: 50,
+                  bgColor: theme.primary.withOpacity(.1),
+                  fgColor: theme.onSurface,
+                  hasBorder: false,
+                ),
+              ),
+              const SizedBox(height: 20),
+              WidgetMotion(
+                direction: "right",
+                child: CustomButton(
+                  size: const Size(350, 50),
+                  text: "Sign up",
+                  onPressed: () {},
+                  bgColor: theme.primary,
+                  fgColor: theme.onPrimary,
+                  isLoading: false,
+                ),
+              ),
+            ],
+          ),
         ),
-      )),
+      ),
     );
   }
 
@@ -148,5 +167,5 @@ class RegisterScreen extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmpasswordController =
-      TextEditingController();
+  TextEditingController();
 }

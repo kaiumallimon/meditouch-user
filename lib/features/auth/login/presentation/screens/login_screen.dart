@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:meditouch/common/widgets/gradient_bg.dart';
+import 'package:meditouch/common/widgets/widget_motion.dart';
 import 'package:meditouch/features/auth/login/presentation/widgets/continue_with_google.dart';
 import 'package:meditouch/features/auth/login/presentation/widgets/custom_passwordfield.dart';
 import 'package:meditouch/features/auth/login/presentation/widgets/custom_emailfield.dart';
@@ -35,7 +36,7 @@ class LoginScreen extends StatelessWidget {
         body: Stack(
       fit: StackFit.expand,
       children: [
-        GradientBackground(),
+        const GradientBackground(),
         Positioned(
           top: (height * .10),
           left: 0,
@@ -60,139 +61,142 @@ class LoginScreen extends StatelessWidget {
                     topLeft: Radius.circular(30),
                     topRight: Radius.circular(30),
                   )),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        text: 'Sign in to your\n',
-                        style: GoogleFonts.lexend(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onSurface,
+              child: WidgetMotion(
+                direction: "right",
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          text: 'Sign in to your\n',
+                          style: GoogleFonts.lexend(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: 'MediTouch',
+                              style: GoogleFonts.lexend(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primary, // Highlight color
+                              ),
+                            ),
+                            TextSpan(
+                              text: ' Account',
+                              style: GoogleFonts.lexend(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                          ],
                         ),
+                        textAlign: TextAlign.left,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomEmailfield(
+                          hint: "Email Address",
+                          size: const Size(350, 50),
+                          bgColor: theme.primary.withOpacity(.15),
+                          fgColor: theme.onSurface,
+                          controller: emailController),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomPasswordfield(
+                          hint: "Password",
+                          size: const Size(350, 50),
+                          bgColor: theme.primary.withOpacity(.15),
+                          fgColor: theme.onSurface,
+                          controller: passwordController),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          TextSpan(
-                            text: 'MediTouch',
-                            style: GoogleFonts.lexend(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .primary, // Highlight color
+                          GestureDetector(
+                            onTap: () {},
+                            child: Text(
+                              'Forgot Password?',
+                              style: TextStyle(
+                                color: theme.error,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14
+                              ),
                             ),
-                          ),
-                          TextSpan(
-                            text: ' Account',
-                            style: GoogleFonts.lexend(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
-                          ),
+                          )
                         ],
                       ),
-                      textAlign: TextAlign.left,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CustomEmailfield(
-                        hint: "Email Address",
-                        size: const Size(350, 50),
-                        bgColor: theme.primary.withOpacity(.15),
-                        fgColor: theme.onSurface,
-                        controller: emailController),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    CustomPasswordfield(
-                        hint: "Password",
-                        size: const Size(350, 50),
-                        bgColor: theme.primary.withOpacity(.15),
-                        fgColor: theme.onSurface,
-                        controller: passwordController),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        GestureDetector(
-                          onTap: () {},
-                          child: Text(
-                            'Forgot Password?',
-                            style: TextStyle(
-                              color: theme.error,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    CustomButton(
-                        size: Size(350, 50),
-                        text: "Sign in",
-                        onPressed: () {},
-                        bgColor: theme.primary,
-                        fgColor: theme.onPrimary,
-                        isLoading: false),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      CustomButton(
+                          size: Size(350, 50),
+                          text: "Sign in",
+                          onPressed: () {},
+                          bgColor: theme.primary,
+                          fgColor: theme.onPrimary,
+                          isLoading: false),
 
-                    const SizedBox(
-                      height: 20,
-                    ),
+                      const SizedBox(
+                        height: 20,
+                      ),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text("Don't have an account?"),
-                        const SizedBox(width: 8,),
-                        GestureDetector(
-                          onTap: (){
-                            Navigator.of(context).pushNamed('/register');
-                          },
-                          child: Text("Create an account",style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: theme.primary
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text("Don't have an account?"),
+                          const SizedBox(width: 8,),
+                          GestureDetector(
+                            onTap: (){
+                              Navigator.of(context).pushNamed('/register');
+                            },
+                            child: Text("Create an account",style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: theme.primary
+                            ),),
+                          )
+                        ],
+                      ),
+
+                      const SizedBox(
+                        height: 20,
+                      ),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Or",style: TextStyle(
+                            color: theme.onSurface.withOpacity(.5)
                           ),),
-                        )
-                      ],
-                    ),
-
-                    const SizedBox(
-                      height: 20,
-                    ),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Or",style: TextStyle(
-                          color: theme.onSurface.withOpacity(.5)
-                        ),),
-                      ],
-                    ),
+                        ],
+                      ),
 
 
 
-                    const SizedBox(
-                      height: 20,
-                    ),
+                      const SizedBox(
+                        height: 20,
+                      ),
 
 
-                    CustomGoogleButton(
-                        size: Size(350, 50),
-                        text: "Continue with Google",
-                        onPressed: () {},
-                        bgColor: theme.primary.withOpacity(.2),
-                        fgColor: theme.onSurface,
-                        isLoading: false),
+                      CustomGoogleButton(
+                          size: Size(350, 50),
+                          text: "Continue with Google",
+                          onPressed: () {},
+                          bgColor: theme.primary.withOpacity(.2),
+                          fgColor: theme.onSurface,
+                          isLoading: false),
 
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ))
