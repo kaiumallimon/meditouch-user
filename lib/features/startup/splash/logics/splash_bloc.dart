@@ -8,13 +8,15 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
     on<SplashStartedEvent>(_onStartSplash);
   }
 
-  Future _onStartSplash(
+  Future<void> _onStartSplash(
       SplashStartedEvent event, Emitter<SplashState> emit) async {
-    // on loading state
+    // Emit loading state when splash starts
     emit(SplashLoadingState());
-    // hold the state for 2 seconds
-    Future.delayed(const Duration(seconds: 2));
-    // mark as loading Complete
+
+    // Hold the state for 2 seconds and wait for the delay
+    await Future.delayed(const Duration(seconds: 2));
+
+    // Mark as loading complete
     emit(SplashLoadedState());
   }
 }
