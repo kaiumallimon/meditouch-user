@@ -173,8 +173,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
                                     } else {
                                       // Navigate to Register
-
+                                      Navigator.of(context).pushReplacementNamed('/login');
                                     }
+
+                                    setWelcomePageWatched();
                                   },
                                 ),
                               ),
