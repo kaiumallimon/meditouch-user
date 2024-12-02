@@ -3,9 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:meditouch/common/themes/theme.dart';
+import 'package:meditouch/features/auth/login/login.dart';
 import 'package:meditouch/features/startup/splash/logics/splash_bloc.dart';
 import 'package:meditouch/features/startup/splash/splash.dart';
-import 'package:meditouch/features/startup/welcome/logics/welcome_bloc.dart';
+import 'package:meditouch/features/startup/welcome/logics/welcome_cubit.dart';
 import 'package:meditouch/features/startup/welcome/welcome.dart';
 
 void main()async{
@@ -24,7 +25,7 @@ class MediTouchApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<SplashBloc>(create: (_) => SplashBloc()),
-        BlocProvider<WelcomeBloc>(create: (_) => WelcomeBloc())
+        BlocProvider<WelcomeCubit>(create: (_) => WelcomeCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -34,7 +35,8 @@ class MediTouchApp extends StatelessWidget {
         initialRoute: "/",
         routes: {
           "/": (context) => const SplashScreen(),
-          "/welcome": (context) => WelcomeScreen()
+          "/welcome": (context) => WelcomeScreen(),
+          "/login":(context)=> LoginScreen(),
         },
       ),
     );
