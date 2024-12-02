@@ -4,12 +4,16 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:meditouch/common/themes/theme.dart';
 import 'package:meditouch/features/auth/login/login.dart';
+import 'package:meditouch/features/auth/register/logic/date_cubit.dart';
+import 'package:meditouch/features/auth/register/logic/gender_cubit.dart';
+import 'package:meditouch/features/auth/register/logic/image_cubit.dart';
+import 'package:meditouch/features/auth/register/presentation/screens/register_screen.dart';
 import 'package:meditouch/features/startup/splash/logics/splash_bloc.dart';
 import 'package:meditouch/features/startup/splash/splash.dart';
 import 'package:meditouch/features/startup/welcome/logics/welcome_cubit.dart';
 import 'package:meditouch/features/startup/welcome/welcome.dart';
 
-void main()async{
+void main() async {
   // initialize hive: local database
   await Hive.initFlutter();
   // run the app
@@ -26,6 +30,9 @@ class MediTouchApp extends StatelessWidget {
       providers: [
         BlocProvider<SplashBloc>(create: (_) => SplashBloc()),
         BlocProvider<WelcomeCubit>(create: (_) => WelcomeCubit()),
+        BlocProvider<DateCubit>(create: (_)=>DateCubit()),
+        BlocProvider<GenderCubit>(create: (_)=>GenderCubit()),
+        BlocProvider<ImagePickerCubit>(create: (_)=>ImagePickerCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -36,7 +43,8 @@ class MediTouchApp extends StatelessWidget {
         routes: {
           "/": (context) => const SplashScreen(),
           "/welcome": (context) => WelcomeScreen(),
-          "/login":(context)=> LoginScreen(),
+          "/login": (context) => LoginScreen(),
+          "/register": (context) => RegisterScreen()
         },
       ),
     );
