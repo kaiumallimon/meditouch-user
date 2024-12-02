@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:meditouch/common/themes/theme.dart';
 import 'package:meditouch/features/startup/splash/logics/splash_bloc.dart';
 import 'package:meditouch/features/startup/splash/splash.dart';
+import 'package:meditouch/features/startup/welcome/logics/welcome_bloc.dart';
+import 'package:meditouch/features/startup/welcome/welcome.dart';
 
-void main() {
+void main()async{
+  // initialize hive: local database
+  await Hive.initFlutter();
+  // run the app
   runApp(const MediTouchApp());
 }
 
@@ -13,16 +20,21 @@ class MediTouchApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // initialize the blocs using multiblocprovider
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_)=>SplashBloc())
+        BlocProvider<SplashBloc>(create: (_) => SplashBloc()),
+        BlocProvider<WelcomeBloc>(create: (_) => WelcomeBloc())
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: AppTheme().getTheme(),
         darkTheme: AppTheme().getDarkTheme(),
+        // define the routes
         initialRoute: "/",
         routes: {
-          "/":(context)=> const SplashScreen()
+          "/": (context) => const SplashScreen(),
+          "/welcome": (context) => WelcomeScreen()
         },
       ),
     );
