@@ -2,178 +2,204 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:meditouch/features/startup/welcome/logics/welcome_bloc.dart';
+import 'package:meditouch/common/widgets/widget_motion.dart';
+import 'package:meditouch/features/startup/welcome/logics/welcome_cubit.dart';
+import 'package:meditouch/features/startup/welcome/presentation/widgets/textstyles.dart';
+import 'package:meditouch/features/startup/welcome/presentation/widgets/welcome_next_button.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../../../common/widgets/gradient_bg.dart';
+import '../widgets/welcome_log_reg_button.dart';
 
-class WelcomeScreen extends StatelessWidget {
-  WelcomeScreen({super.key});
+class WelcomeScreen extends StatefulWidget {
+  const WelcomeScreen({super.key});
 
+  @override
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
   List<Map<String, String>> onboardSlogans = [
     {
-      "svg": "assets/svg/00d34e8d.svg",
-      "title": "Healthcare at Your Fingertips,\nNo Matter Where You Are",
+      "image": "assets/images/welcome-1.png",
+      "title": "Healthcare at your fingertips, no matter where you are",
       "subtitle":
-          "Connecting rural communities to expert doctors-panel through seamless video consultations and affordable care.",
+      "Connecting rural communities to expert doctors-panel through seamless video consultations and affordable care.",
     },
     {
-      "svg": "assets/svg/2d7c0ad1.svg",
+      "image": "assets/images/welcome-2.png",
       "title": "Bringing Quality Care Closer to Home",
       "subtitle":
-          "Empowering you with easy access to medical services, medications, and emergency support from anywhere.",
+      "Empowering you with easy access to medical services, medications, and emergency support from anywhere.",
     },
     {
-      "svg": "assets/svg/ab5e821d.svg",
-      "title": "Affordable, Accessible\nAnytime Healthcare",
+      "image": "assets/images/welcome-3.png",
+      "title": "Affordable, Accessible Anytime Healthcare",
       "subtitle":
-          "Transforming healthcare with cost-friendly solutions and real-time medical support for all.",
+      "Transforming healthcare with cost-friendly solutions and real-time medical support for all.",
     }
   ];
+
+  late ValueNotifier<int> currentIndexNotifier;
+
+  @override
+  void initState() {
+    super.initState();
+    final bloc = BlocProvider.of<WelcomeCubit>(context);
+    currentIndexNotifier = ValueNotifier(bloc.state);
+
+    // Listen to Bloc state changes and update the notifier
+    bloc.stream.listen((state) {
+      currentIndexNotifier.value = state;
+    });
+  }
+
+  @override
+  void dispose() {
+    currentIndexNotifier.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
 
-    // pageview controller
-    final pageController = PageController();
-
-    // retain status bar
+    // Retain status bar
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
-    // set statusbar and navigation colors
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      systemNavigationBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-      systemNavigationBarIconBrightness: Brightness.light,
+    // Set status bar and navigation colors
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: theme.surface,
+      systemNavigationBarColor: theme.surface,
+      statusBarIconBrightness: theme.brightness,
+      systemNavigationBarIconBrightness: theme.brightness,
     ));
 
+    final bloc = BlocProvider.of<WelcomeCubit>(context);
+
     return Scaffold(
-      body: Stack(
-        children: [
-          // gradient background
-          const GradientBackground(),
-          SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: PageView.builder(
-                    controller: pageController,
-                    itemCount: onboardSlogans.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+      body: SafeArea(
+        child: ValueListenableBuilder<int>(
+          valueListenable: currentIndexNotifier,
+          builder: (context, state, _) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              child: Column(
+                children: [
+                  WidgetMotion(
+                    key: ValueKey('image-$state'),
+                    direction: 'right',
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * .5,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: Stack(
                           children: [
-                            Text(
-                              onboardSlogans[index]['title']!,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 20,
+                            const GradientBackground(),
+                            Center(
+                              child: Image.asset(
+                                onboardSlogans[state]['image']!,
+                                scale: 1.3,
                               ),
                             ),
-                            SizedBox(
-                              height: height * .1,
-                            ),
-                            SvgPicture.asset(
-                              onboardSlogans[index]['svg']!,
-                              height: height * .3,
-                              fit: BoxFit.contain,
-                            ),
-                            SizedBox(
-                              height: height * .08,
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 15),
-                              child: Text(
-                                onboardSlogans[index]['subtitle']!,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                            if (index == onboardSlogans.length - 1) // Last page
-                              Container(
-                                height: 50,
-                                margin: const EdgeInsets.only(top: 30),
-                                width: width * .7,
-                                child: ElevatedButton(
-                                  onPressed: () async {
-                                    setWelcomePageWatched();
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: theme.primary,
-                                    foregroundColor: theme.onPrimary,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                  child: const Text('Get Started'),
-                                ),
-                              ),
                           ],
                         ),
-                      );
-                    },
-                    onPageChanged: (pageIndex) {
-                      // Update the page index in the bloc
-                      context.read<WelcomeBloc>().add(UpdatePage(pageIndex));
-                    },
+                      ),
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0),
-                  child: BlocBuilder<WelcomeBloc, WelcomeState>(
-                    builder: (context, state) {
-                      if (state is WelcomeInitial) {
-                        return SmoothPageIndicator(
-                          controller: pageController,
-                          count: onboardSlogans.length,
-                          effect: ExpandingDotsEffect(
-                            activeDotColor: Colors.white,
-                            dotColor: Colors.white.withOpacity(0.3),
-                            dotHeight: 5,
-                            dotWidth: 5,
-                            expansionFactor: 5,
-                            spacing: 10,
-                          ),
-                        );
-                      }
-                      return const SizedBox.shrink();
-                    },
+                  const SizedBox(height: 20),
+                  WidgetMotion(
+                    key: ValueKey('title-$state'),
+                    direction: 'left',
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(
+                        onboardSlogans[state]['title']!,
+                        textAlign: TextAlign.center,
+                        style: getTitleStyle(theme.onSurface),
+                      ),
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 40,
-                ),
-              ],
-            ),
-          ),
-        ],
+                  const SizedBox(height: 20),
+                  WidgetMotion(
+                    key: ValueKey('subtitle-$state'),
+                    direction: 'left',
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(
+                        onboardSlogans[state]['subtitle']!,
+                        textAlign: TextAlign.center,
+                        style: getParagraphStyle(theme.onSurface),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  if (state != 2)
+                    WidgetMotion(
+                      key: ValueKey('button-$state'),
+                      direction: 'up',
+                      child: WelcomeNextButton(
+                        size: const Size(200, 50),
+                        color: theme.primary,
+                        textColor: theme.onPrimary,
+                        text: 'Continue',
+                        onPressed: () {
+                          bloc.next();
+                        },
+                      ),
+                    ),
+
+                  if (state == 2)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Proper spacing
+                      children: List.generate(
+                        2,
+                            (index) {
+                          return Expanded( // Ensures buttons are flexible and spaced nicely
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10), // Adds spacing
+                              child: WidgetMotion(
+                                key: ValueKey('button-$state-$index'),
+                                direction:  index==0?'left':'right',
+                                child: WelcomeButton(
+                                  hasBorder: index==0?false:true,
+                                  size: const Size(double.infinity, 50), // Button adapts to parent width
+                                  color: index==0?theme.primary: theme.surface,
+                                  textColor:index==0? theme.onPrimary:theme.onSurface,
+                                  text: index == 0 ? 'Register' : 'Login',
+                                  onPressed: () {
+                                    if (index == 0) {
+                                      // Navigate to Login
+
+                                    } else {
+                                      // Navigate to Register
+
+                                    }
+                                  },
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
+
+
+
 
   // mark the welcome screen as viewed by the user
   void setWelcomePageWatched() async {
     var settingsBox = await Hive.openBox('settings');
     await settingsBox.put('watchedWelcomePage', true); // Store the flag
     print('Saved');
-  }
-
-  // get the welcome page watched or not flag
-  Future<bool> getWelcomePageWatched()async{
-    var settingsBox = await Hive.openBox('settings');
-    return await settingsBox.get('watchedWelcomePage',defaultValue: false);
   }
 }
