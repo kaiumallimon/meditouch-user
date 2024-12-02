@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hive/hive.dart';
 import 'package:meditouch/common/widgets/gradient_bg.dart';
 import 'package:meditouch/features/auth/login/presentation/widgets/continue_with_google.dart';
-import 'package:meditouch/features/auth/login/presentation/widgets/custom_button.dart';
 import 'package:meditouch/features/auth/login/presentation/widgets/custom_passwordfield.dart';
-import 'package:meditouch/features/auth/login/presentation/widgets/custom_textfield.dart';
+import 'package:meditouch/features/auth/login/presentation/widgets/custom_emailfield.dart';
+
+import '../../../../../common/widgets/custom_button.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -98,7 +98,7 @@ class LoginScreen extends StatelessWidget {
                     const SizedBox(
                       height: 20,
                     ),
-                    CustomTextfield(
+                    CustomEmailfield(
                         hint: "Email Address",
                         size: const Size(350, 50),
                         bgColor: theme.primary.withOpacity(.15),
@@ -152,10 +152,15 @@ class LoginScreen extends StatelessWidget {
                       children: [
                         const Text("Don't have an account?"),
                         const SizedBox(width: 8,),
-                        Text("Create an account",style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: theme.primary
-                        ),)
+                        GestureDetector(
+                          onTap: (){
+                            Navigator.of(context).pushNamed('/register');
+                          },
+                          child: Text("Create an account",style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: theme.primary
+                          ),),
+                        )
                       ],
                     ),
 
