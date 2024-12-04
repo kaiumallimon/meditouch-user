@@ -6,4 +6,6 @@ class GenderCubit extends Cubit<String?> {
   void selectGender(String gender) {
     emit(gender);
   }
+
+  void reset() => emit(null); // Reset state to null
 }

@@ -4,4 +4,6 @@ class DateCubit extends Cubit<DateTime?> {
   DateCubit() : super(null);
 
   void setDate(DateTime date) => emit(date);
+
+  void reset() => emit(null); // Reset state to null
 }

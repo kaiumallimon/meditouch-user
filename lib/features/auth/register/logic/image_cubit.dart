@@ -12,4 +12,6 @@ class ImagePickerCubit extends Cubit<XFile?> {
       emit(image); // Update the state with the picked image
     }
   }
+
+  void reset() => emit(null); // Reset state to null
 }
