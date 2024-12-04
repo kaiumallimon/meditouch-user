@@ -9,10 +9,11 @@ class RegisterSubmitted extends RegisterEvent {
   final String name;
   final String phone;
   final String email;
-  final String gender;
-  final DateTime dob;
+  final String? gender;
+  final DateTime? dob;
   final String password;
-  final XFile image;
+  final String confirmPassword;
+  final XFile? image;
 
   RegisterSubmitted(
       {required this.name,
@@ -21,6 +22,7 @@ class RegisterSubmitted extends RegisterEvent {
       required this.gender,
       required this.dob,
       required this.password,
+      required this.confirmPassword,
       required this.image});
 
   @override
@@ -32,6 +34,7 @@ class RegisterSubmitted extends RegisterEvent {
     this.gender,
     this.dob,
     this.password,
+    this.confirmPassword,
     this.image
   ];
 }
