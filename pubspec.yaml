@@ -27,6 +27,10 @@ dependencies:
   video_player: ^2.9.2
   r_icon_pro: ^1.0.3
   image_picker: ^1.1.2
+  flutter_dotenv: ^5.2.1
+  http: ^1.2.2
+  mime: ^2.0.0
+  http_parser: ^4.0.2
 
 dev_dependencies:
   flutter_test:
@@ -51,6 +55,7 @@ flutter:
     - assets/images/
     - assets/lottie/
     - assets/svg/
+    - .env
 
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
