@@ -26,15 +26,14 @@ class RegisterSubmitted extends RegisterEvent {
       required this.image});
 
   @override
-  // TODO: implement props
   List<Object?> get props => [
-    this.name,
-    this.phone,
-    this.email,
-    this.gender,
-    this.dob,
-    this.password,
-    this.confirmPassword,
-    this.image
+    name,
+    phone,
+    email,
+    gender,
+    dob,
+    password,
+    confirmPassword,
+    image
   ];
 }
