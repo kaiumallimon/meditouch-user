@@ -18,7 +18,6 @@ import '../../../../../common/widgets/custom_button.dart';
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     // Retain the status bar
@@ -27,13 +26,13 @@ class LoginScreen extends StatelessWidget {
     // Get theme
     final theme = Theme.of(context).colorScheme;
 
-    // Set status bar and nav bar colors:
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: theme.surface,
-      systemNavigationBarIconBrightness: theme.brightness,
-    ));
+    // // Set status bar and nav bar colors:
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //   statusBarColor: Colors.transparent,
+    //   statusBarIconBrightness: Brightness.light,
+    //   systemNavigationBarColor: theme.surface,
+    //   systemNavigationBarIconBrightness: theme.brightness,
+    // ));
 
     // Get device height
     final height = MediaQuery.of(context).size.height;
