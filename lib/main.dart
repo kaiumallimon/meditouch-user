@@ -13,6 +13,7 @@ import 'package:meditouch/features/auth/register/logic/gender_cubit.dart';
 import 'package:meditouch/features/auth/register/logic/image_cubit.dart';
 import 'package:meditouch/features/auth/register/logic/register_bloc.dart';
 import 'package:meditouch/features/auth/register/presentation/screens/register_screen.dart';
+import 'package:meditouch/features/dashboard/features/home/logics/home_bloc.dart';
 import 'package:meditouch/features/dashboard/navigation/logics/navigation_cubit.dart';
 import 'package:meditouch/features/dashboard/wrapper/presentation/screens/dashboard_screen.dart';
 import 'package:meditouch/features/startup/splash/logics/splash_bloc.dart';
@@ -20,11 +21,13 @@ import 'package:meditouch/features/startup/splash/splash.dart';
 import 'package:meditouch/features/startup/welcome/logics/welcome_cubit.dart';
 import 'package:meditouch/features/startup/welcome/welcome.dart';
 
+import 'features/dashboard/features/home/logics/home_event.dart';
+import 'features/dashboard/features/profile/profile.dart';
+
 void main() async {
   // initialize hive: local database
   await Hive.initFlutter();
   await HiveRepository().init();
-
 
   // load the .env file
   await dotenv.load(fileName: ".env");
@@ -43,15 +46,21 @@ class MediTouchApp extends StatelessWidget {
       providers: [
         BlocProvider<SplashBloc>(create: (_) => SplashBloc()),
         BlocProvider<WelcomeCubit>(create: (_) => WelcomeCubit()),
-        BlocProvider<DateCubit>(create: (_)=>DateCubit()),
-        BlocProvider<GenderCubit>(create: (_)=>GenderCubit()),
-        BlocProvider<ImagePickerCubit>(create: (_)=>ImagePickerCubit()),
-        BlocProvider<RegisterBloc>(create: (_)=>RegisterBloc(),),
-        BlocProvider<LoginBloc>(create: (_)=>LoginBloc(),),
-        BlocProvider<NavigationCubit>(create: (_)=>NavigationCubit())
+        BlocProvider<DateCubit>(create: (_) => DateCubit()),
+        BlocProvider<GenderCubit>(create: (_) => GenderCubit()),
+        BlocProvider<ImagePickerCubit>(create: (_) => ImagePickerCubit()),
+        BlocProvider<RegisterBloc>(
+          create: (_) => RegisterBloc(),
+        ),
+        BlocProvider<LoginBloc>(
+          create: (_) => LoginBloc(),
+        ),
+        BlocProvider<NavigationCubit>(create: (_) => NavigationCubit()),
+        BlocProvider<HomeBloc>(
+            create: (_) =>
+                HomeBloc(HiveRepository())..add(HomeRefreshRequested())),
       ],
       child: MaterialApp(
-
         debugShowCheckedModeBanner: false,
         theme: AppTheme().getTheme(),
         darkTheme: AppTheme().getDarkTheme(),
@@ -62,7 +71,8 @@ class MediTouchApp extends StatelessWidget {
           "/welcome": (context) => WelcomeScreen(),
           "/login": (context) => LoginScreen(),
           "/register": (context) => RegisterScreen(),
-          "/dashboard": (context)=> DashboardScreen()
+          "/dashboard": (context) => DashboardScreen(),
+          "/profile": (context) => const ProfileScreen(),
         },
       ),
     );
