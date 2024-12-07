@@ -13,6 +13,7 @@ import 'package:meditouch/features/auth/register/logic/gender_cubit.dart';
 import 'package:meditouch/features/auth/register/logic/image_cubit.dart';
 import 'package:meditouch/features/auth/register/logic/register_bloc.dart';
 import 'package:meditouch/features/auth/register/presentation/screens/register_screen.dart';
+import 'package:meditouch/features/dashboard/navigation/logics/navigation_cubit.dart';
 import 'package:meditouch/features/dashboard/wrapper/presentation/screens/dashboard_screen.dart';
 import 'package:meditouch/features/startup/splash/logics/splash_bloc.dart';
 import 'package:meditouch/features/startup/splash/splash.dart';
@@ -47,8 +48,10 @@ class MediTouchApp extends StatelessWidget {
         BlocProvider<ImagePickerCubit>(create: (_)=>ImagePickerCubit()),
         BlocProvider<RegisterBloc>(create: (_)=>RegisterBloc(),),
         BlocProvider<LoginBloc>(create: (_)=>LoginBloc(),),
+        BlocProvider<NavigationCubit>(create: (_)=>NavigationCubit())
       ],
       child: MaterialApp(
+
         debugShowCheckedModeBanner: false,
         theme: AppTheme().getTheme(),
         darkTheme: AppTheme().getDarkTheme(),
