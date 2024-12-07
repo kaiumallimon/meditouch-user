@@ -35,7 +35,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           userInfo['email'],
           userInfo['gender'],
           userInfo['dob'],
-          userInfo['image']);
+          userInfo['image'],
+          userInfo['phone'],);
       emit(LoginSuccessState(response['message']));
       return;
     }

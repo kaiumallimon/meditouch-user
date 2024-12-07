@@ -39,7 +39,7 @@ class LoginRepository {
     }
   }
 
-  Future<void> logout(BuildContext context)async{
+  Future<void> logout(BuildContext context) async {
     await HiveRepository().deleteUserInfo();
 
     final theme = Theme.of(context).colorScheme;
