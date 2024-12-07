@@ -12,7 +12,7 @@ class CustomFloatingNavigationBar extends StatelessWidget {
       builder: (context, currentIndex) {
         return NavigationBar(
           surfaceTintColor: Theme.of(context).colorScheme.primary,
-          indicatorColor: Theme.of(context).colorScheme.secondary,
+          indicatorColor: Theme.of(context).colorScheme.primary,
           backgroundColor: Theme.of(context).colorScheme.surface,
           selectedIndex: currentIndex,
           onDestinationSelected: (int index) {
