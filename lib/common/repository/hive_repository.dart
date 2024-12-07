@@ -15,7 +15,8 @@ class HiveRepository {
     }
   }
 
-  Future<void> saveUserInfo(String id, String name, String email, String gender, String dob, String image) async {
+  Future<void> saveUserInfo(String id, String name, String email, String gender,
+      String dob, String image, String phone) async {
     final userInfoBox = Hive.box<Map>(_userInfoBox);
     final userInfo = {
       'id': id,
@@ -24,6 +25,7 @@ class HiveRepository {
       'gender': gender,
       'dob': dob,
       'image': image,
+      'phone': phone,
     };
     await userInfoBox.put(_userInfoKey, userInfo);
   }
