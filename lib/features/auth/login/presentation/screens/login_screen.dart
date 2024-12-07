@@ -37,25 +37,24 @@ class LoginScreen extends StatelessWidget {
     // Get device height
     final height = MediaQuery.of(context).size.height;
 
-
-    return BlocListener<LoginBloc,LoginState>(
-      listener: (context,state){
-        if(state is LoginLoadingState){
+    return BlocListener<LoginBloc, LoginState>(
+      listener: (context, state) {
+        if (state is LoginLoadingState) {
           QuickAlert.show(
               context: context,
               type: QuickAlertType.loading,
-              text: "Please wait!", disableBackBtn: true
-          );
+              text: "Please wait!",
+              disableBackBtn: true);
         }
 
-        if(state is LoginSuccessState){
+        if (state is LoginSuccessState) {
           Navigator.of(context).pop();
           final String message = state.message;
           QuickAlert.show(
               context: context,
               type: QuickAlertType.success,
-              text: message, disableBackBtn: true
-          );
+              text: message,
+              disableBackBtn: true);
 
           emailController.clear();
           passwordController.clear();
@@ -63,14 +62,14 @@ class LoginScreen extends StatelessWidget {
           Navigator.pushReplacementNamed(context, '/dashboard');
         }
 
-        if(state is LoginErrorState){
+        if (state is LoginErrorState) {
           final String message = state.message;
           Navigator.of(context).pop();
           QuickAlert.show(
               context: context,
               type: QuickAlertType.error,
-              text: message, disableBackBtn: true
-          );
+              text: message,
+              disableBackBtn: true);
         }
       },
       child: Scaffold(
@@ -132,7 +131,8 @@ class LoginScreen extends StatelessWidget {
                                 style: GoogleFonts.lexend(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  color: Theme.of(context).colorScheme.onSurface,
+                                  color:
+                                      Theme.of(context).colorScheme.onSurface,
                                 ),
                               ),
                             ],
@@ -168,10 +168,9 @@ class LoginScreen extends StatelessWidget {
                               child: Text(
                                 'Forgot Password?',
                                 style: TextStyle(
-                                  color: theme.error,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14
-                                ),
+                                    color: theme.error,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14),
                               ),
                             )
                           ],
@@ -184,65 +183,62 @@ class LoginScreen extends StatelessWidget {
                             text: "Sign in",
                             onPressed: () {
                               final String email = emailController.text.trim();
-                              final String password = passwordController.text.trim();
+                              final String password =
+                                  passwordController.text.trim();
 
-                              BlocProvider.of<LoginBloc>(context).add(LoginSubmitted(email: email, password: password));
-
+                              BlocProvider.of<LoginBloc>(context).add(
+                                  LoginSubmitted(
+                                      email: email, password: password));
                             },
                             bgColor: theme.primary,
                             fgColor: theme.onPrimary,
                             isLoading: false),
-
                         const SizedBox(
                           height: 20,
                         ),
-
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             const Text("Don't have an account?"),
-                            const SizedBox(width: 8,),
+                            const SizedBox(
+                              width: 8,
+                            ),
                             GestureDetector(
-                              onTap: (){
+                              onTap: () {
                                 Navigator.of(context).pushNamed('/register');
                               },
-                              child: Text("Create an account",style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: theme.primary
-                              ),),
+                              child: Text(
+                                "Create an account",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: theme.primary),
+                              ),
                             )
                           ],
                         ),
-
                         const SizedBox(
                           height: 20,
                         ),
-
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text("Or",style: TextStyle(
-                              color: theme.onSurface.withOpacity(.5)
-                            ),),
+                            Text(
+                              "Or",
+                              style: TextStyle(
+                                  color: theme.onSurface.withOpacity(.5)),
+                            ),
                           ],
                         ),
-
-
-
                         const SizedBox(
                           height: 20,
                         ),
-
-
                         CustomGoogleButton(
                             size: Size(350, 50),
                             text: "Continue with Google",
-                            onPressed: () {
-                            },
+                            onPressed: () {},
                             bgColor: theme.primary.withOpacity(.2),
                             fgColor: theme.onSurface,
                             isLoading: false),
-
                       ],
                     ),
                   ),
