@@ -8,7 +8,7 @@ class AppTheme {
       fontFamily: GoogleFonts.inter().fontFamily,
       colorScheme: const ColorScheme(
           brightness: Brightness.dark,
-          primary: Color(0xFF5C05AE),
+          primary: Color(0xFF470DC2),
           onPrimary: Colors.white,
           secondary: CupertinoColors.activeOrange,
           onSecondary: Colors.white,
