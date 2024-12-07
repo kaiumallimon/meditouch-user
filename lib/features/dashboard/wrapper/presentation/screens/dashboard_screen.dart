@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meditouch/features/dashboard/features/appointments/appointments.dart';
+import 'package:meditouch/features/dashboard/features/epharmacy/epharmacy.dart';
+import 'package:meditouch/features/dashboard/features/home/home.dart';
+import 'package:meditouch/features/dashboard/features/messages/messages.dart';
+import 'package:meditouch/features/dashboard/navigation/navbar/custom_navbar.dart';
+
+import '../../../navigation/logics/navigation_cubit.dart';
 
 class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
+  DashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // retain statusbar
+    // retain status bar
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
     // get theme
@@ -14,17 +22,27 @@ class DashboardScreen extends StatelessWidget {
 
     // set status bar and nav themes
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: colorScheme.surface,
-      statusBarIconBrightness: colorScheme.brightness,
-      systemNavigationBarColor: colorScheme.surface,
-      systemNavigationBarIconBrightness: colorScheme.brightness
-    ));
+        statusBarColor: colorScheme.surface,
+        statusBarIconBrightness: colorScheme.brightness,
+        systemNavigationBarColor: Color.alphaBlend(
+          colorScheme.primary.withOpacity(0.08), // Tint effect
+          colorScheme.surface,
+        ),
+        systemNavigationBarIconBrightness: colorScheme.brightness));
 
-
-    return Scaffold(
-      body: SafeArea(child: Center(
-        child: Text('Dashboard'),
-      )),
+    return SafeArea(
+      child: Scaffold(
+        body: BlocBuilder<NavigationCubit, int>(
+            builder: (context, state) => screens[state]),
+        bottomNavigationBar: const CustomFloatingNavigationBar(),
+      ),
     );
   }
+
+  final List<Widget> screens = [
+    HomeScreen(),
+    EpharmacyScreen(),
+    AppointmentScreen(),
+    MessagesScreen()
+  ];
 }
