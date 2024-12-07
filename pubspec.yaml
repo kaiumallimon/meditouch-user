@@ -35,6 +35,7 @@ dependencies:
   blur: ^4.0.0
   salomon_bottom_bar: ^3.3.2
   intl: ^0.20.1
+  cached_network_image: ^3.4.1
 
 dev_dependencies:
   flutter_test:
