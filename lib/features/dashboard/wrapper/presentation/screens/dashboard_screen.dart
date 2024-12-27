@@ -35,6 +35,10 @@ class DashboardScreen extends StatelessWidget {
         body: BlocBuilder<NavigationCubit, int>(
             builder: (context, state) => screens[state]),
         bottomNavigationBar: const CustomFloatingNavigationBar(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: const Icon(Icons.menu),
+        ),
       ),
     );
   }
@@ -43,6 +47,7 @@ class DashboardScreen extends StatelessWidget {
     HomeScreen(),
     EpharmacyScreen(),
     AppointmentScreen(),
-    MessagesScreen()
+    MessagesScreen(),
+    Placeholder()
   ];
 }
