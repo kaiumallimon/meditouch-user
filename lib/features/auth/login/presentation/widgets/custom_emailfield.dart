@@ -8,12 +8,16 @@ class CustomEmailfield extends StatelessWidget {
       required this.size,
       required this.bgColor,
       required this.fgColor,
+      this.iconColor,
+      this.keyboardType,
       required this.controller});
 
   final String hint;
   final Size size;
   final Color bgColor;
   final Color fgColor;
+  final TextInputType? keyboardType;
+  final Color? iconColor;
   final TextEditingController controller;
 
   @override
@@ -23,13 +27,16 @@ class CustomEmailfield extends StatelessWidget {
       height: size.height,
       padding: const EdgeInsets.symmetric(horizontal: 15),
       decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(10)
-      ),
+          color: bgColor, borderRadius: BorderRadius.circular(10)),
       child: Row(
         children: [
-          Icon(Icons.mail,color: Theme.of(context).colorScheme.primary,),
-          const SizedBox(width: 10,),
+          Icon(
+            Icons.mail,
+            color: iconColor ?? Theme.of(context).colorScheme.primary,
+          ),
+          const SizedBox(
+            width: 10,
+          ),
           Expanded(
             child: TextField(
               controller: controller,
@@ -37,15 +44,14 @@ class CustomEmailfield extends StatelessWidget {
                 color: fgColor,
                 fontSize: 14,
               ),
+              keyboardType: keyboardType,
+              cursorColor: fgColor,
               decoration: InputDecoration(
-                border: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                hintText: hint,
-                hintStyle: TextStyle(
-                  color: fgColor.withOpacity(.4)
-                )
-              ),
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  hintText: hint,
+                  hintStyle: TextStyle(color: fgColor.withOpacity(.4))),
             ),
           ),
         ],
