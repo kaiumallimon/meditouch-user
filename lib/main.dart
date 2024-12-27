@@ -30,7 +30,7 @@ void main() async {
   await HiveRepository().init();
 
   // load the .env file
-  await dotenv.load(fileName: ".env");
+  // await dotenv.load(fileName: ".env");
 
   // run the app
   runApp(const MediTouchApp());
