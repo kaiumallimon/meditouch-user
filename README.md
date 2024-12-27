@@ -46,10 +46,144 @@ MediTouch offers a vibrant community platform where users can engage with doctor
 
 *Frontend*: Flutter
 
-*Backend*: Node.js
+*Backend*: Firebase & Node.js
 
 *Primary DB*: MongoDB
 
 *Secondary DB*: Hive (based on sqlite)
 
 *Payment Gateway*: Bkash
+
+## Project Structure
+
+```bash
+meditouch-user
+│   lib
+│   ├── common
+│   │   ├── repository
+│   │   │   └── hive_repository.dart
+│   │   ├── themes
+│   │   │   └── theme.dart
+│   │   ├── utils
+│   │   │   └── datetime_format.dart
+│   │   └── widgets
+│   │       ├── custom_appbar.dart
+│   │       ├── custom_button.dart
+│   │       ├── custom_list_tile.dart
+│   │       ├── custom_tinted_iconbutton.dart
+│   │       ├── gradient_bg.dart
+│   │       └── widget_motion.dart
+│   ├── features
+│   │   ├── auth
+│   │   │   ├── login
+│   │   │   │   ├── data
+│   │   │   │   │   └── repository
+│   │   │   │   │       └── login_repository.dart
+│   │   │   │   ├── logic
+│   │   │   │   │   ├── login_bloc.dart
+│   │   │   │   │   ├── login_event.dart
+│   │   │   │   │   └── login_state.dart
+│   │   │   │   ├── presentation
+│   │   │   │   │   ├── screens
+│   │   │   │   │   │   └── login_screen.dart
+│   │   │   │   │   └── widgets
+│   │   │   │   │       ├── continue_with_google.dart
+│   │   │   │   │       ├── custom_emailfield.dart
+│   │   │   │   │       └── custom_passwordfield.dart
+│   │   │   │   └── login.dart
+│   │   │   └── register
+│   │   │       ├── data
+│   │   │       │   └── repository
+│   │   │       │       ├── email_verifier.dart
+│   │   │       │       └── registration_repository.dart
+│   │   │       ├── logic
+│   │   │       │   ├── date_cubit.dart
+│   │   │       │   ├── gender_cubit.dart
+│   │   │       │   ├── image_cubit.dart
+│   │   │       │   ├── register_bloc.dart
+│   │   │       │   ├── register_event.dart
+│   │   │       │   └── register_state.dart
+│   │   │       ├── presentation
+│   │   │       │   ├── screens
+│   │   │       │   │   └── register_screen.dart
+│   │   │       │   └── widgets
+│   │   │       │       ├── custom_datepicker.dart
+│   │   │       │       ├── custom_genderpicker.dart
+│   │   │       │       ├── custom_imagepicker.dart
+│   │   │       │       └── custom_textfield_reg.dart
+│   │   │       └── register.dart
+│   │   ├── dashboard
+│   │   │   ├── features
+│   │   │   │   ├── appointments
+│   │   │   │   │   ├── presentation
+│   │   │   │   │   │   └── screens
+│   │   │   │   │   │       └── appointment_screen.dart
+│   │   │   │   │   └── appointments.dart
+│   │   │   │   ├── epharmacy
+│   │   │   │   │   ├── presentation
+│   │   │   │   │   │   └── screens
+│   │   │   │   │   │       └── epharmacy_screen.dart
+│   │   │   │   │   └── epharmacy.dart
+│   │   │   │   ├── home
+│   │   │   │   │   ├── logics
+│   │   │   │   │   │   ├── home_bloc.dart
+│   │   │   │   │   │   ├── home_event.dart
+│   │   │   │   │   │   └── home_state.dart
+│   │   │   │   │   ├── presentation
+│   │   │   │   │   │   └── screens
+│   │   │   │   │   │       └── home_screen.dart
+│   │   │   │   │   └── home.dart
+│   │   │   │   ├── messages
+│   │   │   │   │   ├── presentation
+│   │   │   │   │   │   └── screens
+│   │   │   │   │   │       └── messages_screen.dart
+│   │   │   │   │   └── messages.dart
+│   │   │   │   └── profile
+│   │   │   │       ├── presentation
+│   │   │   │       │   └── screens
+│   │   │   │       │       └── profile_screen.dart
+│   │   │   │       └── profile.dart
+│   │   │   ├── navigation
+│   │   │   │   ├── logics
+│   │   │   │   │   └── navigation_cubit.dart
+│   │   │   │   └── navbar
+│   │   │   │       └── custom_navbar.dart
+│   │   │   └── wrapper
+│   │   │       ├── presentation
+│   │   │       │   └── screens
+│   │   │       │       └── dashboard_screen.dart
+│   │   │       └── dashboard.dart
+│   │   └── startup
+│   │       ├── splash
+│   │       │   ├── logics
+│   │       │   │   ├── splash_bloc.dart
+│   │       │   │   ├── splash_event.dart
+│   │       │   │   └── splash_state.dart
+│   │       │   ├── presentation
+│   │       │   │   └── screens
+│   │       │   │       └── splash_screen.dart
+│   │       │   └── splash.dart
+│   │       └── welcome
+│   │           ├── logics
+│   │           │   └── welcome_cubit.dart
+│   │           ├── presentation
+│   │           │   ├── screens
+│   │           │   │   └── welcome_screen.dart
+│   │           │   └── widgets
+│   │           │       ├── textstyles.dart
+│   │           │       ├── welcome_log_reg_button.dart
+│   │           │       └── welcome_next_button.dart
+│   │           └── welcome.dart
+│   ├── firebase_options.dart
+│   └── main.dart
+│   .env
+│   .flutter-plugins
+│   .flutter-plugins-dependencies
+│   .gitignore
+│   .metadata
+│   analysis_options.yaml
+│   firebase.json
+│   pubspec.lock
+│   pubspec.yaml
+│   README.md
+```
