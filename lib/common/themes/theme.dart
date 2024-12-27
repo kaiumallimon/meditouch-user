@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   ThemeData getTheme() => ThemeData(
-    useMaterial3: true,
+      useMaterial3: true,
       fontFamily: "SF-Pro-Text",
       colorScheme: const ColorScheme(
           brightness: Brightness.dark,
@@ -18,6 +18,7 @@ class AppTheme {
 
   ThemeData getDarkTheme() => ThemeData(
       fontFamily: "SF-Pro-Text",
+      useMaterial3: true,
       colorScheme: const ColorScheme(
           brightness: Brightness.light,
           primary: CupertinoColors.activeBlue,
