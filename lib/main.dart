@@ -1,7 +1,7 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:meditouch/common/repository/hive_repository.dart';
 import 'package:meditouch/common/themes/theme.dart';
@@ -25,12 +25,18 @@ import 'features/dashboard/features/home/logics/home_event.dart';
 import 'features/dashboard/features/profile/profile.dart';
 
 void main() async {
+  // ensure flutterBinding is initialized
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // initialize firebase
+  await Firebase.initializeApp();
+
   // initialize hive: local database
   await Hive.initFlutter();
   await HiveRepository().init();
 
   // load the .env file
-  // await dotenv.load(fileName: ".env");
+  await dotenv.load(fileName: ".env");
 
   // run the app
   runApp(const MediTouchApp());
@@ -53,7 +59,9 @@ class MediTouchApp extends StatelessWidget {
           create: (_) => RegisterBloc(),
         ),
         BlocProvider<LoginBloc>(
-          create: (_) => LoginBloc(),
+          create: (_) => LoginBloc(
+            loginRepository: LoginRepository()
+          ),
         ),
         BlocProvider<NavigationCubit>(create: (_) => NavigationCubit()),
         BlocProvider<HomeBloc>(
