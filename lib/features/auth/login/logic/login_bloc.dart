@@ -5,44 +5,48 @@ import 'package:meditouch/features/auth/login/logic/login_event.dart';
 import 'package:meditouch/features/auth/login/logic/login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc() : super(LoginInitialState()) {
+  final LoginRepository loginRepository;
+
+  LoginBloc({required this.loginRepository}) : super(LoginInitialState()) {
     on<LoginSubmitted>(_loginSubmitted);
   }
 
   Future<void> _loginSubmitted(
       LoginSubmitted event, Emitter<LoginState> emit) async {
-    // initially show the loading state
+    // Initially show the loading state
     emit(LoginLoadingState());
 
-
-    // check email or password if they are empty
-    if(event.email.isEmpty || event.password.isEmpty){
+    // Check if email or password is empty
+    if (event.email.isEmpty || event.password.isEmpty) {
       emit(LoginErrorState('Both email and password are required to login!'));
       return;
     }
 
+    // Process the login
+    final response = await loginRepository.login(event.email, event.password);
 
-    // process the login
-    final response = await LoginRepository().login(event.email, event.password);
-
-    // error/success state
+    // Handle repository response
     if (response.containsKey('status') && response['status'] == 'success') {
       final userInfo = response['user'];
 
+      // Save user info to Hive
       await HiveRepository().saveUserInfo(
-          userInfo['_id'],
-          userInfo['name'],
-          userInfo['email'],
-          userInfo['gender'],
-          userInfo['dob'],
-          userInfo['image'],
-          userInfo['phone'],);
+        userInfo['id'],
+        userInfo['name'],
+        userInfo['email'],
+        userInfo['gender'],
+        userInfo['dob'],
+        userInfo['image'],
+        userInfo['phone'],
+      );
+
       emit(LoginSuccessState(response['message']));
-      return;
+    } else {
+      // Handle error message
+      final errorMessage = response.containsKey('error')
+          ? response['error']
+          : 'An unknown error occurred.';
+      emit(LoginErrorState(errorMessage));
     }
-
-
-    emit(LoginErrorState(response['message']));
-
   }
 }
