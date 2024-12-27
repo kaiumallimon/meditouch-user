@@ -68,9 +68,9 @@ class MediTouchApp extends StatelessWidget {
         initialRoute: "/",
         routes: {
           "/": (context) => const SplashScreen(),
-          "/welcome": (context) => WelcomeScreen(),
+          "/welcome": (context) => const WelcomeScreen(),
           "/login": (context) => LoginScreen(),
-          "/register": (context) => RegisterScreen(),
+          "/register": (context) => const RegisterScreen(),
           "/dashboard": (context) => DashboardScreen(),
           "/profile": (context) => const ProfileScreen(),
         },
