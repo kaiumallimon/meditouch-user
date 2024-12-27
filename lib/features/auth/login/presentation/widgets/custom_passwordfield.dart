@@ -9,11 +9,15 @@ class CustomPasswordfield extends StatefulWidget {
     required this.bgColor,
     required this.fgColor,
     required this.controller,
+    this.iconColor,
+    this.keyboardType,
   });
 
   final String hint;
   final Size size;
   final Color bgColor;
+  final Color? iconColor;
+  final TextInputType? keyboardType;
   final Color fgColor;
   final TextEditingController controller;
 
@@ -52,8 +56,13 @@ class _CustomPasswordfieldState extends State<CustomPasswordfield> {
       ),
       child: Row(
         children: [
-          Icon(Icons.password,color: Theme.of(context).colorScheme.primary,),
-          const SizedBox(width: 10,),
+          Icon(
+            Icons.password,
+            color: widget.iconColor ?? Theme.of(context).colorScheme.primary,
+          ),
+          const SizedBox(
+            width: 10,
+          ),
           Expanded(
             child: TextField(
               controller: widget.controller,
@@ -63,6 +72,8 @@ class _CustomPasswordfieldState extends State<CustomPasswordfield> {
                 color: widget.fgColor,
                 fontSize: 14,
               ),
+              cursorColor: widget.fgColor,
+              keyboardType: widget.keyboardType ?? TextInputType.text,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 enabledBorder: InputBorder.none,
@@ -77,7 +88,7 @@ class _CustomPasswordfieldState extends State<CustomPasswordfield> {
           if (_focusNode.hasFocus)
             IconButton(
               icon: Icon(
-                _isObscure ? RIcon.Eye_Closed:RIcon.Eye,
+                _isObscure ? RIcon.Eye_Closed : RIcon.Eye,
                 color: widget.fgColor.withOpacity(.7),
               ),
               onPressed: () {
