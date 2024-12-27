@@ -1,12 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meditouch/common/widgets/custom_button.dart';
 import 'package:meditouch/common/widgets/widget_motion.dart';
-import 'package:meditouch/features/auth/login/presentation/widgets/custom_emailfield.dart';
 import 'package:meditouch/features/auth/login/presentation/widgets/custom_passwordfield.dart';
 import 'package:meditouch/features/auth/register/logic/date_cubit.dart';
 import 'package:meditouch/features/auth/register/logic/gender_cubit.dart';
@@ -65,13 +65,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: SafeArea(
         // bloc listener to listen any changes
         // in current states
-        child: BlocListener<RegisterBloc,RegisterState>(
-          listener: (context, state){
+        child: BlocListener<RegisterBloc, RegisterState>(
+          listener: (context, state) {
             // current state is loading state
             // show the loading animation
-            if(state is RegisterLoadingState){
+            if (state is RegisterLoadingState) {
               setState(() {
-                isLoading=true;
+                isLoading = true;
               });
             }
 
@@ -79,10 +79,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
             // close the loading and
             // show an alert
 
-            if(state is RegisterSuccessState){
-
+            if (state is RegisterSuccessState) {
               setState(() {
-                isLoading=false;
+                isLoading = false;
               });
 
               String message = state.message;
@@ -91,30 +90,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Navigator.of(context).pushReplacementNamed('/login');
 
               QuickAlert.show(
-                context: context,
-                type: QuickAlertType.success,
-                text: message, disableBackBtn: true
-              );
-
-
+                  context: context,
+                  type: QuickAlertType.success,
+                  text: message,
+                  disableBackBtn: true);
             }
 
             // registration failed
             // close the loading animation and
             // show a alert
 
-            if(state is RegisterErrorState){
-
+            if (state is RegisterErrorState) {
               setState(() {
-                isLoading=false;
+                isLoading = false;
               });
               String message = state.message;
               QuickAlert.show(
-                context: context,
-                type: QuickAlertType.error,
-                text: message,
-                disableBackBtn: true
-              );
+                  context: context,
+                  type: QuickAlertType.error,
+                  text: message,
+                  disableBackBtn: true);
             }
           },
           child: SingleChildScrollView(
@@ -122,9 +117,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
             child: Column(
               children: [
-                WidgetMotion(
+                const WidgetMotion(
                   direction: "left",
-                  child: const Text(
+                  child: Text(
                       'Fill the information below to continue setting up your account.'),
                 ),
                 const SizedBox(height: 25),
@@ -226,28 +221,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     size: const Size(350, 50),
                     text: "Sign up",
                     onPressed: () {
-                      final String name = _nameController.text.trim();
-                      final String phone = _phoneController.text.trim();
-                      final String email = _emailController.text.trim();
-                      final DateTime? dob =
-                          BlocProvider.of<DateCubit>(context).state;
-                      final String? gender =
-                          BlocProvider.of<GenderCubit>(context).state;
-                      final String password = _passwordController.text.trim();
-                      final String confirmPassword =
-                          _confirmpasswordController.text.trim();
-                      final XFile? image =
-                          BlocProvider.of<ImagePickerCubit>(context).state;
+                      try {
+                        final String name = _nameController.text.trim();
+                        final String phone = _phoneController.text.trim();
+                        final String email = _emailController.text.trim();
+                        final DateTime? dob =
+                            BlocProvider.of<DateCubit>(context).state;
+                        final String? gender =
+                            BlocProvider.of<GenderCubit>(context).state;
+                        final String password = _passwordController.text.trim();
+                        final String confirmPassword =
+                            _confirmpasswordController.text.trim();
+                        final XFile? image =
+                            BlocProvider.of<ImagePickerCubit>(context).state;
 
-                      registrationBloc.add(RegisterSubmitted(
-                          name: name,
-                          phone: phone,
-                          email: email,
-                          gender: gender,
-                          dob: dob,
-                          password: password,
-                          confirmPassword: confirmPassword,
-                          image: image));
+                        registrationBloc.add(RegisterSubmitted(
+                            name: name,
+                            phone: phone,
+                            email: email,
+                            gender: gender,
+                            dob: dob,
+                            password: password,
+                            confirmPassword: confirmPassword,
+                            image: image));
+                      } catch (e) {
+                        log(e.toString());
+                      }
                     },
                     bgColor: theme.primary,
                     fgColor: theme.onPrimary,
@@ -271,7 +270,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   bool isLoading = false;
 
-
   void _clearForm() {
     // Clear the text fields
     _nameController.clear();
@@ -285,5 +283,4 @@ class _RegisterScreenState extends State<RegisterScreen> {
     BlocProvider.of<GenderCubit>(context).reset();
     BlocProvider.of<ImagePickerCubit>(context).reset();
   }
-
 }
