@@ -25,15 +25,10 @@ class CustomGoogleButton extends StatelessWidget {
       child: ElevatedButton(
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.surface,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            side: BorderSide(
-              width: 2,
-              color: bgColor
-            ),
-            elevation: 0
-          ),
+              backgroundColor: bgColor,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)),
+              elevation: 0),
           child: isLoading
               ? CupertinoActivityIndicator(
                   radius: 12,
@@ -42,8 +37,13 @@ class CustomGoogleButton extends StatelessWidget {
               : Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset('assets/icons/google-32.png',height: 22,),
-                    const SizedBox(width: 10,),
+                    Image.asset(
+                      'assets/icons/google-32.png',
+                      height: 22,
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
                     Text(
                       text,
                       style: TextStyle(
