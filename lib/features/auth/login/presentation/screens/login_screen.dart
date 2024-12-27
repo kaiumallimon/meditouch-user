@@ -300,12 +300,11 @@ class LoginScreen extends StatelessWidget {
       size: Size(MediaQuery.of(context).size.width * 0.9, 50),
       text: "Sign in",
       onPressed: () {
-        // final String email = emailController.text.trim();
-        // final String password =
-        //     passwordController.text.trim();
-        // BlocProvider.of<LoginBloc>(context).add(
-        //   LoginSubmitted(email: email, password: password),
-        // );
+        final String email = emailController.text.trim();
+        final String password = passwordController.text.trim();
+        BlocProvider.of<LoginBloc>(context).add(
+          LoginSubmitted(email: email, password: password),
+        );
       },
       bgColor: theme.primary,
       fgColor: theme.onPrimary,
