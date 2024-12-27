@@ -45,3 +45,7 @@ app.*.map.json
 
 #ignore .env
 .env
+
+
+# ignore the architecture.txt
+architecture.txt
