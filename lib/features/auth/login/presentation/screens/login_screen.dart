@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:meditouch/common/widgets/gradient_bg.dart';
@@ -27,12 +28,12 @@ class LoginScreen extends StatelessWidget {
     final theme = Theme.of(context).colorScheme;
 
     // // Set status bar and nav bar colors:
-    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    //   statusBarColor: Colors.transparent,
-    //   statusBarIconBrightness: Brightness.light,
-    //   systemNavigationBarColor: theme.surface,
-    //   systemNavigationBarIconBrightness: theme.brightness,
-    // ));
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarIconBrightness: Brightness.light,
+    ));
 
     // Get device height
     final height = MediaQuery.of(context).size.height;
@@ -73,136 +74,211 @@ class LoginScreen extends StatelessWidget {
         }
       },
       child: Scaffold(
+          resizeToAvoidBottomInset: false,
           body: Stack(
-        fit: StackFit.expand,
-        children: [
-          const GradientBackground(),
-          Positioned(
-            top: (height * .10),
-            left: 0,
-            right: 0,
-            child: Image.asset(
-              'assets/images/logo2.png',
-              height: 130,
-              width: 130,
-            ),
-          ),
-          Positioned(
-              top: height * .35,
-              left: 0,
-              right: 0,
-              child: Container(
-                width: double.infinity,
-                height: height * .65,
-                padding: const EdgeInsets.all(30),
-                decoration: BoxDecoration(
-                    color: theme.surface,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30),
-                    )),
-                child: WidgetMotion(
-                  direction: "right",
+            children: [
+              // Gradient background:
+              const GradientBackground(),
+
+              // Rest of the UI:
+              SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
                   child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        RichText(
-                          text: TextSpan(
-                            text: 'Sign in to your\n',
-                            style: GoogleFonts.lexend(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: 'MediTouch',
-                                style: GoogleFonts.lexend(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .primary, // Highlight color
-                                ),
-                              ),
-                              TextSpan(
-                                text: ' Account',
-                                style: GoogleFonts.lexend(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
-                                ),
-                              ),
-                            ],
+                        const SizedBox(height: 20),
+                        // Logo:
+                        Center(
+                          child: Image.asset(
+                            'assets/images/logo2.png',
+                            height: MediaQuery.of(context).size.height * 0.15,
+                            width: MediaQuery.of(context).size.height * 0.15,
                           ),
-                          textAlign: TextAlign.left,
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        CustomEmailfield(
-                            hint: "Email Address",
-                            size: const Size(350, 50),
-                            bgColor: theme.primary.withOpacity(.15),
-                            fgColor: theme.onSurface,
-                            controller: emailController),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        CustomPasswordfield(
-                            hint: "Password",
-                            size: const Size(350, 50),
-                            bgColor: theme.primary.withOpacity(.15),
-                            fgColor: theme.onSurface,
-                            controller: passwordController),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            GestureDetector(
-                              onTap: () {},
-                              child: Text(
-                                'Forgot Password?',
-                                style: TextStyle(
-                                    color: theme.error,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14),
-                              ),
+                        )
+                            .animate()
+                            .fade(
+                              curve: Curves.easeIn,
+                              duration: const Duration(milliseconds: 800),
                             )
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        CustomButton(
-                            size: Size(350, 50),
-                            text: "Sign in",
-                            onPressed: () {
-                              final String email = emailController.text.trim();
-                              final String password =
-                                  passwordController.text.trim();
+                            .scaleXY(
+                              begin: 0.9,
+                              end: 1.0,
+                              curve: Curves.easeOut,
+                              duration: const Duration(milliseconds: 800),
+                            ),
 
-                              BlocProvider.of<LoginBloc>(context).add(
-                                  LoginSubmitted(
-                                      email: email, password: password));
+                        const SizedBox(height: 20),
+
+                        // Welcome message:
+                        Center(
+                          child: Text(
+                            'Welcome!',
+                            style: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ).animate()
+                            .fade(
+                              curve: Curves.easeIn,
+                              duration: const Duration(milliseconds: 800),
+                            )
+                            .scaleXY(
+                              begin: 0.9,
+                              end: 1.0,
+                              curve: Curves.easeOut,
+                              duration: const Duration(milliseconds: 800),
+                            ),
+
+                        const SizedBox(height: 10),
+
+                        // Sub-message:
+                        Center(
+                          child: Text(
+                            'To continue, sign in to your account',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white.withOpacity(0.6),
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ).animate()
+                            .fade(
+                              curve: Curves.easeIn,
+                              duration: const Duration(milliseconds: 800),
+                            )
+                            .scaleXY(
+                              begin: 0.9,
+                              end: 1.0,
+                              curve: Curves.easeOut,
+                              duration: const Duration(milliseconds: 800),
+                            ),
+
+                        const SizedBox(height: 30),
+
+                        // Email field:
+                        CustomEmailfield(
+                          hint: "Email Address",
+                          size:
+                              Size(MediaQuery.of(context).size.width * 0.9, 50),
+                          bgColor: Colors.grey.withOpacity(0.3),
+                          fgColor: Colors.white,
+                          keyboardType: TextInputType.emailAddress,
+                          iconColor: Colors.grey.withOpacity(0.5),
+                          controller: emailController,
+                        ).animate()
+                            .fade(
+                              curve: Curves.easeIn,
+                              duration: const Duration(milliseconds: 800),
+                            )
+                            .scaleXY(
+                              begin: 0.9,
+                              end: 1.0,
+                              curve: Curves.easeOut,
+                              duration: const Duration(milliseconds: 800),
+                            ),
+
+                        const SizedBox(height: 15),
+
+                        // Password field:
+                        CustomPasswordfield(
+                          hint: "Password",
+                          size:
+                              Size(MediaQuery.of(context).size.width * 0.9, 50),
+                          bgColor: Colors.grey.withOpacity(0.3),
+                          fgColor: Colors.white,
+                          keyboardType: TextInputType.text,
+                          iconColor: Colors.grey.withOpacity(0.5),
+                          controller: passwordController,
+                        ).animate()
+                            .fade(
+                              curve: Curves.easeIn,
+                              duration: const Duration(milliseconds: 800),
+                            )
+                            .scaleXY(
+                              begin: 0.9,
+                              end: 1.0,
+                              curve: Curves.easeOut,
+                              duration: const Duration(milliseconds: 800),
+                            ),
+
+                        const SizedBox(height: 10),
+
+                        // Forgot Password:
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: GestureDetector(
+                            onTap: () {
+                              // handle forgot password
                             },
-                            bgColor: theme.primary,
-                            fgColor: theme.onPrimary,
-                            isLoading: false),
-                        const SizedBox(
-                          height: 20,
-                        ),
+                            child: const Text(
+                              'Forgot Password?',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
+                        ).animate()
+                            .fade(
+                              curve: Curves.easeIn,
+                              duration: const Duration(milliseconds: 800),
+                            )
+                            .scaleXY(
+                              begin: 0.9,
+                              end: 1.0,
+                              curve: Curves.easeOut,
+                              duration: const Duration(milliseconds: 800),
+                            ),
+
+                        const SizedBox(height: 20),
+
+                        // Sign in button:
+                        CustomButton(
+                          size:
+                              Size(MediaQuery.of(context).size.width * 0.9, 50),
+                          text: "Sign in",
+                          onPressed: () {
+                            // final String email = emailController.text.trim();
+                            // final String password =
+                            //     passwordController.text.trim();
+                            // BlocProvider.of<LoginBloc>(context).add(
+                            //   LoginSubmitted(email: email, password: password),
+                            // );
+                          },
+                          bgColor: theme.primary,
+                          fgColor: theme.onPrimary,
+                          isLoading: false,
+                        ).animate()
+                            .fade(
+                              curve: Curves.easeIn,
+                              duration: const Duration(milliseconds: 800),
+                            )
+                            .scaleXY(
+                              begin: 0.9,
+                              end: 1.0,
+                              curve: Curves.easeOut,
+                              duration: const Duration(milliseconds: 800),
+                            ),
+
+                        const SizedBox(height: 20),
+
+                        // Create account:
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text("Don't have an account?"),
-                            const SizedBox(
-                              width: 8,
+                            Text(
+                              "Don't have an account?",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white.withOpacity(0.6),
+                              ),
                             ),
+                            const SizedBox(width: 8),
                             GestureDetector(
                               onTap: () {
                                 Navigator.of(context).pushNamed('/register');
@@ -210,42 +286,89 @@ class LoginScreen extends StatelessWidget {
                               child: Text(
                                 "Create an account",
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: theme.primary),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: theme.secondary,
+                                ),
                               ),
-                            )
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Or",
-                              style: TextStyle(
-                                  color: theme.onSurface.withOpacity(.5)),
                             ),
                           ],
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
+                        ).animate()
+                            .fade(
+                              curve: Curves.easeIn,
+                              duration: const Duration(milliseconds: 800),
+                            )
+                            .scaleXY(
+                              begin: 0.9,
+                              end: 1.0,
+                              curve: Curves.easeOut,
+                              duration: const Duration(milliseconds: 800),
+                            ),
+
+                        const SizedBox(height: 30),
+
+                        // Or:
+                        Center(
+                          child: Text(
+                            "Or",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.white.withOpacity(0.6),
+                            ),
+                          ),
+                        ).animate()
+                            .fade(
+                              curve: Curves.easeIn,
+                              duration: const Duration(milliseconds: 800),
+                            )
+                            .scaleXY(
+                              begin: 0.9,
+                              end: 1.0,
+                              curve: Curves.easeOut,
+                              duration: const Duration(milliseconds: 800),
+                            ),
+
+                        const SizedBox(height: 20),
+
+                        // Continue with Google:
                         CustomGoogleButton(
-                            size: Size(350, 50),
-                            text: "Continue with Google",
-                            onPressed: () {},
-                            bgColor: theme.primary.withOpacity(.2),
-                            fgColor: theme.onSurface,
-                            isLoading: false),
+                          size:
+                              Size(MediaQuery.of(context).size.width * 0.9, 50),
+                          text: "Continue with Google",
+                          onPressed: () {
+                            // Handle Google sign in
+                            QuickAlert.show(
+                                context: context,
+                                headerBackgroundColor: theme.primary,
+                                backgroundColor: theme.surface,
+                                textColor: theme.onSurface,
+                                titleColor: theme.onSurface,
+                                barrierColor: Colors.black.withOpacity(.7),
+                                type: QuickAlertType.warning,
+                                text: "Not Implemented Yet!",
+                                disableBackBtn: true);
+                          },
+                          bgColor: Colors.white,
+                          fgColor: Colors.black,
+                          isLoading: false,
+                        ).animate()
+                            .fade(
+                              curve: Curves.easeIn,
+                              duration: const Duration(milliseconds: 800),
+                            )
+                            .scaleXY(
+                              begin: 0.9,
+                              end: 1.0,
+                              curve: Curves.easeOut,
+                              duration: const Duration(milliseconds: 800),
+                            ),
                       ],
                     ),
                   ),
                 ),
-              ))
-        ],
-      )),
+              )
+            ],
+          )),
     );
   }
 
