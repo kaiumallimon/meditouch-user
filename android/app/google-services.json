@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "553315172029",
+    "project_id": "meditouch-backend",
+    "storage_bucket": "meditouch-backend.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553315172029:android:657d3545a66a9dd66701d4",
+        "android_client_info": {
+          "package_name": "com.example.meditouch"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpSJTCuTkCcmlRnKHRiwRor4M6W-CHyHc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553315172029:android:d30f76974a4360f86701d4",
+        "android_client_info": {
+          "package_name": "team.bcrypt.client.user.meditouch"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpSJTCuTkCcmlRnKHRiwRor4M6W-CHyHc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553315172029:android:2aed7188999e8ac16701d4",
+        "android_client_info": {
+          "package_name": "team.bcrypt.user.meditouch"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpSJTCuTkCcmlRnKHRiwRor4M6W-CHyHc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
