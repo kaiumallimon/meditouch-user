@@ -13,6 +13,7 @@ import 'package:meditouch/features/auth/register/logic/gender_cubit.dart';
 import 'package:meditouch/features/auth/register/logic/image_cubit.dart';
 import 'package:meditouch/features/auth/register/logic/register_bloc.dart';
 import 'package:meditouch/features/auth/register/presentation/screens/register_screen.dart';
+import 'package:meditouch/features/dashboard/features/account/presentation/screens/theme_screen.dart';
 import 'package:meditouch/features/dashboard/features/home/logics/home_bloc.dart';
 import 'package:meditouch/features/dashboard/navigation/logics/navigation_cubit.dart';
 import 'package:meditouch/features/dashboard/wrapper/presentation/screens/dashboard_screen.dart';
@@ -23,6 +24,7 @@ import 'package:meditouch/features/startup/welcome/welcome.dart';
 
 import 'features/dashboard/features/account/logics/account_bloc.dart';
 import 'features/dashboard/features/account/logics/account_events.dart';
+import 'features/dashboard/features/account/logics/theme_cubit.dart';
 import 'features/dashboard/features/home/logics/home_event.dart';
 import 'features/dashboard/features/profile/profile.dart';
 
@@ -40,12 +42,20 @@ void main() async {
   // load the .env file
   await dotenv.load(fileName: ".env");
 
+  // theme
+  final themeCubit = ThemeCubit();
+  themeCubit.loadTheme();
+
   // run the app
-  runApp(const MediTouchApp());
+  runApp(MediTouchApp(
+    themeCubit: themeCubit,
+  ));
 }
 
 class MediTouchApp extends StatelessWidget {
-  const MediTouchApp({super.key});
+  const MediTouchApp({super.key, required this.themeCubit});
+
+  final ThemeCubit themeCubit;
 
   @override
   Widget build(BuildContext context) {
@@ -83,20 +93,27 @@ class MediTouchApp extends StatelessWidget {
         BlocProvider<AccountBloc>(
             create: (_) => AccountBloc(hiveRepository: HiveRepository())
               ..add(const AccountRefreshRequested())),
+
+        // theme cubit
+        BlocProvider<ThemeCubit>(create: (_) => ThemeCubit()),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme().getTheme(),
-        darkTheme: AppTheme().getDarkTheme(),
-        // define the routes
-        initialRoute: "/",
-        routes: {
-          "/": (context) => const SplashScreen(),
-          "/welcome": (context) => const WelcomeScreen(),
-          "/login": (context) => LoginScreen(),
-          "/register": (context) => const RegisterScreen(),
-          "/dashboard": (context) => DashboardScreen(),
-          "/profile": (context) => const ProfileScreen(),
+      child: BlocBuilder<ThemeCubit, bool>(
+        builder: (context, darkMode) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: darkMode ? AppTheme().getDarkTheme() : AppTheme().getTheme(),
+            // define the routes
+            initialRoute: "/",
+            routes: {
+              "/": (context) => const SplashScreen(),
+              "/welcome": (context) => const WelcomeScreen(),
+              "/login": (context) => LoginScreen(),
+              "/register": (context) => const RegisterScreen(),
+              "/dashboard": (context) => DashboardScreen(),
+              "/profile": (context) => const ProfileScreen(),
+              "/theme": (context) => const ThemeScreen(),
+            },
+          );
         },
       ),
     );
