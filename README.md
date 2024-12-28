@@ -114,6 +114,17 @@ meditouch-user
 │   │   │       └── register.dart
 │   │   ├── dashboard
 │   │   │   ├── features
+│   │   │   │   ├── account
+│   │   │   │   │   ├── logics
+│   │   │   │   │   │   ├── account_bloc.dart
+│   │   │   │   │   │   ├── account_events.dart
+│   │   │   │   │   │   └── account_states.dart
+│   │   │   │   │   └── presentation
+│   │   │   │   │       ├── screens
+│   │   │   │   │       │   └── account_screen.dart
+│   │   │   │   │       └── widgets
+│   │   │   │   │           ├── custom_multipletile.dart
+│   │   │   │   │           └── custom_tile.dart
 │   │   │   │   ├── appointments
 │   │   │   │   │   ├── presentation
 │   │   │   │   │   │   └── screens
@@ -182,6 +193,7 @@ meditouch-user
 │   .gitignore
 │   .metadata
 │   analysis_options.yaml
+│   architecture.txt
 │   firebase.json
 │   pubspec.lock
 │   pubspec.yaml
