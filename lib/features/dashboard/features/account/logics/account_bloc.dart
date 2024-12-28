@@ -9,7 +9,11 @@ class AccountBloc extends Bloc<AccountEvents, AccountStates> {
 
   AccountBloc({required this.hiveRepository}) : super(AccountInitial()) {
     on<AccountRefreshRequested>(_onRefresh);
+    on<AccountLogoutRequested>(_logout);
   }
+
+
+  /* Method to refresh the user account panel */
 
   Future<void> _onRefresh(
       AccountRefreshRequested event, Emitter<AccountStates> emit) async {
@@ -20,5 +24,13 @@ class AccountBloc extends Bloc<AccountEvents, AccountStates> {
     } catch (e) {
       emit(AccountError('Failed to fetch data: ${e.toString()}'));
     }
+  }
+
+
+/* Method to logout the user */
+  Future<void> _logout(
+      AccountLogoutRequested event, Emitter<AccountStates> emit) async {
+    await hiveRepository.deleteUserInfo();
+    emit(AccountLogout());
   }
 }
