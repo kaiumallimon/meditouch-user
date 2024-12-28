@@ -5,13 +5,19 @@ class AppTheme {
   ThemeData getTheme() => ThemeData(
       useMaterial3: true,
       fontFamily: "SF-Pro-Text",
-      colorScheme: const ColorScheme(
+      colorScheme: ColorScheme(
           brightness: Brightness.dark,
           primary: Color(0xFF470DC2),
+          primaryContainer: Color.fromARGB(30, 70, 13, 194),
+          onPrimaryContainer: Colors.black,
           onPrimary: Colors.white,
           secondary: CupertinoColors.activeOrange,
           onSecondary: Colors.white,
           error: Colors.red,
+          surfaceContainer: Color.alphaBlend(
+            const Color(0xFF470DC2).withOpacity(0.05), // Tint effect
+            Colors.white,
+          ),
           onError: Colors.white,
           surface: Colors.white,
           onSurface: Colors.black));
@@ -19,14 +25,20 @@ class AppTheme {
   ThemeData getDarkTheme() => ThemeData(
       fontFamily: "SF-Pro-Text",
       useMaterial3: true,
-      colorScheme: const ColorScheme(
+      colorScheme: ColorScheme(
           brightness: Brightness.light,
           primary: CupertinoColors.activeBlue,
+          primaryContainer: Color.fromARGB(30, 0, 123, 255),
+          onPrimaryContainer: Colors.white,
           onPrimary: Colors.white,
           secondary: CupertinoColors.activeOrange,
           onSecondary: Colors.white,
           error: Colors.red,
+          surfaceContainer: Color.alphaBlend(
+            CupertinoColors.activeBlue.withOpacity(0.05), // Tint effect
+            const Color(0xFF141414),
+          ),
           onError: Colors.white,
-          surface: Color(0xFF141414),
+          surface: const Color(0xFF141414),
           onSurface: Colors.white));
 }
