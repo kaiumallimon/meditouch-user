@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meditouch/features/dashboard/navigation/logics/navigation_cubit.dart';
-import 'package:r_icon_pro/r_icon_pro.dart';
 
 class CustomFloatingNavigationBar extends StatelessWidget {
   const CustomFloatingNavigationBar({super.key});
@@ -22,7 +21,7 @@ class CustomFloatingNavigationBar extends StatelessWidget {
           labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
           destinations: [
             NavigationDestination(
-              icon: Icon(Icons.home_outlined),
+              icon: const Icon(Icons.home_outlined),
               selectedIcon: Icon(
                 Icons.home,
                 color: Theme.of(context).colorScheme.onPrimary,
@@ -30,15 +29,15 @@ class CustomFloatingNavigationBar extends StatelessWidget {
               label: 'Home',
             ),
             NavigationDestination(
-              icon: Icon(Icons.medical_services_outlined),
+              icon: const Icon(Icons.medical_services_outlined),
               selectedIcon: Icon(
                 Icons.medical_services,
                 color: Theme.of(context).colorScheme.onPrimary,
               ),
-              label: 'E-Pharmacy',
+              label: 'Epharmacy',
             ),
             NavigationDestination(
-              icon: Icon(Icons.bookmark_outline),
+              icon: const Icon(Icons.bookmark_outline),
               selectedIcon: Icon(
                 Icons.bookmark,
                 color: Theme.of(context).colorScheme.onPrimary,
@@ -46,7 +45,7 @@ class CustomFloatingNavigationBar extends StatelessWidget {
               label: 'Appts',
             ),
             NavigationDestination(
-              icon: Icon(Icons.chat_outlined),
+              icon: const Icon(Icons.chat_outlined),
               selectedIcon: Icon(
                 Icons.chat,
                 color: Theme.of(context).colorScheme.onPrimary,
@@ -54,7 +53,7 @@ class CustomFloatingNavigationBar extends StatelessWidget {
               label: 'Inbox',
             ),
             NavigationDestination(
-              icon: Icon(Icons.account_circle_outlined),
+              icon: const Icon(Icons.account_circle_outlined),
               selectedIcon: Icon(
                 Icons.account_circle,
                 color: Theme.of(context).colorScheme.onPrimary,
