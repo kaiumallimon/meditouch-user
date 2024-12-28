@@ -7,6 +7,7 @@ import 'package:meditouch/common/widgets/custom_button.dart';
 import 'package:meditouch/features/dashboard/features/account/logics/account_states.dart';
 import 'package:meditouch/features/dashboard/features/account/presentation/widgets/custom_multipletile.dart';
 import 'package:meditouch/features/dashboard/features/account/presentation/widgets/custom_tile.dart';
+import 'package:quickalert/models/quickalert_animtype.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import '../../logics/account_bloc.dart';
@@ -152,6 +153,7 @@ class AccountScreen extends StatelessWidget {
           QuickAlert.show(
               context: context,
               type: QuickAlertType.confirm,
+              animType: QuickAlertAnimType.scale,
               barrierDismissible: false,
               text: "Are you sure you want to logout?",
               confirmBtnColor: theme.error,
@@ -178,6 +180,12 @@ class AccountScreen extends StatelessWidget {
               leading: Icon(Icons.people, color: theme.primary),
               tileColor: Colors.transparent,
               borderRadius: 0,
+              onTap: () {
+                QuickAlert.show(
+                    context: context,
+                    type: QuickAlertType.warning,
+                    text: "This feature is not available yet");
+              },
               title: Text('View/Manage family members',
                   style: TextStyle(
                     color: theme.onSurface,
@@ -187,6 +195,12 @@ class AccountScreen extends StatelessWidget {
               leading: Icon(Icons.list_alt, color: theme.primary),
               tileColor: Colors.transparent,
               borderRadius: 0,
+              onTap: () {
+                QuickAlert.show(
+                    context: context,
+                    type: QuickAlertType.warning,
+                    text: "This feature is not available yet");
+              },
               title: Text('Your payment logs',
                   style: TextStyle(
                     color: theme.onSurface,
@@ -196,6 +210,12 @@ class AccountScreen extends StatelessWidget {
               leading: Icon(Icons.notifications, color: theme.primary),
               tileColor: Colors.transparent,
               borderRadius: 0,
+              onTap: () {
+                QuickAlert.show(
+                    context: context,
+                    type: QuickAlertType.warning,
+                    text: "This feature is not available yet");
+              },
               title: Text('Notification settings',
                   style: TextStyle(
                     color: theme.onSurface,
@@ -204,6 +224,9 @@ class AccountScreen extends StatelessWidget {
           CustomTile(
               leading: Icon(Icons.dark_mode, color: theme.primary),
               tileColor: Colors.transparent,
+              onTap: () {
+                Navigator.of(context).pushNamed('/theme');
+              },
               borderRadius: 0,
               title: Text('Appearances & Themes',
                   style: TextStyle(
