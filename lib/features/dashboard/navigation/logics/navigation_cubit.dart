@@ -6,4 +6,8 @@ class NavigationCubit extends Cubit<int>{
   void switchTo(int index){
     emit(index);
   }
+
+  void reset(){
+    emit(0);
+  }
 }
