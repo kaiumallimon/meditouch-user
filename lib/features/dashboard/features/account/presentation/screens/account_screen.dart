@@ -3,7 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:meditouch/common/widgets/custom_button.dart';
 import 'package:meditouch/features/dashboard/features/account/logics/account_states.dart';
+import 'package:meditouch/features/dashboard/features/account/presentation/widgets/custom_multipletile.dart';
 import 'package:meditouch/features/dashboard/features/account/presentation/widgets/custom_tile.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -43,6 +45,11 @@ class AccountScreen extends StatelessWidget {
                       type: QuickAlertType.error,
                       text: state.message);
                 }
+
+                if (state is AccountLogout) {
+                  Navigator.of(context)
+                      .pushNamedAndRemoveUntil('/login', (route) => false);
+                }
               },
               builder: (context, state) {
                 if (state is AccountLoading) {
@@ -72,6 +79,7 @@ class AccountScreen extends StatelessWidget {
 
                       const SizedBox(height: 20),
 
+                      // profile text
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -90,12 +98,42 @@ class AccountScreen extends StatelessWidget {
 
                       const SizedBox(height: 30),
 
+                      // helper
+                      Text('Quick Actions',
+                          style: TextStyle(
+                            color: theme.primary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          )),
+
+                      const SizedBox(height: 20),
+
                       // Account grid
                       _buildAccountGrid(context, theme),
+
+                      const SizedBox(height: 30),
+
+                      // helper
+                      Text('Preferences and Management',
+                          style: TextStyle(
+                            color: theme.primary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          )),
+
+                      const SizedBox(height: 20),
+
+                      _buildMultipleCustomTile(context, theme),
+
+                      const SizedBox(height: 30),
+
+                      // Logout button
+                      _buildLogoutButton(context, theme),
                     ],
                   );
                 }
 
+                // return empty container if none of the above
                 return const SizedBox();
               },
             ),
@@ -103,6 +141,76 @@ class AccountScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  /*Sign out button */
+  Widget _buildLogoutButton(BuildContext context, ColorScheme theme) {
+    return CustomButton(
+        size: const Size(300, 50),
+        text: "Logout",
+        onPressed: () {
+          QuickAlert.show(
+              context: context,
+              type: QuickAlertType.confirm,
+              barrierDismissible: false,
+              text: "Are you sure you want to logout?",
+              confirmBtnColor: theme.error,
+              confirmBtnText: 'Logout',
+              onConfirmBtnTap: () {
+                context.read<AccountBloc>().add(const AccountLogoutRequested());
+              });
+        },
+        bgColor: theme.error,
+        fgColor: theme.onError,
+        isLoading: false);
+  }
+
+  /* Multiple custom tile */
+
+  Widget _buildMultipleCustomTile(BuildContext context, ColorScheme theme) {
+    return CustomMultipletile(
+        backgroundColor: theme.primaryContainer,
+        borderRadius: 15,
+        seperatorColor: theme.primary.withOpacity(.1),
+        padding: 15,
+        children: [
+          CustomTile(
+              leading: Icon(Icons.people, color: theme.primary),
+              tileColor: Colors.transparent,
+              borderRadius: 0,
+              title: Text('View/Manage family members',
+                  style: TextStyle(
+                    color: theme.onSurface,
+                    fontSize: 14,
+                  ))),
+          CustomTile(
+              leading: Icon(Icons.list_alt, color: theme.primary),
+              tileColor: Colors.transparent,
+              borderRadius: 0,
+              title: Text('Your payment logs',
+                  style: TextStyle(
+                    color: theme.onSurface,
+                    fontSize: 14,
+                  ))),
+          CustomTile(
+              leading: Icon(Icons.notifications, color: theme.primary),
+              tileColor: Colors.transparent,
+              borderRadius: 0,
+              title: Text('Notification settings',
+                  style: TextStyle(
+                    color: theme.onSurface,
+                    fontSize: 14,
+                  ))),
+          CustomTile(
+              leading: Icon(Icons.dark_mode, color: theme.primary),
+              tileColor: Colors.transparent,
+              borderRadius: 0,
+              title: Text('Appearances & Themes',
+                  style: TextStyle(
+                    color: theme.onSurface,
+                    fontSize: 14,
+                  ))),
+        ]);
   }
 
   /* 1*2 grid */
@@ -123,14 +231,14 @@ class AccountScreen extends StatelessWidget {
     ];
 
     const gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-        mainAxisExtent: 100);
+      crossAxisCount: 2,
+      crossAxisSpacing: 10,
+      mainAxisSpacing: 10,
+      mainAxisExtent: 100,
+    );
 
     return SizedBox(
-      height:
-          MediaQuery.of(context).size.height * 0.6, // Adjust height as needed
+      height: 220, // Adjust height as needed
       child: GridView.builder(
         gridDelegate: gridDelegate,
         itemCount: gridItems.length,
