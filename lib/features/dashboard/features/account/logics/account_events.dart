@@ -13,3 +13,9 @@ class AccountRefreshRequested extends AccountEvents{
   List<Object> get props => [];
 }
 
+class AccountLogoutRequested extends AccountEvents{
+  const AccountLogoutRequested();
+
+  @override
+  List<Object> get props => [];
+}
