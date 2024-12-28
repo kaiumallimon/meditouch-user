@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:meditouch/common/widgets/custom_button.dart';
@@ -11,6 +10,7 @@ import 'package:meditouch/features/dashboard/features/account/presentation/widge
 import 'package:quickalert/models/quickalert_animtype.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import '../../../../navigation/logics/navigation_cubit.dart';
 import '../../logics/account_bloc.dart';
 import '../../logics/account_events.dart';
 
@@ -19,6 +19,9 @@ class AccountScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // add refresh request
+    context.read<AccountBloc>().add(const AccountRefreshRequested());
+
     // get color scheme
     final theme = Theme.of(context).colorScheme;
 
@@ -49,8 +52,11 @@ class AccountScreen extends StatelessWidget {
                 }
 
                 if (state is AccountLogout) {
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil('/login', (route) => false);
+                  // reset the navigation index;
+                  context.read<NavigationCubit>().reset();
+                  Navigator.of(context).pushReplacementNamed(
+                    '/login',
+                  );
                 }
               },
               builder: (context, state) {
@@ -84,7 +90,8 @@ class AccountScreen extends StatelessWidget {
                       // profile text
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context).pushNamed('/profile');
+                          Navigator.of(context)
+                              .pushNamed('/profile', arguments: userInfo);
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -101,39 +108,17 @@ class AccountScreen extends StatelessWidget {
                             )
                           ],
                         ),
-                      )
-                          .animate()
-                          .fade(
-                            curve: Curves.easeIn,
-                            duration: const Duration(milliseconds: 600),
-                          )
-                          .scaleXY(
-                            begin: 0.9,
-                            end: 1.0,
-                            curve: Curves.easeOut,
-                            duration: const Duration(milliseconds: 600),
-                          ),
+                      ),
 
                       const SizedBox(height: 30),
 
                       // helper
                       Text('Quick Actions',
-                              style: TextStyle(
-                                color: theme.primary,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ))
-                          .animate()
-                          .fade(
-                            curve: Curves.easeIn,
-                            duration: const Duration(milliseconds: 600),
-                          )
-                          .scaleXY(
-                            begin: 0.9,
-                            end: 1.0,
-                            curve: Curves.easeOut,
-                            duration: const Duration(milliseconds: 600),
-                          ),
+                          style: TextStyle(
+                            color: theme.primary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          )),
 
                       const SizedBox(height: 20),
 
@@ -144,22 +129,11 @@ class AccountScreen extends StatelessWidget {
 
                       // helper
                       Text('Preferences and Management',
-                              style: TextStyle(
-                                color: theme.primary,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ))
-                          .animate()
-                          .fade(
-                            curve: Curves.easeIn,
-                            duration: const Duration(milliseconds: 600),
-                          )
-                          .scaleXY(
-                            begin: 0.9,
-                            end: 1.0,
-                            curve: Curves.easeOut,
-                            duration: const Duration(milliseconds: 600),
-                          ),
+                          style: TextStyle(
+                            color: theme.primary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          )),
 
                       const SizedBox(height: 20),
 
@@ -186,48 +160,35 @@ class AccountScreen extends StatelessWidget {
   /*Sign out button */
   Widget _buildLogoutButton(BuildContext context, ColorScheme theme) {
     return CustomButton(
-            size: const Size(300, 50),
-            text: "Logout",
-            onPressed: () {
-              QuickAlert.show(
-                  context: context,
-                  type: QuickAlertType.confirm,
-                  animType: QuickAlertAnimType.scale,
-                  barrierDismissible: false,
-                  text: "Are you sure you want to logout?",
-                  confirmBtnColor: theme.error,
-                  confirmBtnText: 'Logout',
-                  onConfirmBtnTap: () {
-                    context
-                        .read<AccountBloc>()
-                        .add(const AccountLogoutRequested());
-                  });
-            },
-            bgColor: theme.error,
-            fgColor: theme.onError,
-            isLoading: false)
-        .animate()
-        .fade(
-          curve: Curves.easeIn,
-          duration: const Duration(milliseconds: 600),
-        )
-        .scaleXY(
-          begin: 0.9,
-          end: 1.0,
-          curve: Curves.easeOut,
-          duration: const Duration(milliseconds: 600),
-        );
+        size: const Size(300, 50),
+        text: "Logout",
+        onPressed: () {
+          QuickAlert.show(
+              context: context,
+              type: QuickAlertType.confirm,
+              animType: QuickAlertAnimType.scale,
+              barrierDismissible: false,
+              text: "Are you sure you want to logout?",
+              confirmBtnColor: theme.error,
+              confirmBtnText: 'Logout',
+              onConfirmBtnTap: () {
+                context.read<AccountBloc>().add(const AccountLogoutRequested());
+              });
+        },
+        bgColor: theme.error,
+        fgColor: theme.onError,
+        isLoading: false);
   }
 
   /* Multiple custom tile */
 
   Widget _buildMultipleCustomTile(BuildContext context, ColorScheme theme) {
     return CustomMultipletile(
-            backgroundColor: theme.primaryContainer,
-            borderRadius: 15,
-            seperatorColor: theme.primary.withOpacity(.1),
-            padding: 15,
-            children: [
+        backgroundColor: theme.primaryContainer,
+        borderRadius: 15,
+        seperatorColor: theme.primary.withOpacity(.1),
+        padding: 15,
+        children: [
           CustomTile(
               leading: Icon(Icons.people, color: theme.primary),
               tileColor: Colors.transparent,
@@ -285,18 +246,7 @@ class AccountScreen extends StatelessWidget {
                     color: theme.onSurface,
                     fontSize: 14,
                   ))),
-        ])
-        .animate()
-        .fade(
-          curve: Curves.easeIn,
-          duration: const Duration(milliseconds: 600),
-        )
-        .scaleXY(
-          begin: 0.9,
-          end: 1.0,
-          curve: Curves.easeOut,
-          duration: const Duration(milliseconds: 600),
-        );
+        ]);
   }
 
   /* 1*2 grid */
@@ -365,18 +315,7 @@ class AccountScreen extends StatelessWidget {
           );
         },
       ),
-    )
-        .animate()
-        .fade(
-          curve: Curves.easeIn,
-          duration: const Duration(milliseconds: 600),
-        )
-        .scaleXY(
-          begin: 0.9,
-          end: 1.0,
-          curve: Curves.easeOut,
-          duration: const Duration(milliseconds: 600),
-        );
+    );
   }
 
   /* Profile Picture */
@@ -424,18 +363,7 @@ class AccountScreen extends StatelessWidget {
           ),
         )
       ],
-    )
-        .animate()
-        .fade(
-          curve: Curves.easeIn,
-          duration: const Duration(milliseconds: 600),
-        )
-        .scaleXY(
-          begin: 0.9,
-          end: 1.0,
-          curve: Curves.easeOut,
-          duration: const Duration(milliseconds: 600),
-        );
+    );
   }
 
   /* Appbar text */
@@ -447,17 +375,6 @@ class AccountScreen extends StatelessWidget {
           fontSize: 20,
           fontWeight: FontWeight.bold,
           height: 1),
-    )
-        .animate()
-        .fade(
-          curve: Curves.easeIn,
-          duration: const Duration(milliseconds: 600),
-        )
-        .scaleXY(
-          begin: 0.9,
-          end: 1.0,
-          curve: Curves.easeOut,
-          duration: const Duration(milliseconds: 600),
-        );
+    );
   }
 }
