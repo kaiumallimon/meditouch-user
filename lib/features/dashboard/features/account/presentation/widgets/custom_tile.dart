@@ -9,6 +9,7 @@ class CustomTile extends StatelessWidget {
       required this.title,
       this.subtitle,
       this.trailing,
+      this.padding = 0,
       this.onTap});
 
   final Color tileColor;
@@ -18,24 +19,29 @@ class CustomTile extends StatelessWidget {
   final Widget? subtitle;
   final Widget? trailing;
   final Function? onTap;
+  final double padding;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: tileColor,
-        borderRadius: BorderRadius.circular(borderRadius),
-      ),
-      child: ListTile(
-        leading: leading,
-        title: title,
-        subtitle: subtitle,
-        trailing: trailing,
-        onTap: () {
-          if (onTap != null) {
-            onTap!();
-          }
-        },
+    return GestureDetector(
+      onTap: onTap as void Function()?,
+      child: Container(
+        padding: EdgeInsets.all(padding),
+        decoration: BoxDecoration(
+          color: tileColor,
+          borderRadius: BorderRadius.circular(borderRadius),
+        ),
+        child: ListTile(
+          splashColor: Colors.transparent,
+          hoverColor: Colors.transparent,
+          selectedColor: Colors.transparent,
+
+          // contentPadding: EdgeInsets.all(padding),
+          leading: leading,
+          title: title,
+          subtitle: subtitle,
+          trailing: trailing,
+        ),
       ),
     );
   }
