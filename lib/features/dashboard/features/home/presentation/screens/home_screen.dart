@@ -52,8 +52,9 @@ class HomeScreen extends StatelessWidget {
             final userInfo = state.userInfo;
 
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
               child: CustomScrollView(
+                physics: const BouncingScrollPhysics(),
                 slivers: [
                   _buildSliverAppbar(context, theme, userInfo),
                   SliverList(
@@ -63,6 +64,16 @@ class HomeScreen extends StatelessWidget {
                         _buildDateAndTime(theme),
                         const SizedBox(height: 10),
                         _buildGreeting(theme, userInfo['name']),
+                        const SizedBox(height: 20),
+                        _buildAppointmentBox(theme, 2),
+                        const SizedBox(height: 20),
+                        _buildAppointmentBox(theme, 2),
+                        const SizedBox(height: 20),
+                        _buildAppointmentBox(theme, 2),
+                        const SizedBox(height: 20),
+                        _buildAppointmentBox(theme, 2),
+                        const SizedBox(height: 20),
+                        _buildAppointmentBox(theme, 2),
                         const SizedBox(height: 20),
                         _buildAppointmentBox(theme, 2),
                       ],
@@ -174,8 +185,9 @@ class HomeScreen extends StatelessWidget {
       pinned: false,
       snap: false,
       elevation: 0,
-      surfaceTintColor: theme.surface,
+      surfaceTintColor: Colors.transparent,
       leading: null,
+      backgroundColor: theme.surfaceContainer,
       automaticallyImplyLeading: false,
       flexibleSpace: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -205,7 +217,8 @@ class HomeScreen extends StatelessWidget {
                   height: 40,
                   width: 40,
                   fit: BoxFit.cover,
-                  placeholder: (context, url) => const CupertinoActivityIndicator(),
+                  placeholder: (context, url) =>
+                      const CupertinoActivityIndicator(),
                   errorWidget: (context, url, error) =>
                       const Icon(Icons.person), // Fallback icon
                 ),
@@ -243,5 +256,3 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
-
-
