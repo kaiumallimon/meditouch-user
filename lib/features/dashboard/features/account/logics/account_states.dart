@@ -25,3 +25,5 @@ class AccountError extends AccountStates {
   @override
   List<Object> get props => [message];
 }
+
+class AccountLogout extends AccountStates {}
