@@ -57,6 +57,13 @@ class LoginScreen extends StatelessWidget {
           emailController.clear();
           passwordController.clear();
 
+          SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+            statusBarColor: theme.surface,
+            statusBarIconBrightness: theme.brightness,
+            systemNavigationBarColor: theme.surface,
+            systemNavigationBarIconBrightness: theme.brightness,
+          ));
+
           Navigator.pushReplacementNamed(context, '/dashboard');
         }
 
