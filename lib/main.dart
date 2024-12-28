@@ -21,6 +21,8 @@ import 'package:meditouch/features/startup/splash/splash.dart';
 import 'package:meditouch/features/startup/welcome/logics/welcome_cubit.dart';
 import 'package:meditouch/features/startup/welcome/welcome.dart';
 
+import 'features/dashboard/features/account/logics/account_bloc.dart';
+import 'features/dashboard/features/account/logics/account_events.dart';
 import 'features/dashboard/features/home/logics/home_event.dart';
 import 'features/dashboard/features/profile/profile.dart';
 
@@ -50,23 +52,37 @@ class MediTouchApp extends StatelessWidget {
     // initialize the blocs using multiblocprovider
     return MultiBlocProvider(
       providers: [
+        // splash bloc
         BlocProvider<SplashBloc>(create: (_) => SplashBloc()),
+        // welcome cubit
         BlocProvider<WelcomeCubit>(create: (_) => WelcomeCubit()),
+        // register cubits
         BlocProvider<DateCubit>(create: (_) => DateCubit()),
+        // gender cubit
         BlocProvider<GenderCubit>(create: (_) => GenderCubit()),
+        // imagepicker cubit
         BlocProvider<ImagePickerCubit>(create: (_) => ImagePickerCubit()),
+        // register bloc
         BlocProvider<RegisterBloc>(
           create: (_) => RegisterBloc(),
         ),
+
+        // login bloc
         BlocProvider<LoginBloc>(
-          create: (_) => LoginBloc(
-            loginRepository: LoginRepository()
-          ),
+          create: (_) => LoginBloc(loginRepository: LoginRepository()),
         ),
+        // navigation cubit
         BlocProvider<NavigationCubit>(create: (_) => NavigationCubit()),
+
+        // home bloc
         BlocProvider<HomeBloc>(
             create: (_) =>
                 HomeBloc(HiveRepository())..add(HomeRefreshRequested())),
+
+        // account bloc
+        BlocProvider<AccountBloc>(
+            create: (_) => AccountBloc(hiveRepository: HiveRepository())
+              ..add(const AccountRefreshRequested())),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
