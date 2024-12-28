@@ -118,10 +118,12 @@ meditouch-user
 │   │   │   │   │   ├── logics
 │   │   │   │   │   │   ├── account_bloc.dart
 │   │   │   │   │   │   ├── account_events.dart
-│   │   │   │   │   │   └── account_states.dart
+│   │   │   │   │   │   ├── account_states.dart
+│   │   │   │   │   │   └── theme_cubit.dart
 │   │   │   │   │   └── presentation
 │   │   │   │   │       ├── screens
-│   │   │   │   │       │   └── account_screen.dart
+│   │   │   │   │       │   ├── account_screen.dart
+│   │   │   │   │       │   └── theme_screen.dart
 │   │   │   │   │       └── widgets
 │   │   │   │   │           ├── custom_multipletile.dart
 │   │   │   │   │           └── custom_tile.dart
