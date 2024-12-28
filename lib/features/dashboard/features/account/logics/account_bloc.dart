@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meditouch/features/dashboard/features/account/logics/account_states.dart';
-
 import '../../../../../common/repository/hive_repository.dart';
 import 'account_events.dart';
 
@@ -11,7 +10,6 @@ class AccountBloc extends Bloc<AccountEvents, AccountStates> {
     on<AccountRefreshRequested>(_onRefresh);
     on<AccountLogoutRequested>(_logout);
   }
-
 
   /* Method to refresh the user account panel */
 
@@ -25,7 +23,6 @@ class AccountBloc extends Bloc<AccountEvents, AccountStates> {
       emit(AccountError('Failed to fetch data: ${e.toString()}'));
     }
   }
-
 
 /* Method to logout the user */
   Future<void> _logout(
