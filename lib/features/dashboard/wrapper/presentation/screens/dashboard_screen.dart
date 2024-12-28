@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meditouch/features/dashboard/features/account/presentation/screens/account_screen.dart';
 import 'package:meditouch/features/dashboard/features/appointments/appointments.dart';
 import 'package:meditouch/features/dashboard/features/epharmacy/epharmacy.dart';
 import 'package:meditouch/features/dashboard/features/home/home.dart';
@@ -22,7 +23,7 @@ class DashboardScreen extends StatelessWidget {
 
     // set status bar and nav themes
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: colorScheme.surface,
+        statusBarColor: colorScheme.surfaceContainer,
         statusBarIconBrightness: colorScheme.brightness,
         systemNavigationBarColor: Color.alphaBlend(
           colorScheme.primary.withOpacity(0.08), // Tint effect
@@ -32,13 +33,10 @@ class DashboardScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: colorScheme.surfaceContainer,
         body: BlocBuilder<NavigationCubit, int>(
             builder: (context, state) => screens[state]),
         bottomNavigationBar: const CustomFloatingNavigationBar(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          child: const Icon(Icons.menu),
-        ),
       ),
     );
   }
@@ -48,6 +46,6 @@ class DashboardScreen extends StatelessWidget {
     EpharmacyScreen(),
     AppointmentScreen(),
     MessagesScreen(),
-    Placeholder()
+    AccountScreen()
   ];
 }
