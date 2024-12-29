@@ -49,3 +49,7 @@ app.*.map.json
 
 # ignore the architecture.txt
 architecture.txt
+
+
+# ignore usage directory
+/usage/
