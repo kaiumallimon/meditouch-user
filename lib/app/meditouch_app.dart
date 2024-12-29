@@ -23,6 +23,7 @@ import '../common/repository/hive_repository.dart';
 import '../features/dashboard/features/account/logics/account_bloc.dart';
 import '../features/dashboard/features/account/logics/account_events.dart';
 import '../features/dashboard/features/account/logics/theme_cubit.dart';
+import '../features/dashboard/features/epharmacy/logics/epharmacy_bloc.dart';
 import '../features/dashboard/features/home/logics/home_event.dart';
 import '../features/dashboard/features/profile/data/repository/profile_repository.dart';
 import '../features/dashboard/features/profile/logics/profile_bloc.dart';
@@ -77,6 +78,11 @@ class MediTouchApp extends StatelessWidget {
           create: (_) => ProfileBloc(
             profileRepository: ProfileRepository(),
           ),
+        ),
+
+        // ephearmacy bloc
+        BlocProvider<EpharmacyBloc>(
+          create: (_) => EpharmacyBloc(),
         ),
       ],
       child: BlocBuilder<ThemeCubit, bool>(
