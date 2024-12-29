@@ -26,7 +26,11 @@ class AccountScreen extends StatelessWidget {
     final theme = Theme.of(context).colorScheme;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      padding: const EdgeInsets.only(
+        top: 10,
+        left: 20,
+        right: 20,
+      ),
       color: theme.surfaceContainer,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
