@@ -15,7 +15,8 @@ class EpharmacyScreen extends StatelessWidget {
     final theme = Theme.of(context).colorScheme;
 
     // request refresh
-    BlocProvider.of<EpharmacyBloc>(context).add(const EpharmacyRefreshEvent());
+    BlocProvider.of<EpharmacyBloc>(context)
+        .add(const EpharmacyRefreshEvent(currentPage: 1));
 
     return Padding(
       padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
@@ -30,9 +31,7 @@ class EpharmacyScreen extends StatelessWidget {
 
           // body
           Expanded(
-            child: EpharmacyScrollableBody(
-              theme: theme,
-            ),
+            child: buildCustomBody(context, theme),
           ),
         ],
       ),
