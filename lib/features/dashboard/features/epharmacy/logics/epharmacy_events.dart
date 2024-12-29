@@ -8,19 +8,12 @@ abstract class EpharmacyEvents extends Equatable {
 }
 
 class EpharmacyRefreshEvent extends EpharmacyEvents {
-  const EpharmacyRefreshEvent();
+  const EpharmacyRefreshEvent({
+    required this.currentPage,
+  }) : super();
+
+  final int currentPage;
 
   @override
-  List<Object> get props => [];
-}
-
-
-
-class EpharmacyLoadMoreEvent extends EpharmacyEvents {
-  final int page;
-
-  const EpharmacyLoadMoreEvent(this.page);
-
-  @override
-  List<Object> get props => [page];
+  List<Object> get props => [currentPage];
 }
