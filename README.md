@@ -201,3 +201,10 @@ meditouch-user
 │   pubspec.yaml
 │   README.md
 ```
+
+### .env Structure:
+
+```bash
+ZEROBOUNCE_API_KEY=??
+
+```
