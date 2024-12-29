@@ -9,10 +9,7 @@ import 'epharmacy_events.dart';
 class EpharmacyBloc extends Bloc<EpharmacyEvents, EpharmacyStates> {
   EpharmacyBloc() : super(const EpharmacyInitialState()) {
     on<EpharmacyRefreshEvent>(_refreshEpharmacy);
-    on<EpharmacyLoadMoreEvent>(_loadMoreMedicines);
   }
-
-  int _currentPage = 1; // Track current page for pagination
 
   Future<void> _refreshEpharmacy(
       EpharmacyRefreshEvent event, Emitter<EpharmacyStates> emit) async {
@@ -22,41 +19,18 @@ class EpharmacyBloc extends Bloc<EpharmacyEvents, EpharmacyStates> {
     final buildIdData = await SharedRepository().getBuildId();
 
     // request data from the server
-    final MedicinesResponse? medicineResponse =
-        await EpharmacyRepository().getMedicines(buildIdData, 1);
+    final MedicinesResponse? medicineResponse = await EpharmacyRepository()
+        .getMedicines(buildIdData, event.currentPage);
 
     if (medicineResponse != null) {
-      _currentPage = 1; // Reset the page number when refreshing
       emit(EpharmacySuccessState(
+        currentPage: event.currentPage,
         medicines: medicineResponse.medicines,
         totalPages: medicineResponse.totalPages, // Pass totalPages here
         message: 'Success',
       ));
     } else {
       emit(const EpharmacyErrorState(message: 'Error occurred'));
-    }
-  }
-
-  Future<void> _loadMoreMedicines(
-      EpharmacyLoadMoreEvent event, Emitter<EpharmacyStates> emit) async {
-    if (state is EpharmacySuccessState) {
-      final currentState = state as EpharmacySuccessState;
-      final currentMedicines = currentState.medicines;
-
-      // Fetch the next page
-      final buildIdData = await SharedRepository().getBuildId();
-      final response =
-          await EpharmacyRepository().getMedicines(buildIdData, event.page);
-
-      if (response != null) {
-        emit(EpharmacySuccessState(
-          medicines: currentMedicines + response.medicines,
-          totalPages: response.totalPages,
-          message: 'Success',
-        ));
-      } else {
-        emit(const EpharmacyErrorState(message: 'Failed to load more data'));
-      }
     }
   }
 }
