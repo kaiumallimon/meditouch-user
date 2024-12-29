@@ -34,13 +34,15 @@ class EpharmacyErrorState extends EpharmacyStates {
 class EpharmacySuccessState extends EpharmacyStates {
   final String message;
   final int totalPages;
+  final int currentPage;
   final List<Medicine> medicines;
 
   const EpharmacySuccessState(
       {required this.message,
       required this.medicines,
+      required this.currentPage,
       required this.totalPages});
 
   @override
-  List<Object> get props => [message, totalPages, medicines];
+  List<Object> get props => [message, totalPages, medicines, currentPage];
 }
