@@ -11,6 +11,8 @@ class EpharmacyRepository {
 
     final Uri uri = Uri.parse(url);
 
+    print("Current page: $page");
+
     try {
       final response = await http.get(uri);
       if (response.statusCode == 200) {
