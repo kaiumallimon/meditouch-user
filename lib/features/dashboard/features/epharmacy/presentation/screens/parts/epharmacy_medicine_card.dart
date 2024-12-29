@@ -52,58 +52,58 @@ Container BuildMedicineCard(ColorScheme theme, Medicine medicine,
         ),
 
         // Medicine name
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: Text(
-            medicine.medicineName,
-            style: const TextStyle(fontWeight: FontWeight.bold, height: 1),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-
-        // strength and unit size
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Text(
-            medicine.strength,
-            style: const TextStyle(color: Colors.grey),
-          ),
-        ),
-
-        // Price section: original price and discounted price
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "৳${unitPrice.toStringAsFixed(1)} ($unit)",
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                    decoration: TextDecoration.lineThrough,
-                    decorationColor: Colors.grey),
-              ),
-              // Discounted price
-              Text(
-                "৳${discountedPrice.toStringAsFixed(2)} ($unit)",
-                style: TextStyle(
-                  fontSize: 13,
-                  color: theme.primary,
-                  fontWeight: FontWeight.bold,
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "${medicine.medicineName} ${medicine.strength}",
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, height: 1, fontSize: 12),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              // Availability status
-              // Icon(
-              //   medicine.isAvailable
-              //       ? Icons.check_circle
-              //       : Icons.cancel,
-              //   color: medicine.isAvailable ? Colors.green : Colors.red,
-              // ),
-            ],
+                const SizedBox(height: 5),
+                // Manufacturer name
+                Text(
+                  medicine.manufacturerName,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: theme.primary.withOpacity(.5),
+                  ),
+                ),
+                const Spacer(),
+                // Price section: original price and discounted price
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "৳${unitPrice.toStringAsFixed(1)}",
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                          decoration: TextDecoration.lineThrough,
+                          decorationColor: Colors.grey),
+                    ),
+                    // Discounted price
+                    Text(
+                      "৳${discountedPrice.toStringAsFixed(2)}",
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: theme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ],
