@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:meditouch/common/repository/hive_repository.dart';
+import 'package:http/http.dart' as http;
 
 class LoginRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -89,6 +93,56 @@ class LoginRepository {
       // Handle errors during logout
       print('Error during logout: $e');
       // Optionally, you can show a message or log the error
+    }
+  }
+
+  // function to get the build ID from the server
+  Future<Map<String, String>> getEpharmacyBuildId() async {
+    try {
+      // Get URL from .env
+      final String url = dotenv.env['EPHARMACY_BUILD_ID_URL'] ?? '';
+
+      // Check if the URL is not empty
+      if (url.isEmpty) {
+        print("ID: ${dotenv.env['EPHARMACY_BUILD_ID_URL']}");
+        return {
+          "status": "error",
+          "error":
+              "EPHARMACY_BUILD_ID_URL is not set in the environment variables."
+        };
+      }
+
+      // Make a GET request
+      final response = await http.get(Uri.parse(url), headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': dotenv.env['SERVER_API_KEY'] ?? '',
+      });
+
+      // Check if the response is successful
+      if (response.statusCode == 200) {
+        // Parse the response body
+        final responseBody = jsonDecode(response.body);
+
+        // Get the build ID
+        final String buildId = responseBody['buildId'];
+
+        // Return the build ID
+        return {
+          "status": "success",
+          "build_id": buildId,
+        };
+      } else {
+        return {
+          "status": "error",
+          "error":
+              "Failed to fetch build ID. Status code: ${response.statusCode}"
+        };
+      }
+    } catch (e) {
+      return {
+        "status": "error",
+        "error": "An unexpected error occurred. Please try again."
+      };
     }
   }
 }
