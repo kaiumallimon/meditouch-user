@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meditouch/common/repository/hive_repository.dart';
 import 'package:meditouch/features/auth/login/data/repository/login_repository.dart';
 import 'package:meditouch/features/auth/login/logic/login_event.dart';
 import 'package:meditouch/features/auth/login/logic/login_state.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final LoginRepository loginRepository;
@@ -27,20 +30,36 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
     // Handle repository response
     if (response.containsKey('status') && response['status'] == 'success') {
-      final userInfo = response['user'];
+      // get the build id
+      final buildIdData = await LoginRepository().getEpharmacyBuildId();
 
-      // Save user info to Hive
-      await HiveRepository().saveUserInfo(
-        userInfo['id'],
-        userInfo['name'],
-        userInfo['email'],
-        userInfo['gender'],
-        userInfo['dob'],
-        userInfo['image'],
-        userInfo['phone'],
-      );
+      if (buildIdData.containsKey('status') &&
+          buildIdData['status'] == 'success') {
+        // Save the build id to shared preferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('medeasyId', buildIdData['build_id']!);
 
-      emit(LoginSuccessState(response['message']));
+        print(
+            'Build ID: ${buildIdData['build_id']} Saved to Shared Preferences');
+
+        final userInfo = response['user'];
+
+        // Save user info to Hive
+        await HiveRepository().saveUserInfo(
+          userInfo['id'],
+          userInfo['name'],
+          userInfo['email'],
+          userInfo['gender'],
+          userInfo['dob'],
+          userInfo['image'],
+          userInfo['phone'],
+        );
+
+        emit(LoginSuccessState(response['message']));
+      } else {
+        emit(LoginErrorState(buildIdData['error']!));
+        return;
+      }
     } else {
       // Handle error message
       final errorMessage = response.containsKey('error')
