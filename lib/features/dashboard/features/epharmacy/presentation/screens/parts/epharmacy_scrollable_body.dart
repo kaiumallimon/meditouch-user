@@ -1,104 +1,158 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meditouch/common/widgets/custom_button.dart';
+import 'package:meditouch/features/dashboard/features/epharmacy/logics/epharmacy_events.dart';
 import 'package:quickalert/quickalert.dart';
 
-import '../../../../../../../common/utils/epharmacy_util.dart';
 import '../../../logics/epharmacy_bloc.dart';
-import '../../../logics/epharmacy_events.dart';
 import '../../../logics/epharmacy_states.dart';
 import 'epharmacy_medicine_card.dart';
-import 'epharmacy_searchbar.dart';
 
-class EpharmacyScrollableBody extends StatelessWidget {
-  final ColorScheme theme;
+Widget buildCustomBody(BuildContext context, ColorScheme theme) {
+  return BlocConsumer<EpharmacyBloc, EpharmacyStates>(
+    listener: (context, state) {
+      if (state is EpharmacyErrorState) {
+        QuickAlert.show(
+            context: context, type: QuickAlertType.error, text: state.message);
+      }
+    },
+    builder: (context, state) {
+      // loading state
+      if (state is EpharmacyLoadingState) {
+        return Center(
+          child: CupertinoActivityIndicator(
+            radius: 15,
+            color: theme.primary,
+          ),
+        );
+      }
 
-  const EpharmacyScrollableBody({required this.theme, super.key});
+      // loaded state
+      if (state is EpharmacySuccessState) {
+        return CustomScrollView(
+          physics: const BouncingScrollPhysics(),
+          slivers: [
+            // Search Bar
+            buildSearchBar(context, theme),
 
-  @override
-  Widget build(BuildContext context) {
-    final ScrollController scrollController = ScrollController();
+            //space
+            const SliverToBoxAdapter(child: SizedBox(height: 12)),
 
-    return BlocConsumer<EpharmacyBloc, EpharmacyStates>(
-      listener: (context, state) {
-        if (state is EpharmacyErrorState) {
-          // Show error alert
-          QuickAlert.show(
-              context: context,
-              type: QuickAlertType.error,
-              text: state.message);
-        }
-      },
-      builder: (context, state) {
-        if (state is EpharmacyLoadingState) {
-          return Center(
-            child: CupertinoActivityIndicator(radius: 12, color: theme.primary),
-          );
-        }
+            SliverToBoxAdapter(
+                child: Text(
+              'Showing ${state.currentPage} of ${state.totalPages} Pages',
+              style: TextStyle(
+                  color: theme.onSurface, fontWeight: FontWeight.normal),
+            )),
 
-        if (state is EpharmacySuccessState) {
-          return CustomScrollView(
-            controller: scrollController
-              ..addListener(() {
-                if (scrollController.position.atEdge &&
-                    scrollController.position.pixels != 0) {
-                  context
-                      .read<EpharmacyBloc>()
-                      .add(EpharmacyLoadMoreEvent(getNextPage(state)));
-                }
-              }),
-            physics: const BouncingScrollPhysics(),
-            slivers: [
-              // Search Bar
-              buildSearchBar(context, theme),
+            const SliverToBoxAdapter(child: SizedBox(height: 12)),
 
-              // Space
-              const SliverToBoxAdapter(child: SizedBox(height: 10)),
+            // Grid View
+            SliverGrid(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final medicine = state.medicines[index];
 
-              // Medicines Grid
-              SliverGrid(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final medicine = state.medicines[index];
-                    return BuildMedicineCard(
-                      theme,
-                      medicine,
-                      getUnitPrice(medicine),
-                      getUnit(medicine),
-                      getDiscountedPrice(getUnitPrice(medicine), medicine),
-                    );
-                  },
-                  childCount: state.medicines.length,
-                ),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  childAspectRatio: .68,
-                ),
+                  // Select the price based on the unit size (e.g., first unit size)
+                  final unitPrice = medicine.unitPrices.isNotEmpty
+                      ? medicine.unitPrices.first.price
+                      : 0.0;
+                  final String unit = medicine.unitPrices.isNotEmpty
+                      ? medicine.unitPrices.first.unit
+                      : '';
+
+                  // Calculate the discounted price if applicable
+                  final discountedPrice =
+                      unitPrice - (unitPrice * (medicine.discountValue / 100));
+
+                  return BuildMedicineCard(
+                    theme,
+                    medicine,
+                    unitPrice,
+                    unit,
+                    discountedPrice,
+                  );
+                },
+                childCount: state.medicines.length,
               ),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                mainAxisExtent: 273,
+              ),
+            ),
 
-              // Loading Indicator for more data
-              if (state.medicines.length < state.totalPages)
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: Center(
-                      child: CupertinoActivityIndicator(
-                          radius: 12, color: theme.primary),
-                    ),
-                  ),
-                ),
-            ],
-          );
-        }
+            const SliverToBoxAdapter(child: SizedBox(height: 20)),
 
-        if (state is EpharmacyErrorState) {
-          return Center(child: Text(state.message));
-        }
+            // Next Page Button
+            SliverToBoxAdapter(
+              child: Center(
+                  child: CustomButton(
+                      size: const Size(120, 35),
+                      text: "Next",
+                      onPressed: () {
+                        context.read<EpharmacyBloc>().add(EpharmacyRefreshEvent(
+                              currentPage: state.currentPage + 1,
+                            ));
+                      },
+                      bgColor: theme.primary,
+                      fgColor: theme.onPrimary,
+                      isLoading: false)),
+            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 20)),
+          ],
+        );
+      }
 
-        return const SizedBox();
+      // error state
+      if (state is EpharmacyErrorState) {
+        return Center(
+          child: Text(state.message),
+        );
+      }
+
+      // return empty container
+      return SizedBox();
+    },
+  );
+}
+
+Widget buildSearchBar(BuildContext context, ColorScheme theme) {
+  return SliverToBoxAdapter(
+    child: InkWell(
+      splashColor: theme.primary.withOpacity(.1),
+      borderRadius: BorderRadius.circular(10),
+      onTap: () {
+        // QuickAlert.show(
+        //   context: context,
+        //   type: QuickAlertType.info,
+        //   text: 'Search feature is not available yet',
+        // );
       },
-    );
-  }
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+        decoration: BoxDecoration(
+          border: Border.all(color: theme.primary.withOpacity(.1), width: 2),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              Icons.search,
+              color: theme.primary.withOpacity(.5),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              'Search for medicines',
+              style: TextStyle(
+                  color: theme.primary.withOpacity(.5),
+                  fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }
