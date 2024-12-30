@@ -13,7 +13,7 @@ class CustomButton extends StatelessWidget {
       required this.isLoading});
   final Size size;
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Color bgColor;
   final Color fgColor;
   final bool isLoading;
