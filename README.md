@@ -205,6 +205,9 @@ meditouch-user
 ### .env Structure:
 
 ```bash
-ZEROBOUNCE_API_KEY=??
+ZEROBOUNCE_API_KEY=f88dcd8cb8034dbd968ac2a294eb07ac
+EPHARMACY_BUILD_ID_URL = https://meditouch.vercel.app/medeasy/build/id
+SERVER_API_KEY = p5xBzm5vWlni1f9VertqKkdOgUJaQCcX
+EPHARMACY_BASE_URL = https://medeasy.health/_next/data/
 
 ```
