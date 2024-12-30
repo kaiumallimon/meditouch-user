@@ -49,4 +49,9 @@ final providers = [
 
   // add the detailed medicine bloc
   BlocProvider<DetailedMedicineBloc>(create: (_) => DetailedMedicineBloc()),
+
+  // add the search bloc
+  BlocProvider<EpharmacySearchBloc>(
+    create: (_) => EpharmacySearchBloc(),
+  ),
 ];
