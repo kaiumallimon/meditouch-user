@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../../../../../../../common/utils/epharmacy_util.dart';
 import '../../../../../../../common/widgets/custom_button.dart';
@@ -62,11 +64,17 @@ Row detailedMedicinePricingCart(
           size: const Size(120, 35),
           textSize: 12,
           text: "Add To Cart",
-          onPressed: () {},
+          onPressed: () {
+            QuickAlert.show(
+              barrierDismissible: false,
+              context: context,
+              type: QuickAlertType.info,
+              text: 'Yet to implement',
+            );
+          },
           bgColor: theme.primary,
           fgColor: theme.onPrimary,
           isLoading: false)
     ],
   );
 }
-
