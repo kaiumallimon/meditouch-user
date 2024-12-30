@@ -5,7 +5,8 @@ import 'package:path_provider/path_provider.dart';
 class HiveRepository {
   static const String _userInfoBox = 'userInfoBox';
   static const String _userInfoKey = 'userInfo';
-
+  static const String _userSearchBox = 'userSearchBox';
+  static const String _searchHistoryKey = 'searchHistory';
 
   // ValueListenable to listen for changes in the user info box
   ValueListenable<Box<Map>> get userInfoBoxListener {
@@ -20,6 +21,11 @@ class HiveRepository {
     // Ensure the box is opened only once
     if (!Hive.isBoxOpen(_userInfoBox)) {
       await Hive.openBox<Map>(_userInfoBox);
+    }
+
+    // Ensure the box is opened only once
+    if (!Hive.isBoxOpen(_userSearchBox)) {
+      await Hive.openBox<List<String>>(_userSearchBox);
     }
   }
 
@@ -64,6 +70,49 @@ class HiveRepository {
     if (userInfo is Map) {
       userInfo.addAll(updatedData);
       await userInfoBox.put(_userInfoKey, userInfo);
+    }
+  }
+
+  // Save user search history to Hive
+  Future<void> saveUserSearchHistory(String searchQuery) async {
+    final searchBox = Hive.box<List<String>>(_userSearchBox);
+    final history = searchBox.get(_searchHistoryKey, defaultValue: <String>[])!;
+
+    // Avoid duplicates in history
+    if (!history.contains(searchQuery)) {
+      history.add(searchQuery);
+      await searchBox.put(_searchHistoryKey, history);
+
+      print('Search history saved:  $history');
+    }
+  }
+
+  // Retrieve user search history from Hive
+  Future<List<String>> getUserSearchHistory() async {
+    final searchBox = Hive.box<List<String>>(_userSearchBox);
+    return searchBox.get(_searchHistoryKey, defaultValue: <String>[])!;
+  }
+
+  // retrieve user search history from Hive realtime
+  ValueListenable<Box<List<String>>> getUserSearchHistoryListenable() {
+    final searchBox = Hive.box<List<String>>(_userSearchBox);
+    return searchBox.listenable();
+  }
+
+  // Delete all user search history
+  Future<void> deleteUserSearchHistory() async {
+    final searchBox = Hive.box<List<String>>(_userSearchBox);
+    await searchBox.delete(_searchHistoryKey);
+  }
+
+  // Delete a specific search query from history
+  Future<void> deleteSpecificSearchQuery(String searchQuery) async {
+    final searchBox = Hive.box<List<String>>(_userSearchBox);
+    final history = searchBox.get(_searchHistoryKey, defaultValue: <String>[])!;
+
+    if (history.contains(searchQuery)) {
+      history.remove(searchQuery);
+      await searchBox.put(_searchHistoryKey, history);
     }
   }
 }
