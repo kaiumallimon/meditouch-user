@@ -8,6 +8,7 @@ import 'package:quickalert/quickalert.dart';
 import '../../../logics/epharmacy_bloc.dart';
 import '../../../logics/epharmacy_states.dart';
 import '../detailed_medicine.dart';
+import '../epharmacy_search.dart';
 import 'epharmacy_medicine_card.dart';
 
 Widget buildCustomBody(BuildContext context, ColorScheme theme) {
@@ -102,8 +103,26 @@ Widget buildCustomBody(BuildContext context, ColorScheme theme) {
 
             // Next Page Button
             SliverToBoxAdapter(
-              child: Center(
-                  child: CustomButton(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomButton(
+                      size: const Size(120, 35),
+                      text: "Previous",
+                      onPressed: state.currentPage > 1
+                          ? () {
+                              context
+                                  .read<EpharmacyBloc>()
+                                  .add(EpharmacyRefreshEvent(
+                                    currentPage: state.currentPage - 1,
+                                  ));
+                            }
+                          : null,
+                      bgColor: Colors.grey,
+                      fgColor: Colors.white,
+                      isLoading: false),
+                  const SizedBox(width: 10),
+                  CustomButton(
                       size: const Size(120, 35),
                       text: "Next",
                       onPressed: () {
@@ -113,7 +132,9 @@ Widget buildCustomBody(BuildContext context, ColorScheme theme) {
                       },
                       bgColor: theme.primary,
                       fgColor: theme.onPrimary,
-                      isLoading: false)),
+                      isLoading: false),
+                ],
+              ),
             ),
             const SliverToBoxAdapter(child: SizedBox(height: 20)),
           ],
@@ -139,11 +160,8 @@ Widget buildSearchBar(BuildContext context, ColorScheme theme) {
       splashColor: theme.primary.withOpacity(.1),
       borderRadius: BorderRadius.circular(10),
       onTap: () {
-        // QuickAlert.show(
-        //   context: context,
-        //   type: QuickAlertType.info,
-        //   text: 'Search feature is not available yet',
-        // );
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => EpharmacySearchScreen()));
       },
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
