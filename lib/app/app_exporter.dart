@@ -1,4 +1,4 @@
-export  'package:flutter/material.dart';
+export 'package:flutter/material.dart';
 export 'package:flutter_bloc/flutter_bloc.dart';
 export 'package:meditouch/common/themes/theme.dart';
 export 'package:meditouch/features/auth/login/data/repository/login_repository.dart';
@@ -26,4 +26,5 @@ export '../features/dashboard/features/epharmacy/logics/detailed_medicine_bloc.d
 export '../features/dashboard/features/epharmacy/logics/epharmacy_bloc.dart';
 export '../features/dashboard/features/home/logics/home_event.dart';
 export '../features/dashboard/features/profile/data/repository/profile_repository.dart';
+export '../features/dashboard/features/epharmacy/logics/epharmacy_search_bloc.dart';
 export '../features/dashboard/features/profile/logics/profile_bloc.dart';
