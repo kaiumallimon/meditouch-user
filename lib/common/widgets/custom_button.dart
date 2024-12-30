@@ -8,6 +8,7 @@ class CustomButton extends StatelessWidget {
       required this.text,
       required this.onPressed,
       required this.bgColor,
+      this.textSize,
       required this.fgColor,
       required this.isLoading});
   final Size size;
@@ -16,6 +17,7 @@ class CustomButton extends StatelessWidget {
   final Color bgColor;
   final Color fgColor;
   final bool isLoading;
+  final double? textSize;
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +28,8 @@ class CustomButton extends StatelessWidget {
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
             backgroundColor: bgColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10)
-            ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           ),
           child: isLoading
               ? CupertinoActivityIndicator(
@@ -37,7 +38,10 @@ class CustomButton extends StatelessWidget {
                 )
               : Text(
                   text,
-                  style: TextStyle(color: fgColor,fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: fgColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: textSize ?? 14),
                 )),
     );
   }
