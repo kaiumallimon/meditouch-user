@@ -27,3 +27,7 @@ String getDetailedPageUrl(
       "https://api.medeasy.health/api/patient/medicine-details/?generic_name=$formattedGenericName&category_name=$formattedCategoryName&id=${id.toString()}&strength=$formattedStrength&lang=en";
   return baseUrl;
 }
+
+double getDiscountedPriceByDiscountValue(double unitPrice, discountValue) {
+  return unitPrice - (unitPrice * (discountValue / 100));
+}
