@@ -7,6 +7,7 @@ import 'package:quickalert/quickalert.dart';
 
 import '../../../logics/epharmacy_bloc.dart';
 import '../../../logics/epharmacy_states.dart';
+import '../detailed_medicine.dart';
 import 'epharmacy_medicine_card.dart';
 
 Widget buildCustomBody(BuildContext context, ColorScheme theme) {
@@ -66,12 +67,25 @@ Widget buildCustomBody(BuildContext context, ColorScheme theme) {
                   final discountedPrice =
                       unitPrice - (unitPrice * (medicine.discountValue / 100));
 
-                  return BuildMedicineCard(
-                    theme,
-                    medicine,
-                    unitPrice,
-                    unit,
-                    discountedPrice,
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DetailedMedicineScreen(
+                                    medicineName: medicine.medicineName,
+                                    strength: medicine.strength,
+                                    slug: medicine.slug,
+                                    key: ValueKey(medicine.slug),
+                                  )));
+                    },
+                    child: BuildMedicineCard(
+                      theme,
+                      medicine,
+                      unitPrice,
+                      unit,
+                      discountedPrice,
+                    ),
                   );
                 },
                 childCount: state.medicines.length,
