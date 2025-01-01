@@ -1,13 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:meditouch/common/repository/hive_repository.dart';
 
 import 'app/meditouch_app.dart';
 import 'features/dashboard/features/account/logics/theme_cubit.dart';
-import 'features/dashboard/navigation/logics/navigation_cubit.dart';
 
 void main() async {
   // ensure flutterBinding is initialized
