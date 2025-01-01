@@ -46,26 +46,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
     // get the bloc
     final registrationBloc = BlocProvider.of<RegisterBloc>(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Create a new account'),
-        backgroundColor: theme.primary,
-        foregroundColor: theme.onPrimary,
-        toolbarHeight: 70,
-        leading: IconButton(
-          onPressed: isLoading
-              ? null // Disable the back button when loading
-              : () {
-                  Navigator.of(context).pushReplacementNamed('/login');
-                },
-          icon: const Icon(CupertinoIcons.back),
-          disabledColor: theme.onPrimary.withOpacity(.5),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Create a new account'),
+          backgroundColor: theme.surfaceContainer,
+          foregroundColor: theme.onSurface,
+          toolbarHeight: 70,
+          elevation: 0,
+          surfaceTintColor: theme.surfaceContainer,
+          leading: IconButton(
+            onPressed: isLoading
+                ? null // Disable the back button when loading
+                : () {
+                    Navigator.of(context).pushReplacementNamed('/login');
+                  },
+            icon: const Icon(CupertinoIcons.back),
+            disabledColor: theme.onPrimary.withOpacity(.5),
+          ),
         ),
-      ),
-      body: SafeArea(
-        // bloc listener to listen any changes
-        // in current states
-        child: BlocListener<RegisterBloc, RegisterState>(
+        body: BlocListener<RegisterBloc, RegisterState>(
           listener: (context, state) {
             // current state is loading state
             // show the loading animation
