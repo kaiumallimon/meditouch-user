@@ -14,7 +14,8 @@ class HomeLoading extends HomeState {}
 
 class HomeLoaded extends HomeState {
   final Map<String, dynamic> userInfo;
-  HomeLoaded(this.userInfo);
+  final int cartItemsCount;
+  HomeLoaded(this.userInfo, this.cartItemsCount);
 }
 
 class HomeError extends HomeState {
