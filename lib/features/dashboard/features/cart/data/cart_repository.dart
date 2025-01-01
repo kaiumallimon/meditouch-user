@@ -7,6 +7,7 @@ class CartRepository {
   // add to cart
   Future<Map<String, dynamic>> addToCart(CartModel cartModel) async {
     try {
+      // check if the timestamp is null
       await _firestore
           .collection('db_client_user_cart')
           .add(cartModel.toJson());
@@ -17,14 +18,10 @@ class CartRepository {
     }
   }
 
-
   // remove from cart
-  Future<Map<String, dynamic>> removeFromCart(String uid, String cartId) async {
+  Future<Map<String, dynamic>> removeFromCart(String cartId) async {
     try {
-      await _firestore
-          .collection('db_client_user_cart')
-          .doc(cartId)
-          .delete();
+      await _firestore.collection('db_client_user_cart').doc(cartId).delete();
 
       return {'status': true, 'message': 'Removed from cart'};
     } catch (e) {
@@ -32,11 +29,19 @@ class CartRepository {
     }
   }
 
-  // get cart list of a user as stream
-  Stream<QuerySnapshot> getCartList(String uid) {
-    return _firestore
-        .collection('db_client_user_cart')
-        .where('user_id', isEqualTo: uid)
-        .snapshots();
+  // get cart list of a user by uid as future
+  Future<List<CartModel>> getCartList(String uid) async {
+    try {
+      final snapshot = await _firestore
+          .collection('db_client_user_cart')
+          .where('user_id', isEqualTo: uid)
+          .get();
+
+      return snapshot.docs
+          .map((doc) => CartModel.fromJson(doc.data(), doc.id))
+          .toList();
+    } catch (e) {
+      return [];
+    }
   }
 }
