@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meditouch/common/widgets/gradient_bg.dart';
 import 'package:meditouch/features/auth/login/logic/login_bloc.dart';
 import 'package:meditouch/features/auth/login/logic/login_event.dart';
 import 'package:meditouch/features/auth/login/logic/login_state.dart';
@@ -26,11 +25,11 @@ class LoginScreen extends StatelessWidget {
     final theme = Theme.of(context).colorScheme;
 
     // // Set status bar and nav bar colors:
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: Colors.transparent,
-      systemNavigationBarIconBrightness: Brightness.light,
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: theme.surfaceContainer,
+      statusBarIconBrightness: theme.brightness,
+      systemNavigationBarColor: theme.surfaceContainer,
+      systemNavigationBarIconBrightness: theme.brightness,
     ));
 
     // Get device height
@@ -41,6 +40,7 @@ class LoginScreen extends StatelessWidget {
           QuickAlert.show(
               context: context,
               type: QuickAlertType.loading,
+              barrierColor: Colors.grey.shade500.withOpacity(0.1),
               text: "Please wait!",
               disableBackBtn: true);
         }
@@ -77,86 +77,80 @@ class LoginScreen extends StatelessWidget {
               disableBackBtn: true);
         }
       },
-      child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          body: Stack(
-            children: [
-              // Gradient background:
-              const GradientBackground(),
+      child: SafeArea(
+        child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: theme.surfaceContainer,
+            body: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+                    // Logo:
+                    _buildLogo(context, theme),
 
-              // Rest of the UI:
-              SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 20),
-                        // Logo:
-                        _buildLogo(context),
+                    const SizedBox(height: 20),
 
-                        const SizedBox(height: 20),
+                    // Welcome message:
+                    _buildWelcomeTitle(context, theme),
 
-                        // Welcome message:
-                        _buildWelcomeTitle(context, theme),
+                    const SizedBox(height: 10),
 
-                        const SizedBox(height: 10),
+                    // Sub-message:
+                    _buildSubtitle(context, theme),
 
-                        // Sub-message:
-                        _buildSubtitle(context, theme),
+                    const SizedBox(height: 30),
 
-                        const SizedBox(height: 30),
+                    // Email field:
+                    _buildEmailField(context, theme),
 
-                        // Email field:
-                        _buildEmailField(context, theme),
+                    const SizedBox(height: 15),
 
-                        const SizedBox(height: 15),
+                    // Password field:
+                    _buildPasswordField(context, theme),
 
-                        // Password field:
-                        _buildPasswordField(context, theme),
+                    const SizedBox(height: 10),
 
-                        const SizedBox(height: 10),
+                    // Forgot Password:
+                    _buildForgotPasswordWidget(context, theme),
 
-                        // Forgot Password:
-                        _buildForgotPasswordWidget(context, theme),
+                    const SizedBox(height: 20),
 
-                        const SizedBox(height: 20),
+                    // Sign in button:
+                    _buildSignInButton(context, theme),
 
-                        // Sign in button:
-                        _buildSignInButton(context, theme),
+                    const SizedBox(height: 20),
 
-                        const SizedBox(height: 20),
+                    // Create account:
+                    _buildCreateAccountWidget(context, theme),
 
-                        // Create account:
-                        _buildCreateAccountWidget(context, theme),
+                    const SizedBox(height: 30),
 
-                        const SizedBox(height: 30),
+                    // Or:
+                    _buildOrText(theme),
 
-                        // Or:
-                        _buildOrText(theme),
+                    const SizedBox(height: 30),
 
-                        const SizedBox(height: 30),
-
-                        // Continue with Google:
-                        _buildGoogleSignIn(context, theme),
-                      ],
-                    ),
-                  ),
+                    // Continue with Google:
+                    _buildGoogleSignIn(context, theme),
+                  ],
                 ),
-              )
-            ],
-          )),
+              ),
+            )),
+      ),
     );
   }
 
 /* Function to build the logo */
-  Widget _buildLogo(BuildContext context) {
+  Widget _buildLogo(BuildContext context, ColorScheme theme) {
     return Center(
       child: Image.asset(
         'assets/images/logo2.png',
         height: MediaQuery.of(context).size.height * 0.15,
         width: MediaQuery.of(context).size.height * 0.15,
+        color: theme.primary.withOpacity(0.7),
       ),
     )
         .animate()
@@ -174,13 +168,13 @@ class LoginScreen extends StatelessWidget {
 
   /* Function to build the welcome title */
   Widget _buildWelcomeTitle(BuildContext context, ColorScheme theme) {
-    return const Center(
+    return Center(
       child: Text(
         'Welcome!',
         style: TextStyle(
           fontSize: 28,
           fontWeight: FontWeight.bold,
-          color: Colors.white,
+          color: theme.onSurface.withOpacity(0.8),
         ),
       ),
     )
@@ -204,7 +198,7 @@ class LoginScreen extends StatelessWidget {
         'To continue, sign in to your account',
         style: TextStyle(
           fontSize: 16,
-          color: Colors.white.withOpacity(0.6),
+          color: theme.onSurface.withOpacity(0.6),
         ),
         textAlign: TextAlign.center,
       ),
@@ -227,10 +221,10 @@ class LoginScreen extends StatelessWidget {
     return CustomEmailfield(
       hint: "Email Address",
       size: Size(MediaQuery.of(context).size.width * 0.9, 50),
-      bgColor: Colors.grey.withOpacity(0.3),
-      fgColor: Colors.white,
+      bgColor: theme.primaryContainer.withOpacity(0.1),
+      fgColor: theme.onSurface,
       keyboardType: TextInputType.emailAddress,
-      iconColor: Colors.grey.withOpacity(0.5),
+      iconColor: theme.primary.withOpacity(0.7),
       controller: emailController,
     )
         .animate()
@@ -251,10 +245,10 @@ class LoginScreen extends StatelessWidget {
     return CustomPasswordfield(
       hint: "Password",
       size: Size(MediaQuery.of(context).size.width * 0.9, 50),
-      bgColor: Colors.grey.withOpacity(0.3),
-      fgColor: Colors.white,
+      bgColor: theme.primaryContainer.withOpacity(0.1),
+      fgColor: theme.onSurface,
       keyboardType: TextInputType.text,
-      iconColor: Colors.grey.withOpacity(0.5),
+      iconColor: theme.primary.withOpacity(0.7),
       controller: passwordController,
     )
         .animate()
@@ -339,7 +333,7 @@ class LoginScreen extends StatelessWidget {
           "Don't have an account?",
           style: TextStyle(
             fontSize: 14,
-            color: Colors.white.withOpacity(0.6),
+            color: theme.onSurface.withOpacity(0.6),
           ),
         ),
         const SizedBox(width: 8),
@@ -378,7 +372,7 @@ class LoginScreen extends StatelessWidget {
         "Or",
         style: TextStyle(
           fontSize: 14,
-          color: Colors.white.withOpacity(0.6),
+          color: theme.onSurface.withOpacity(0.6),
         ),
       ),
     )
@@ -413,7 +407,7 @@ class LoginScreen extends StatelessWidget {
             text: "Not Implemented Yet!",
             disableBackBtn: true);
       },
-      bgColor: Colors.white,
+      bgColor: theme.primaryContainer,
       fgColor: Colors.black,
       isLoading: false,
     )
