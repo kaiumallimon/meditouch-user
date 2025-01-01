@@ -1,3 +1,5 @@
+import '../features/dashboard/features/cart/data/cart_repository.dart';
+import '../features/dashboard/features/cart/logics/cart_bloc.dart';
 import './app_exporter.dart';
 
 final providers = [
@@ -53,5 +55,12 @@ final providers = [
   // add the search bloc
   BlocProvider<EpharmacySearchBloc>(
     create: (_) => EpharmacySearchBloc(),
+  ),
+
+  // add cart bloc
+  BlocProvider<CartBloc>(
+    create: (_) => CartBloc(
+      CartRepository(),
+    ),
   ),
 ];
