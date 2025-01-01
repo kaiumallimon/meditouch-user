@@ -67,15 +67,6 @@ class HomeScreen extends StatelessWidget {
                         const SizedBox(height: 20),
                         _buildAppointmentBox(theme, 2),
                         const SizedBox(height: 20),
-                        _buildAppointmentBox(theme, 2),
-                        const SizedBox(height: 20),
-                        _buildAppointmentBox(theme, 2),
-                        const SizedBox(height: 20),
-                        _buildAppointmentBox(theme, 2),
-                        const SizedBox(height: 20),
-                        _buildAppointmentBox(theme, 2),
-                        const SizedBox(height: 20),
-                        _buildAppointmentBox(theme, 2),
                       ],
                     ),
                   ),
@@ -178,8 +169,6 @@ class HomeScreen extends StatelessWidget {
   // Sliver appbar widget
   SliverAppBar _buildSliverAppbar(
       BuildContext context, ColorScheme theme, Map<String, dynamic> userData) {
-    print(userData);
-
     return SliverAppBar(
       floating: true,
       pinned: false,
@@ -193,35 +182,22 @@ class HomeScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // User image in leading
-          GestureDetector(
-            onTap: () {
-              try {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => ProfileScreen(),
-                  ),
-                );
-              } catch (e) {
-                print(e);
-              }
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                color: theme.primary.withOpacity(.1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: CachedNetworkImage(
-                  imageUrl: userData['image'],
-                  height: 40,
-                  width: 40,
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) =>
-                      const CupertinoActivityIndicator(),
-                  errorWidget: (context, url, error) =>
-                      const Icon(Icons.person), // Fallback icon
-                ),
+          Container(
+            decoration: BoxDecoration(
+              color: theme.primary.withOpacity(.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: CachedNetworkImage(
+                imageUrl: userData['image'],
+                height: 40,
+                width: 40,
+                fit: BoxFit.cover,
+                placeholder: (context, url) =>
+                    const CupertinoActivityIndicator(),
+                errorWidget: (context, url, error) =>
+                    const Icon(Icons.person), // Fallback icon
               ),
             ),
           ),
@@ -240,14 +216,29 @@ class HomeScreen extends StatelessWidget {
                 onPressed: () {},
               ),
               const SizedBox(width: 10),
-              CustomTintedIconButton(
-                child: Image.asset(
-                  'assets/icons/search2.png',
-                  height: 25,
-                  width: 25,
-                  color: theme.primary,
-                ),
-                onPressed: () {},
+              BlocBuilder<HomeBloc, HomeState>(
+                builder: (context, state) {
+                  if (state is HomeLoaded) {
+                    return CustomTintedIconButton(
+                      onPressed: () {
+                        Navigator.of(context).pushNamed('/cart');
+                      },
+                      hasCount: true,
+                      count: state.cartItemsCount,
+                      child: Icon(Icons.shopping_bag_outlined,
+                          color: theme.primary),
+                    );
+                  }
+
+                  return CustomTintedIconButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/cart');
+                    },
+                    hasCount: false,
+                    child:
+                        Icon(Icons.shopping_bag_outlined, color: theme.primary),
+                  );
+                },
               ),
             ],
           ),
