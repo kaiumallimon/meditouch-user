@@ -5,7 +5,7 @@
 <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     
     <application
-        android:label="meditouch"
+        android:label="Meditouch"
         android:name="${applicationName}"
         android:icon="@mipmap/app_icon2"
         android:allowBackup="false"
