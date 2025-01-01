@@ -135,6 +135,7 @@ void showQuantityDialog(
                   quantity: quantity,
                   unitIndex: state.selectedUnitIndex,
                   discountedPrice: discountedPrice,
+                  createdAt: DateTime.now(),
                   totalPrice: totalPrice);
 
               context
