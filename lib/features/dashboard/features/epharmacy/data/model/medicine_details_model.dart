@@ -22,6 +22,7 @@ class MedicineDetailsModel extends Equatable {
   final int manufacturerId;
   final MedicineDescription medicineDetails;
   final List<Medicine> relatedMedicines;
+  final bool rxRequired;
 
   const MedicineDetailsModel({
     required this.medicineId,
@@ -44,6 +45,7 @@ class MedicineDetailsModel extends Equatable {
     required this.manufacturerId,
     required this.medicineDetails,
     required this.relatedMedicines,
+    this.rxRequired = false,
   });
 
   factory MedicineDetailsModel.fromJson(Map<String, dynamic> json) {
@@ -89,6 +91,7 @@ class MedicineDetailsModel extends Equatable {
       medicineDetails:
           MedicineDescription.fromJson(pageProps['productDetails'] ?? {}),
       relatedMedicines: relatedMedicinesList,
+      rxRequired: pageProps['productInfo']['rx_required'] ?? false,
     );
   }
 
@@ -121,6 +124,7 @@ class MedicineDetailsModel extends Equatable {
           'order_count': orderCount,
           'medicine_category': medicineCategoryId,
           'manufacturer': manufacturerId,
+          'rx_required': rxRequired,
         },
         'productDetails': medicineDetails.toJson(),
       },
@@ -150,6 +154,7 @@ class MedicineDetailsModel extends Equatable {
         manufacturerId,
         medicineDetails,
         relatedMedicines,
+        rxRequired,
       ];
 }
 
