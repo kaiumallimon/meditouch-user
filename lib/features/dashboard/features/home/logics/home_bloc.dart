@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meditouch/features/dashboard/features/home/data/repository/home_repository.dart';
 import 'package:meditouch/features/dashboard/features/home/logics/home_event.dart';
 import 'package:meditouch/features/dashboard/features/home/logics/home_state.dart';
 
@@ -16,7 +17,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(HomeLoading());
     try {
       final userInfo = await hiveRepository.getUserInfo();
-      emit(HomeLoaded(userInfo!));
+      final cartItemsCount =
+          await HomeRepository().getCartItemsCount(userInfo!['id']);
+      emit(HomeLoaded(userInfo, cartItemsCount));
     } catch (e) {
       emit(HomeError('Failed to fetch data: ${e.toString()}'));
     }
