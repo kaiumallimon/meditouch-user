@@ -255,15 +255,27 @@ class AccountScreen extends StatelessWidget {
   Widget _buildAccountGrid(BuildContext context, ColorScheme theme) {
     // Define grid items as a List of Maps
     final List<Map<String, dynamic>> gridItems = [
-      {'icon': Icons.star, 'label': 'Favorites'},
-      {'icon': Icons.shopping_bag, 'label': 'Cart'},
+      {'icon': Icons.star, 'label': 'Favorites', 'onTap': () {}},
+      {
+        'icon': Icons.shopping_bag,
+        'label': 'Cart',
+        'onTap': () {
+          Navigator.of(context).pushNamed('/cart');
+        }
+      },
       {
         'icon': Icons.receipt_long,
-        'label': 'Orders'
+        'label': 'Orders',
+        'onTap': () {
+          // Navigator.of(context).pushNamed('/orders');
+        }
       }, // Replaced with a proper icon
       {
         'icon': Icons.bookmark,
-        'label': 'Appointments'
+        'label': 'Appointments',
+        'onTap': () {
+          // Navigator.of(context).pushNamed('/appointments');
+        }
       }, // Corrected icon for profile
     ];
 
@@ -285,7 +297,7 @@ class AccountScreen extends StatelessWidget {
           final item = gridItems[index];
           return InkWell(
             borderRadius: BorderRadius.circular(10),
-            onTap: () {},
+            onTap: item['onTap'],
             child: Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
