@@ -61,12 +61,14 @@ SliverList BuildSliverList(
           const SizedBox(height: 40),
 
           // alternative medicines title
-          detailedMedicineAlternativeTitle(theme, state),
+          if (state.medicineDetails.relatedMedicines.isNotEmpty)
+            detailedMedicineAlternativeTitle(theme, state),
 
           const SizedBox(height: 20),
 
           // alternative medicines list
-          buildAlternativeMedicinesList(state, theme),
+          if (state.medicineDetails.relatedMedicines.isNotEmpty)
+            buildAlternativeMedicinesList(state, theme),
 
           const SizedBox(height: 40),
 
