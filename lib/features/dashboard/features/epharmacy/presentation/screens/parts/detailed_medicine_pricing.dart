@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:meditouch/features/dashboard/features/epharmacy/presentation/widgets/cart_amount_selector.dart';
 
 import '../../../../../../../common/utils/epharmacy_util.dart';
 import '../../../../../../../common/widgets/custom_button.dart';
@@ -65,12 +64,9 @@ Row detailedMedicinePricingCart(
           textSize: 12,
           text: "Add To Cart",
           onPressed: () {
-            QuickAlert.show(
-              barrierDismissible: false,
-              context: context,
-              type: QuickAlertType.info,
-              text: 'Yet to implement',
-            );
+            showQuantityDialog(context, state, theme);
+
+            print(state.medicineDetails.rxRequired);
           },
           bgColor: theme.primary,
           fgColor: theme.onPrimary,
