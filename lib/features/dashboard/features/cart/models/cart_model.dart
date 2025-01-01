@@ -9,6 +9,7 @@ class CartModel extends Equatable {
   final double totalPrice;
   final double discountedPrice;
   final String cartId;
+  final DateTime createdAt;
 
   const CartModel({
     required this.userId,
@@ -18,6 +19,7 @@ class CartModel extends Equatable {
     required this.totalPrice,
     required this.cartId,
     required this.discountedPrice,
+    required this.createdAt,
   });
 
   // serialization and deserialization
@@ -31,6 +33,7 @@ class CartModel extends Equatable {
       unitIndex: json['unit_index'],
       totalPrice: json['total_price'],
       discountedPrice: json['discounted_price'],
+      createdAt: DateTime.parse(json['created_at']),
     );
   }
 
@@ -42,6 +45,7 @@ class CartModel extends Equatable {
       'unit_index': unitIndex,
       'total_price': totalPrice,
       'discounted_price': discountedPrice,
+      'created_at': createdAt.toIso8601String(),
     };
   }
 
