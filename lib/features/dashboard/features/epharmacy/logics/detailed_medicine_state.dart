@@ -31,3 +31,23 @@ class DetailedMedicineError extends DetailedMedicineState {
   @override
   List<Object> get props => [message];
 }
+
+
+class AddToCartSuccess extends DetailedMedicineState {
+  final String message;
+
+  const AddToCartSuccess(this.message);
+
+  @override
+  List<Object> get props => [message];
+} 
+
+
+class CartAddError extends DetailedMedicineState {
+  final String message;
+
+  const CartAddError(this.message);
+
+  @override
+  List<Object> get props => [message];
+} 

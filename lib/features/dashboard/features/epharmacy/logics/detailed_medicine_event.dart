@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:meditouch/features/dashboard/features/cart/models/cart_model.dart';
 
 abstract class DetailedMedicineEvent extends Equatable {
   const DetailedMedicineEvent();
@@ -16,7 +17,6 @@ class FetchDetailedMedicineEvent extends DetailedMedicineEvent {
   List<Object> get props => [];
 }
 
-
 class ChangeUnitRequested extends DetailedMedicineEvent {
   final int index;
 
@@ -24,4 +24,18 @@ class ChangeUnitRequested extends DetailedMedicineEvent {
 
   @override
   List<Object> get props => [index];
+}
+
+class AddToCartRequested extends DetailedMedicineEvent {
+  final CartModel cartModel;
+
+  const AddToCartRequested(this.cartModel);
+}
+
+
+class ResetAddToCart extends DetailedMedicineEvent {
+  const ResetAddToCart();
+
+  @override
+  List<Object> get props => [];
 }
