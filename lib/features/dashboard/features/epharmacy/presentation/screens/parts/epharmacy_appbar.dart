@@ -13,7 +13,7 @@ Widget buildCustomAppBar(BuildContext context, ColorScheme theme) {
       const SizedBox(height: 5),
       Text('Powered by MedEasy',
           style:
-              TextStyle(color: theme.onSurface.withOpacity(.5), fontSize: 14)),
+              TextStyle(color: theme.onSurface.withOpacity(.5), fontSize: 12)),
     ],
   );
 }
