@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:meditouch/common/widgets/custom_button.dart';
+import 'package:meditouch/common/widgets/custom_loading_animation.dart';
 import 'package:meditouch/features/dashboard/features/account/logics/account_states.dart';
 import 'package:meditouch/features/dashboard/features/account/presentation/widgets/custom_multipletile.dart';
 import 'package:meditouch/features/dashboard/features/account/presentation/widgets/custom_tile.dart';
@@ -66,10 +65,8 @@ class AccountScreen extends StatelessWidget {
               builder: (context, state) {
                 if (state is AccountLoading) {
                   return Center(
-                    child: CupertinoActivityIndicator(
-                      color: theme.primary,
-                      radius: 12,
-                    ),
+                    child:
+                        CustomLoadingAnimation(size: 30, color: theme.primary),
                   );
                 }
 
@@ -330,7 +327,7 @@ class AccountScreen extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () {
-            Navigator.of(context).pushNamed('/profile');
+            Navigator.of(context).pushNamed('/profile', arguments: userInfo);
           },
           child: Container(
             height: 120,
@@ -354,9 +351,8 @@ class AccountScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(100),
               child: CachedNetworkImage(
                 imageUrl: userInfo['image'],
-                placeholder: (context, url) => const CupertinoActivityIndicator(
-                  radius: 15,
-                ),
+                placeholder: (context, url) =>
+                    CustomLoadingAnimation(size: 20, color: theme.primary),
                 errorWidget: (context, url, error) => Icon(
                   Icons.person,
                   color: theme.onSurface.withOpacity(.5),
