@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:meditouch/common/widgets/custom_loading_animation.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 
-import 'package:meditouch/common/utils/datetime_format.dart';
 import 'package:meditouch/common/widgets/custom_list_tile.dart';
 import 'package:meditouch/features/dashboard/features/profile/logics/profile_bloc.dart';
 import 'package:meditouch/features/dashboard/features/profile/logics/profile_event.dart';
@@ -16,7 +16,6 @@ class ProfileScreen extends StatelessWidget {
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _dobController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +49,7 @@ class ProfileScreen extends StatelessWidget {
           if (state is ProfileLoading) {
             return Scaffold(
                 backgroundColor: theme.surfaceContainer,
-                body: _buildLoadingIndicator(theme));
+                body: CustomLoadingAnimation(size: 30, color: theme.primary));
           }
           if (state is ProfileError) {
             return _buildErrorMessage(state.message);
