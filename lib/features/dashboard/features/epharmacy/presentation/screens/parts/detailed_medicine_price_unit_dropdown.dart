@@ -31,9 +31,8 @@ DropdownButton<String> detailedMedicineUnitSelectorDropDown(
         .map<DropdownMenuItem<String>>((unitPrice) {
       return DropdownMenuItem<String>(
         value: unitPrice.unit,
-        child: Text(unitPrice.unit),
+        child: Text("${unitPrice.unit.replaceAll('Ã', 'x')}"),
       );
     }).toList(),
   );
 }
-
