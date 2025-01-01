@@ -5,6 +5,7 @@ import 'package:meditouch/common/widgets/custom_button.dart';
 import 'package:meditouch/features/dashboard/features/epharmacy/logics/epharmacy_events.dart';
 import 'package:quickalert/quickalert.dart';
 
+import '../../../../../../../common/widgets/custom_loading_animation.dart';
 import '../../../logics/epharmacy_bloc.dart';
 import '../../../logics/epharmacy_states.dart';
 import '../detailed_medicine.dart';
@@ -22,12 +23,7 @@ Widget buildCustomBody(BuildContext context, ColorScheme theme) {
     builder: (context, state) {
       // loading state
       if (state is EpharmacyLoadingState) {
-        return Center(
-          child: CupertinoActivityIndicator(
-            radius: 15,
-            color: theme.primary,
-          ),
-        );
+        return CustomLoadingAnimation(size: 30, color: theme.primary);
       }
 
       // loaded state
@@ -166,7 +162,7 @@ Widget buildSearchBar(BuildContext context, ColorScheme theme) {
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
         decoration: BoxDecoration(
-          border: Border.all(color: theme.primary.withOpacity(.1), width: 2),
+          border: Border.all(color: theme.primary.withOpacity(.1), width: 1.5),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
@@ -180,7 +176,7 @@ Widget buildSearchBar(BuildContext context, ColorScheme theme) {
               'Search for medicines',
               style: TextStyle(
                   color: theme.primary.withOpacity(.5),
-                  fontWeight: FontWeight.bold),
+                  fontWeight: FontWeight.normal),
             ),
           ],
         ),
