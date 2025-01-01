@@ -1,21 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meditouch/app/app_exporter.dart';
-import 'package:meditouch/common/utils/epharmacy_util.dart';
-import 'package:meditouch/common/widgets/custom_loading_animation.dart';
-import 'package:meditouch/features/dashboard/features/cart/models/cart_model.dart';
-import 'package:meditouch/features/dashboard/features/cart/presentation/screens/parts/cart_appbar.dart';
 
 import '../../../logics/cart_bloc.dart';
 import '../../../logics/cart_event.dart';
 
-
 class CartFilterBar extends StatefulWidget {
   final ColorScheme theme;
 
-  const CartFilterBar({Key? key, required this.theme}) : super(key: key);
+  const CartFilterBar({super.key, required this.theme});
 
   @override
   State<CartFilterBar> createState() => _CartFilterBarState();
@@ -44,8 +36,15 @@ class _CartFilterBarState extends State<CartFilterBar> {
             elevation: 0,
             items: const [
               DropdownMenuItem(
-                  value: 'createdAt', child: Text('By Added Time')),
-              DropdownMenuItem(value: 'totalPrice', child: Text('By Price')),
+                  value: 'createdAt',
+                  child: Text(
+                    'By added time',
+                    style: TextStyle(fontFamily: 'SF-Pro-Text'),
+                  )),
+              DropdownMenuItem(
+                  value: 'totalPrice',
+                  child: Text('By price',
+                      style: TextStyle(fontFamily: 'SF-Pro-Text'))),
             ],
             onChanged: (value) {
               setState(() {
@@ -88,7 +87,7 @@ class _CartFilterBarState extends State<CartFilterBar> {
                 padding: const EdgeInsets.all(5),
                 child: Icon(
                   isAscending ? Icons.arrow_upward : Icons.arrow_downward,
-                  color: widget.theme.onSurface,
+                  color: widget.theme.primary,
                 ),
               ),
             ),
