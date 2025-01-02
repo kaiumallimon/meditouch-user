@@ -19,6 +19,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       // Get old data from the Hive repository
       final oldData = await HiveRepository().getUserInfo();
 
+      print('Old Data: $oldData');
+
       // Call the API to update the profile
       final response = await profileRepository.update(
         event.uid,
@@ -27,20 +29,26 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         event.image,
       );
 
+      print('Response: $response');
+
       // Check if the response is successful
       if (response.containsKey('status') && response['status']) {
-        try {
-          // Update the Hive repository with the new data from the API response
-          final updatedData = response['data'] as Map<String, dynamic>;
+        if (response['message'] != 'No changes detected.') {
+          try {
+            // Update the Hive repository with the new data from the API response
+            final updatedData = response['data'] as Map<String, dynamic>;
 
-          // Ensure the updated data is not null or empty
-          if (updatedData.isNotEmpty) {
-            await HiveRepository().updateUserInfo(updatedData);
+            // Ensure the updated data is not null or empty
+            if (updatedData.isNotEmpty) {
+              await HiveRepository().updateUserInfo(updatedData);
+            }
+
+            emit(ProfileUpdated(message: response['message']));
+          } on Exception catch (e) {
+            emit(ProfileUpdateError(message: e.toString()));
           }
-
+        } else {
           emit(ProfileUpdated(message: response['message']));
-        } on Exception catch (e) {
-          emit(ProfileUpdateError(message: e.toString()));
         }
       } else {
         emit(ProfileUpdateError(message: response['message']));
