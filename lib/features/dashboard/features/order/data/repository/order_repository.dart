@@ -72,8 +72,7 @@ class OrderRepository {
     }
   }
 
-  Future<Map<String, dynamic>> addPaymentLog(
-   {
+  Future<Map<String, dynamic>> addPaymentLog({
     required String paymentId,
     required String transactionId,
     required double amount,
@@ -81,8 +80,7 @@ class OrderRepository {
     required String invoiceNumber,
     required String orderId,
     required String userId,
-   }
-  ) async {
+  }) async {
     try {
       final docRef = await _firestore.collection('db_client_payment_logs').add({
         'payment_id': paymentId,
@@ -113,6 +111,95 @@ class OrderRepository {
         'status': false,
         'message': 'An unexpected error occurred: $e',
       };
+    }
+  }
+
+  // get pending orders of a user
+
+  Future<OrderResponse> getPendingOrders(String uid) async {
+    try {
+      final snapshot = await _firestore
+          .collection('db_client_user_orders')
+          .where('user_id', isEqualTo: uid)
+          .where('status', isNotEqualTo: 'Delivered')
+          .get();
+
+      if (snapshot.docs.isEmpty) {
+        print('No pending orders found');
+        return const OrderResponse(
+          status: true,
+          message: 'No pending orders found',
+          orders: [],
+        );
+      }
+
+      final orders = snapshot.docs.map((doc) {
+        final data = doc.data();
+        return OrderModel.fromJson(data, doc.id);
+      });
+
+      return OrderResponse(
+        status: true,
+        message: 'Pending orders fetched successfully',
+        orders: orders.toList(),
+      );
+    } on FirebaseException catch (e) {
+      return OrderResponse(
+        status: false,
+        message: 'Firebase error: ${e.message}',
+        orders: const [],
+      );
+    } catch (e) {
+      return OrderResponse(
+        status: false,
+        message: 'An unexpected error occurred: $e',
+        orders: const [],
+      );
+    }
+  }
+
+// get delivered orders of a user
+  Future<OrderResponse> getDeliveredOrders(String uid) async {
+    try {
+      final snapshot = await _firestore
+          .collection('db_client_user_orders')
+          .where('user_id', isEqualTo: uid)
+          .where('status', isEqualTo: 'Delivered')
+          .get();
+
+      if (snapshot.docs.isEmpty) {
+        print('No delivered orders found');
+        return const OrderResponse(
+          status: true,
+          message: 'No delivered orders found',
+          orders: [],
+        );
+      }
+
+      final orders = snapshot.docs.map((doc) {
+        final data = doc.data();
+        return OrderModel.fromJson(data, doc.id);
+      });
+
+      print('Delivered orders fetched successfully: ${orders.toList()}');
+
+      return OrderResponse(
+        status: true,
+        message: 'Delivered orders fetched successfully',
+        orders: orders.toList(),
+      );
+    } on FirebaseException catch (e) {
+      return OrderResponse(
+        status: false,
+        message: 'Firebase error: ${e.message}',
+        orders: const [],
+      );
+    } catch (e) {
+      return OrderResponse(
+        status: false,
+        message: 'An unexpected error occurred: $e',
+        orders: const [],
+      );
     }
   }
 }
