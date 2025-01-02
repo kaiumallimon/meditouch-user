@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meditouch/common/utils/datetime_format.dart';
+import 'package:meditouch/common/widgets/custom_loading_animation.dart';
 import 'package:meditouch/features/dashboard/features/home/logics/home_event.dart';
 import 'package:meditouch/features/dashboard/navigation/logics/navigation_cubit.dart';
 import 'package:r_icon_pro/r_icon_pro.dart';
@@ -35,11 +36,9 @@ class HomeScreen extends StatelessWidget {
         },
         builder: (context, state) {
           if (state is HomeLoading) {
-            return Center(
-              child: CupertinoActivityIndicator(
-                color: theme.primary,
-                radius: 12,
-              ),
+            return CustomLoadingAnimation(
+              color: theme.primary,
+              size: 30,
             );
           }
 
