@@ -1,6 +1,8 @@
 // cart_bloc.dart
 import 'dart:async';
 import 'package:meditouch/app/app_exporter.dart';
+import 'package:meditouch/common/repository/bkash_repository.dart';
+import 'package:meditouch/common/utils/invoice.dart';
 import 'package:meditouch/features/dashboard/features/order/data/repository/order_repository.dart';
 
 import '../data/cart_repository.dart';
@@ -12,13 +14,82 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   final CartRepository cartRepository;
 
   CartBloc(this.cartRepository) : super(const CartInitial()) {
+    // load the cart items on page openning
     on<LoadCart>(_onLoadCart);
+
+    // remove the selected items from the cart
     on<RemoveFromCart>(_onRemoveFromCart);
+
+    // filter the cart items based on the selected filter
     on<FilterCart>(_onFilterCart);
+
+    // select the cart items to be checked out or removed
     on<SelectCartItemsRequested>(_onSelectCartItemsRequested);
+
+    // change the payment method
     on<CheckoutRequested>(_onCheckoutRequested);
+
+    // handle the payment execution
+    on<PaymentExecuted>(_onPaymentExecuted);
+
+    // handle the checkout error
+    on<CartCheckoutGotError>(_onCartCheckoutGotError);
   }
 
+  // Handle the checkout error
+
+  FutureOr<void> _onCartCheckoutGotError(
+      CartCheckoutGotError event, Emitter<CartState> emit) {
+    emit(CartCheckoutError(event.message));
+  }
+
+  // Handle the payment execution
+  FutureOr<void> _onPaymentExecuted(
+      PaymentExecuted event, Emitter<CartState> emit) async {
+    // initially show the loading state
+    emit(const CartCheckoutLoading());
+
+    // prepare the order
+    final Map<String, dynamic> response =
+        await OrderRepository().createOrder(event.order);
+
+    // get the order id
+    final String orderId = response['orderId'];
+
+    if (response['status']) {
+      // remove the items from the cart
+      final removeResponse =
+          await cartRepository.removeMultipleFromCart(event.cartIds);
+
+      if (removeResponse['status']) {
+        // add payment logs
+        final paymentLogResponse = await OrderRepository().addPaymentLog(
+            event.paymentId,
+            event.transactionId,
+            event.amount,
+            event.currency,
+            event.invoiceNumber,
+            orderId,
+            event.order.uid);
+
+        if (paymentLogResponse['status']) {
+          // emit the success state
+          emit(const CartCheckoutSuccess());
+        } else {
+          // emit the error state
+          emit(CartCheckoutError(paymentLogResponse['message']));
+        }
+      } else {
+        // emit the error state
+        emit(CartCheckoutError(removeResponse['message']));
+      }
+    } else {
+      // emit the error state
+      emit(CartCheckoutError(response['message']));
+    }
+  }
+
+  // Handle the checkout request
   FutureOr<void> _onCheckoutRequested(
       CheckoutRequested event, Emitter<CartState> emit) async {
     emit(const CartCheckoutLoading());
@@ -27,7 +98,47 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     final String paymentMethod = event.order.paymentMethod;
 
     if (paymentMethod == 'bkash') {
-      emit(const CartPaymentSate());
+      // grant the token
+      await BkashRepository().grantToken().then((grantTokenResponse) async {
+        if (grantTokenResponse.statusMessage != 'Successful') {
+          // handle the error for token grant failure
+          emit(CartCheckoutError(
+              'Failed to grant token: ${grantTokenResponse.statusMessage}'));
+          return;
+        }
+
+        // create payment:
+
+        // for testing, the amount is fixed to 1
+
+        final createPaymentResponse = await BkashRepository().createPayment(
+            idToken: grantTokenResponse.idToken,
+            amount: '1',
+            invoiceNumber: generateInvoice());
+
+        // check if the payment creation is successful
+
+        if (createPaymentResponse.statusMessage != "Successful") {
+          // handle the error for payment creation failure
+          emit(CartCheckoutError(
+              'Failed to create payment: ${createPaymentResponse.statusMessage}'));
+          return;
+        }
+
+        // load the payment gateway
+        emit(CartPaymentWebview(
+            deliveryAddress: event.order.deliveryAddress,
+            paymentId: createPaymentResponse.paymentID,
+            paymentUrl: createPaymentResponse.bkashURL,
+            tokenId: grantTokenResponse.idToken,
+            uid: event.order.uid,
+            totalAmount: event.order.totalPrice,
+            userFullName: event.order.userFullName,
+            userPhone: event.order.userPhoneNumber,
+            medicines: event.order.medicines));
+      });
+
+      return;
     }
 
     // prepare the order
@@ -40,15 +151,19 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           await cartRepository.removeMultipleFromCart(event.cartIds);
 
       if (removeResponse['status']) {
+        // emit the success state
         emit(const CartCheckoutSuccess());
       } else {
+        // emit the error state
         emit(CartCheckoutError(removeResponse['message']));
       }
     } else {
+      // emit the error state
       emit(CartCheckoutError(response['message']));
     }
   }
 
+  // Load the cart items from the repository
   FutureOr<void> _onLoadCart(LoadCart event, Emitter<CartState> emit) async {
     emit(const CartLoading());
     try {
@@ -62,6 +177,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
+  // Remove the selected items from the cart
   FutureOr<void> _onRemoveFromCart(
       RemoveFromCart event, Emitter<CartState> emit) async {
     final currentState = state as CartLoaded;
@@ -82,6 +198,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
+  // Filter the cart items based on the selected filter
   FutureOr<void> _onFilterCart(FilterCart event, Emitter<CartState> emit) {
     if (state is CartLoaded) {
       final currentState = state as CartLoaded;
@@ -101,6 +218,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
   }
 
+  // Select the cart items to be checked out or removed
   FutureOr<void> _onSelectCartItemsRequested(
       SelectCartItemsRequested event, Emitter<CartState> emit) {
     if (state is CartLoaded) {
@@ -110,6 +228,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 }
 
+// Payment cubit to manage the payment method state
 class PaymentCubit extends Cubit<String> {
   PaymentCubit() : super('cod');
 
@@ -118,10 +237,13 @@ class PaymentCubit extends Cubit<String> {
   }
 }
 
+// Address cubit to manage the user address state for delivery
 class AddressCubit extends Cubit<String> {
   AddressCubit() : super('');
 
+  // update the address
   void updateAddress(String address) => emit(address);
-
+  
+  // clear the address
   void clearAddress() => emit('');
 }
