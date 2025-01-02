@@ -64,13 +64,13 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       if (removeResponse['status']) {
         // add payment logs
         final paymentLogResponse = await OrderRepository().addPaymentLog(
-            event.paymentId,
-            event.transactionId,
-            event.amount,
-            event.currency,
-            event.invoiceNumber,
-            orderId,
-            event.order.uid);
+            paymentId: event.paymentId,
+            transactionId: event.transactionId,
+            amount: double.parse(event.amount),
+            currency: event.currency,
+            invoiceNumber: event.invoiceNumber,
+            orderId: orderId,
+            userId: event.order.uid);
 
         if (paymentLogResponse['status']) {
           // emit the success state
@@ -243,7 +243,7 @@ class AddressCubit extends Cubit<String> {
 
   // update the address
   void updateAddress(String address) => emit(address);
-  
+
   // clear the address
   void clearAddress() => emit('');
 }
