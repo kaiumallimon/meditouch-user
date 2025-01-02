@@ -15,6 +15,8 @@ class OrderModel extends Equatable {
   final double totalPrice;
   final String orderId;
   final String? orderNote;
+  final DateTime? shippingDate;
+  final DateTime? outForDeliveryDate;
 
   const OrderModel({
     required this.medicines,
@@ -30,6 +32,8 @@ class OrderModel extends Equatable {
     required this.totalPrice,
     required this.orderId,
     this.orderNote,
+    this.shippingDate,
+    this.outForDeliveryDate,
   });
 
   // serialization
@@ -55,6 +59,12 @@ class OrderModel extends Equatable {
       totalPrice: json['total_price'].toDouble(),
       orderId: orderId,
       orderNote: json['order_note'],
+      shippingDate: json['shipping_date'] != null
+          ? DateTime.parse(json['shipping_date'])
+          : null,
+      outForDeliveryDate: json['out_for_delivery_date'] != null
+          ? DateTime.parse(json['out_for_delivery_date'])
+          : null,
     );
   }
 
@@ -75,6 +85,8 @@ class OrderModel extends Equatable {
       'payment_status': paymentStatus,
       'total_price': totalPrice,
       'order_note': orderNote,
+      'shipping_date': shippingDate?.toIso8601String(),
+      'out_for_delivery_date': outForDeliveryDate?.toIso8601String(),
     };
   }
 
@@ -93,6 +105,8 @@ class OrderModel extends Equatable {
         totalPrice,
         orderId,
         orderNote,
+        shippingDate,
+        outForDeliveryDate,
       ];
 }
 
@@ -109,9 +123,9 @@ class OrderResponse extends Equatable {
 
   factory OrderResponse.fromJson(Map<String, dynamic> json) {
     var ordersFromJson = json['orders'] as List;
-    List<OrderModel> ordersList =
-        ordersFromJson.map((orderJson) => OrderModel.fromJson(orderJson, ''))
-            .toList();
+    List<OrderModel> ordersList = ordersFromJson
+        .map((orderJson) => OrderModel.fromJson(orderJson, ''))
+        .toList();
 
     return OrderResponse(
       orders: ordersList,
@@ -119,7 +133,6 @@ class OrderResponse extends Equatable {
       message: json['message'],
     );
   }
-
 
   @override
   List<Object?> get props => [orders, status, message];
