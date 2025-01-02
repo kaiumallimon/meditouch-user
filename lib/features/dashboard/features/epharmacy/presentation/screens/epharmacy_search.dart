@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 import 'package:meditouch/app/app_exporter.dart';
 import '../../logics/epharmacy_search_state.dart';
 import 'parts/epharmacy_search_appbar.dart';

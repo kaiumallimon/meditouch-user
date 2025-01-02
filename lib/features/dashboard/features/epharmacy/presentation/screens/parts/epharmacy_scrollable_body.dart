@@ -145,7 +145,7 @@ Widget buildCustomBody(BuildContext context, ColorScheme theme) {
       }
 
       // return empty container
-      return SizedBox();
+      return const SizedBox();
     },
   );
 }
@@ -160,7 +160,7 @@ Widget buildSearchBar(BuildContext context, ColorScheme theme) {
             MaterialPageRoute(builder: (context) => EpharmacySearchScreen()));
       },
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
         decoration: BoxDecoration(
           border: Border.all(color: theme.primary.withOpacity(.1), width: 1.5),
           borderRadius: BorderRadius.circular(10),

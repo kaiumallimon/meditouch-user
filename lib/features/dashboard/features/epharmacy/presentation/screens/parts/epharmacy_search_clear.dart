@@ -20,7 +20,7 @@ ValueListenableBuilder<TextEditingValue> searchClear(
             searchController.notifyListeners();
 
             context.read<EpharmacySearchBloc>().add(
-                  EpharmacySearchClearEvent(),
+                  const EpharmacySearchClearEvent(),
                 );
           },
         );

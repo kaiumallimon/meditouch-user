@@ -134,7 +134,7 @@ class MedicinesResponse  extends Equatable {
   final List<Medicine> medicines;
   final int totalPages;
 
-  MedicinesResponse({
+  const MedicinesResponse({
     required this.medicines,
     required this.totalPages,
   });

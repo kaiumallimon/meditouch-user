@@ -9,7 +9,6 @@ import 'package:meditouch/features/dashboard/navigation/logics/navigation_cubit.
 import 'package:r_icon_pro/r_icon_pro.dart';
 
 import '../../../../../../common/widgets/custom_tinted_iconbutton.dart';
-import '../../../profile/presentation/screens/profile_screen.dart';
 import '../../logics/home_bloc.dart';
 import '../../logics/home_state.dart';
 

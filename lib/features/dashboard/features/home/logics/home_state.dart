@@ -15,10 +15,10 @@ class HomeLoading extends HomeState {}
 class HomeLoaded extends HomeState {
   final Map<String, dynamic> userInfo;
   final int cartItemsCount;
-  HomeLoaded(this.userInfo, this.cartItemsCount);
+  const HomeLoaded(this.userInfo, this.cartItemsCount);
 }
 
 class HomeError extends HomeState {
   final String message;
-  HomeError(this.message);
+  const HomeError(this.message);
 }

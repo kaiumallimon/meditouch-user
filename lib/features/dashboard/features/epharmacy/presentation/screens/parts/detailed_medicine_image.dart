@@ -8,8 +8,7 @@ import '../../../logics/detailed_medicine_state.dart';
 Widget BuildDetailedMedicineImage(DetailedMedicineSuccess state) {
   return AspectRatio(
     aspectRatio: 16 / 9,
-    child: (state.medicineDetails.medicineImage == null ||
-            state.medicineDetails.medicineImage.isEmpty)
+    child: (state.medicineDetails.medicineImage.isEmpty)
         ? Image.asset(
             'assets/images/medicine_placeholder.png',
             fit: BoxFit.cover,

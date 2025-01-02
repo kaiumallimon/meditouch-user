@@ -1,6 +1,5 @@
 // cart_bloc.dart
 import 'dart:async';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meditouch/app/app_exporter.dart';
 
 import '../data/cart_repository.dart';

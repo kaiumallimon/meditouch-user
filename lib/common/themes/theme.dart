@@ -7,8 +7,8 @@ class AppTheme {
       fontFamily: "SF-Pro-Text",
       colorScheme: ColorScheme(
           brightness: Brightness.dark,
-          primary: Color(0xFF470DC2),
-          primaryContainer: Color.fromARGB(30, 70, 13, 194),
+          primary: const Color(0xFF470DC2),
+          primaryContainer: const Color.fromARGB(30, 70, 13, 194),
           onPrimaryContainer: Colors.black,
           onPrimary: Colors.white,
           secondary: CupertinoColors.activeOrange,
@@ -28,7 +28,7 @@ class AppTheme {
       colorScheme: ColorScheme(
           brightness: Brightness.light,
           primary: CupertinoColors.activeBlue,
-          primaryContainer: Color.fromARGB(30, 0, 123, 255),
+          primaryContainer: const Color.fromARGB(30, 0, 123, 255),
           onPrimaryContainer: Colors.white,
           onPrimary: Colors.white,
           secondary: CupertinoColors.activeOrange,

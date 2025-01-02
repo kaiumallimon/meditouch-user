@@ -1,6 +1,5 @@
 import 'package:flutter/services.dart';
 import 'package:meditouch/app/app_exporter.dart';
-import 'package:meditouch/common/widgets/custom_button.dart';
 import 'package:meditouch/common/widgets/custom_loading_animation.dart';
 import 'package:meditouch/features/dashboard/features/cart/presentation/screens/parts/cart_appbar.dart';
 

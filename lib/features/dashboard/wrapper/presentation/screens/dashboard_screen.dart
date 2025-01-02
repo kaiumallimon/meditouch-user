@@ -42,10 +42,10 @@ class DashboardScreen extends StatelessWidget {
   }
 
   final List<Widget> screens = [
-    HomeScreen(),
-    EpharmacyScreen(),
-    AppointmentScreen(),
-    MessagesScreen(),
-    AccountScreen()
+    const HomeScreen(),
+    const EpharmacyScreen(),
+    const AppointmentScreen(),
+    const MessagesScreen(),
+    const AccountScreen()
   ];
 }
