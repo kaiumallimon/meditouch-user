@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meditouch/common/repository/bkash_repository.dart';
 import 'package:meditouch/common/widgets/custom_loading_animation.dart';
 import 'package:meditouch/features/dashboard/features/cart/models/cart_model.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../../order/data/models/order_model.dart';
@@ -32,29 +34,57 @@ class CartCheckoutScreen extends StatelessWidget {
       appBar: checkoutAppBar(theme),
 
       // body
-      body: BlocBuilder<CartBloc, CartState>(
+      body: BlocConsumer<CartBloc, CartState>(
+        listener: (context, state) {
+          // listen for checkout success and errors
+          if (state is CartCheckoutSuccess) {
+            QuickAlert.show(
+                context: context,
+                type: QuickAlertType.success,
+                onConfirmBtnTap: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  context.read<CartBloc>().add(LoadCart());
+                },
+                text:
+                    'Your order has been placed successfully, go to orders to track your order');
+          }
+
+          if (state is CartCheckoutError) {
+            QuickAlert.show(
+                context: context,
+                type: QuickAlertType.error,
+                title: 'Error',
+                onConfirmBtnTap: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  context.read<CartBloc>().add(LoadCart());
+                },
+                text: state.message);
+          }
+        },
         builder: (context, state) {
           if (state is CartCheckoutLoading) {
             return CustomLoadingAnimation(size: 30, color: theme.primary);
           }
 
-          if (state is CartCheckoutSuccess) {
-            return checkoutSuccess(theme, context);
-          }
+          // if (state is CartCheckoutSuccess) {
+          //   return checkoutSuccess(theme, context);
+          // }
 
           if (state is CartPaymentWebview) {
             return checkoutWebView(
                 theme, context, state, cartItems, selectedItems);
           }
 
-          if (state is CartCheckoutError) {
-            return Center(
-              child: Text(
-                state.message,
-                style: TextStyle(color: theme.error),
-              ),
-            );
-          }
+          // if (state is CartCheckoutError) {
+          //   return Center(
+          //     child: Text(
+          //       state.message,
+          //       style: TextStyle(color: theme.error),
+          //     ),
+          //   );
+          // }
 
           return checkoutBody(context, theme, cartItems, selectedItems);
         },
