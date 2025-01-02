@@ -71,4 +71,45 @@ class OrderRepository {
       );
     }
   }
+
+  Future<Map<String, dynamic>> addPaymentLog(
+    String paymentId,
+    String transactionId,
+    String userId,
+    String orderId,
+    String amount,
+    String currency,
+    String invoiceNumber,
+  ) async {
+    try {
+      final docRef = await _firestore.collection('db_client_payment_logs').add({
+        'payment_id': paymentId,
+        'transaction_id': transactionId,
+        'user_id': userId,
+        'order_id': orderId,
+        'amount': amount,
+        'currency': currency,
+        'invoice_number': invoiceNumber,
+        'created_at': FieldValue.serverTimestamp(),
+      });
+      return {
+        'status': true,
+        'message': 'Payment log created successfully',
+        'logId': docRef.id,
+      };
+    } on FirebaseException catch (e) {
+      // Firebase-specific error
+      return {
+        'status': false,
+        'message': 'Firebase error: ${e.message}',
+        'code': e.code,
+      };
+    } catch (e) {
+      // Other errors
+      return {
+        'status': false,
+        'message': 'An unexpected error occurred: $e',
+      };
+    }
+  }
 }
