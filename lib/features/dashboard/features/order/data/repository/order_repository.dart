@@ -73,13 +73,15 @@ class OrderRepository {
   }
 
   Future<Map<String, dynamic>> addPaymentLog(
-    String paymentId,
-    String transactionId,
-    String userId,
-    String orderId,
-    String amount,
-    String currency,
-    String invoiceNumber,
+   {
+    required String paymentId,
+    required String transactionId,
+    required double amount,
+    required String currency,
+    required String invoiceNumber,
+    required String orderId,
+    required String userId,
+   }
   ) async {
     try {
       final docRef = await _firestore.collection('db_client_payment_logs').add({
@@ -90,6 +92,7 @@ class OrderRepository {
         'amount': amount,
         'currency': currency,
         'invoice_number': invoiceNumber,
+        'purpose': 'Medicine Purchase',
         'created_at': FieldValue.serverTimestamp(),
       });
       return {
