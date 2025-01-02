@@ -34,3 +34,32 @@ class CheckoutRequested extends CartEvent {
 
   CheckoutRequested(this.cartIds, this.order);
 }
+
+class PaymentExecuted extends CartEvent {
+  final String paymentId;
+  final String transactionId;
+  final String amount;
+  final String currency;
+  final String invoiceNumber;
+
+  final List<String> cartIds;
+  final OrderModel order;
+
+  PaymentExecuted(
+      {required this.cartIds,
+      required this.order,
+      required this.paymentId,
+      required this.transactionId,
+      required this.amount,
+      required this.currency,
+      required this.invoiceNumber});
+}
+
+class CartCheckoutGotError extends CartEvent {
+  final String message;
+  CartCheckoutGotError(this.message);
+}
+
+class CartCheckoutShowLoading extends CartEvent {
+  CartCheckoutShowLoading();
+}
