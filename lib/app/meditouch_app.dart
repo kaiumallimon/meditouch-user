@@ -1,6 +1,7 @@
 import 'package:meditouch/app/app_bloc_providers.dart';
 
 import '../features/dashboard/features/cart/presentation/screens/cart_screen.dart';
+import '../features/dashboard/features/order/presentation/screens/order_checkout_screen.dart';
 import './app_exporter.dart';
 
 class MediTouchApp extends StatelessWidget {
@@ -29,6 +30,7 @@ class MediTouchApp extends StatelessWidget {
               "/profile": (context) => ProfileScreen(),
               "/theme": (context) => const ThemeScreen(),
               "/cart": (context) => const CartScreen(),
+              "/orders": (context) => const OrderScreen(),
             },
           );
         },

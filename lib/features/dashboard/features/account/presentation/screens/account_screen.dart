@@ -267,7 +267,7 @@ class AccountScreen extends StatelessWidget {
         'icon': Icons.receipt_long,
         'label': 'Orders',
         'onTap': () {
-          // Navigator.of(context).pushNamed('/orders');
+          Navigator.of(context).pushNamed('/orders');
         }
       }, // Replaced with a proper icon
       {
