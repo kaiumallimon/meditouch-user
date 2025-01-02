@@ -25,7 +25,8 @@ void showQuantityDialog(
                       style: TextStyle(color: theme.onSurface.withOpacity(.5))),
                   Text(
                     state.medicineDetails.unitPrices[state.selectedUnitIndex]
-                        .unit,
+                        .unit
+                        .replaceAll('Ã', 'x'),
                     style: TextStyle(
                         color: theme.primary, fontWeight: FontWeight.w600),
                   ), // This line is not working
