@@ -131,9 +131,7 @@ Widget checkoutWebView(
                           userPhoneNumber: state.userPhone,
                           userFullName: state.userFullName,
                           paymentMethod: "bKash",
-                          paymentStatus: response.amount == state.totalAmount
-                              ? 'Paid'
-                              : 'Pending',
+                          paymentStatus: "Paid",
                           totalPrice: state.totalAmount,
                           orderId: "")));
                 } else {
