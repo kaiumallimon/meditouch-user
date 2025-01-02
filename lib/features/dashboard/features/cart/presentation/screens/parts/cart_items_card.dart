@@ -56,7 +56,7 @@ GestureDetector cartItemsCard(bool isSelected, BuildContext context,
                           fontWeight: FontWeight.bold)),
                   const SizedBox(height: 5),
                   Text(
-                      'Quantity: ${item.quantity} (${item.medicine.unitPrices[item.unitIndex].unit})',
+                      'Quantity: ${item.quantity} (${item.medicine.unitPrices[item.unitIndex].unit.replaceAll('Ã', 'x')})',
                       style: TextStyle(
                         color: isSelected ? theme.onPrimary : theme.primary,
                       )),
