@@ -1,6 +1,7 @@
 // cart_state.dart
 import 'package:equatable/equatable.dart';
 import 'package:meditouch/features/dashboard/features/cart/models/cart_model.dart';
+import 'package:meditouch/features/dashboard/features/epharmacy/data/model/medicine_model.dart';
 
 abstract class CartState extends Equatable {
   const CartState();
@@ -78,4 +79,64 @@ class CartPaymentSate extends CartState {
 
   @override
   List<Object> get props => [];
+}
+
+class CartPaymentWebview extends CartState {
+  final String paymentUrl;
+  final String paymentId;
+  final String tokenId;
+  final String deliveryAddress;
+  final String uid;
+  final double totalAmount;
+  final String userFullName;
+  final String userPhone;
+  final List<Medicine> medicines;
+
+  const CartPaymentWebview(
+      {required this.paymentUrl,
+      required this.paymentId,
+      required this.deliveryAddress,
+      required this.tokenId,
+      required this.uid,
+      required this.totalAmount,
+      required this.userFullName,
+      required this.userPhone,
+      required this.medicines});
+
+  @override
+  List<Object> get props => [
+        paymentUrl,
+        paymentId,
+        tokenId,
+        deliveryAddress,
+        uid,
+        totalAmount,
+        userFullName,
+        userPhone,
+        medicines
+      ];
+}
+
+class CartPaymentGatewaySuccess extends CartState {
+  final String paymentId;
+  final String transactionId;
+  final String amount;
+  final String currency;
+  final String invoiceNumber;
+
+  const CartPaymentGatewaySuccess(
+      {required this.paymentId,
+      required this.transactionId,
+      required this.amount,
+      required this.currency,
+      required this.invoiceNumber});
+
+  @override
+  List<Object> get props => [
+        paymentId,
+        transactionId,
+        amount,
+        currency,
+        invoiceNumber,
+      ];
 }
