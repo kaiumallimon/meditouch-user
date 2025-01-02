@@ -1,5 +1,6 @@
 import '../features/dashboard/features/cart/data/cart_repository.dart';
 import '../features/dashboard/features/cart/logics/cart_bloc.dart';
+import '../features/dashboard/features/order/logics/order_bloc.dart';
 import './app_exporter.dart';
 
 final providers = [
@@ -64,7 +65,6 @@ final providers = [
     ),
   ),
 
-
   // add payment cubit
   BlocProvider<PaymentCubit>(
     create: (_) => PaymentCubit(),
@@ -73,5 +73,10 @@ final providers = [
   // add address cubit
   BlocProvider<AddressCubit>(
     create: (_) => AddressCubit(),
+  ),
+
+  // add order bloc
+  BlocProvider<OrderBloc>(
+    create: (_) => OrderBloc(),
   ),
 ];
