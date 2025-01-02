@@ -8,6 +8,7 @@ class CustomTextfield extends StatelessWidget {
       required this.bgColor,
       required this.fgColor,
       required this.controller,
+      this.onChanged,
       required this.iconData});
 
   final String hint;
@@ -16,6 +17,7 @@ class CustomTextfield extends StatelessWidget {
   final Color fgColor;
   final IconData iconData;
   final TextEditingController controller;
+  final Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +39,7 @@ class CustomTextfield extends StatelessWidget {
           Expanded(
             child: TextField(
               controller: controller,
+              onChanged: onChanged,
               style: TextStyle(
                 color: fgColor,
                 fontSize: 14,
