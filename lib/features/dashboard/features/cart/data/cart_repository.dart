@@ -44,4 +44,16 @@ class CartRepository {
       return [];
     }
   }
+
+
+  Future<Map<String,dynamic>> removeMultipleFromCart(List<String> cartIds)async{
+    try{
+      for (var cartId in cartIds) {
+        await _firestore.collection('db_client_user_cart').doc(cartId).delete();
+      }
+      return {'status': true, 'message': 'Removed from cart'};
+    }catch(e){
+      return {'status': false, 'message': e.toString()};
+    }
+  }
 }
