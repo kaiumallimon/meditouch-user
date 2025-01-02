@@ -13,8 +13,10 @@ class UpdateProfile extends ProfileEvent {
   final String uid;
   final XFile? image;
 
-  const UpdateProfile(
-      {required this.data, required this.uid, this.image});
+  UpdateProfile({required this.data, required this.uid, this.image}) {
+    print('UpdateProfile');
+    print('data: $data');
+  }
 
   @override
   List<Object> get props => [data, uid];
