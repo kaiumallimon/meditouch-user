@@ -6,6 +6,7 @@ import 'package:meditouch/features/dashboard/features/cart/presentation/screens/
 import '../../logics/cart_bloc.dart';
 import '../../logics/cart_event.dart';
 import '../../logics/cart_state.dart';
+import 'cart_checkout_screen.dart';
 import 'parts/cart_body.dart';
 
 class CartScreen extends StatelessWidget {
@@ -56,6 +57,18 @@ class CartScreen extends StatelessWidget {
                     foregroundColor: theme.onSecondary,
                     onPressed: () {
                       // go to the checkout screen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BlocProvider(
+                            create: (context) => PaymentCubit(),
+                            child: CartCheckoutScreen(
+                              cartItems: state.selectedCartItems,
+                              selectedItems: state.selectedItems,
+                            ),
+                          ),
+                        ),
+                      );
                     },
                     label: const Text("Proceed to checkout"),
                   )
