@@ -19,6 +19,8 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
 
+    context.read<HomeBloc>().add(HomeRefreshRequested());
+
     return RefreshIndicator(
       onRefresh: () async {
         context.read<HomeBloc>().add(HomeRefreshRequested());
