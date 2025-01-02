@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../../../../../common/widgets/custom_button.dart';
+import '../../../logics/cart_bloc.dart';
+import '../../../logics/cart_event.dart';
 
 Center checkoutSuccess(ColorScheme theme, BuildContext context) {
   return Center(
@@ -29,8 +32,8 @@ Center checkoutSuccess(ColorScheme theme, BuildContext context) {
           size: const Size(120, 45),
           text: "Exit",
           onPressed: () {
-            // Navigator.pop(context);
             Navigator.pop(context);
+            context.read<CartBloc>().add(LoadCart());
           },
           bgColor: theme.primary,
           fgColor: theme.onPrimary,
