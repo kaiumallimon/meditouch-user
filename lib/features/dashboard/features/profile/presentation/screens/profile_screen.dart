@@ -33,7 +33,9 @@ class ProfileScreen extends StatelessWidget {
               context: context,
               type: QuickAlertType.success,
               title: state.message,
-              text: "Please restart the app to see changes",
+              text: state.message == 'No changes detected.'
+                  ? null
+                  : "Please restart the app to see changes",
             );
           }
           if (state is ProfileUpdateError) {
