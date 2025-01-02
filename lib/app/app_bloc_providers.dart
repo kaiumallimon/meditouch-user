@@ -63,4 +63,15 @@ final providers = [
       CartRepository(),
     ),
   ),
+
+
+  // add payment cubit
+  BlocProvider<PaymentCubit>(
+    create: (_) => PaymentCubit(),
+  ),
+
+  // add address cubit
+  BlocProvider<AddressCubit>(
+    create: (_) => AddressCubit(),
+  ),
 ];
