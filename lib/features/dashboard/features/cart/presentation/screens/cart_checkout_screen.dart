@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meditouch/common/repository/bkash_repository.dart';
@@ -7,8 +5,6 @@ import 'package:meditouch/common/widgets/custom_loading_animation.dart';
 import 'package:meditouch/features/dashboard/features/cart/models/cart_model.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import '../../../../../../common/repository/hive_repository.dart';
-import '../../../epharmacy/data/model/medicine_model.dart';
 import '../../../order/data/models/order_model.dart';
 import '../../logics/cart_bloc.dart';
 import '../../logics/cart_event.dart';
@@ -119,7 +115,6 @@ Widget checkoutWebView(
                     .add(CartCheckoutGotError(e.toString()));
               }
             } else if (url.contains('failure')) {
-              print('Payment failed');
               BlocProvider.of<CartBloc>(context)
                   .add(CartCheckoutGotError('Payment failed'));
             } else if (url.contains('cancelled')) {
