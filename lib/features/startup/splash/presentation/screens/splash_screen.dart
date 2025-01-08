@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:meditouch/common/repository/hive_repository.dart';
 import 'package:meditouch/features/startup/splash/logics/splash_bloc.dart';
@@ -32,13 +33,13 @@ class SplashScreen extends StatelessWidget {
                   userInfo.containsKey('id') &&
                   (userInfo['id']?.toString().isNotEmpty ?? false)) {
                 // User is logged in, navigate to Dashboard
-                Navigator.pushReplacementNamed(context, "/dashboard");
+                Get.toNamed("/dashboard");
               } else if (await getWelcomePageWatched()) {
                 // Welcome page watched, navigate to Login
-                Navigator.pushReplacementNamed(context, "/login");
+                Get.toNamed("/login");
               } else {
                 // First time user, navigate to Welcome
-                Navigator.pushReplacementNamed(context, "/welcome");
+                Get.toNamed("/welcome");
               }
             }
           },
