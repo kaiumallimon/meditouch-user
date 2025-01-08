@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:meditouch/common/widgets/widget_motion.dart';
 import 'package:meditouch/features/startup/welcome/logics/welcome_cubit.dart';
 import 'package:meditouch/features/startup/welcome/presentation/widgets/textstyles.dart';
@@ -23,19 +24,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       "image": "assets/images/welcome-1.png",
       "title": "Healthcare at your fingertips, no matter where you are",
       "subtitle":
-      "Connecting rural communities to expert doctors-panel through seamless video consultations and affordable care.",
+          "Connecting rural communities to expert doctors-panel through seamless video consultations and affordable care.",
     },
     {
       "image": "assets/images/welcome-2.png",
       "title": "Bringing Quality Care Closer to Home",
       "subtitle":
-      "Empowering you with easy access to medical services, medications, and emergency support from anywhere.",
+          "Empowering you with easy access to medical services, medications, and emergency support from anywhere.",
     },
     {
       "image": "assets/images/welcome-3.png",
       "title": "Affordable, Accessible Anytime Healthcare",
       "subtitle":
-      "Transforming healthcare with cost-friendly solutions and real-time medical support for all.",
+          "Transforming healthcare with cost-friendly solutions and real-time medical support for all.",
     }
   ];
 
@@ -159,7 +160,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: List.generate(
                         2,
-                            (index) {
+                        (index) {
                           return Expanded(
                             child: Padding(
                               padding: EdgeInsets.symmetric(
@@ -179,11 +180,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                   text: index == 0 ? 'Register' : 'Login',
                                   onPressed: () {
                                     if (index == 0) {
-                                      Navigator.of(context)
-                                          .pushReplacementNamed('/register');
+                                      Get.toNamed('/register');
                                     } else {
-                                      Navigator.of(context)
-                                          .pushReplacementNamed('/login');
+                                      Get.toNamed('/login');
                                     }
 
                                     setWelcomePageWatched();
