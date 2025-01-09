@@ -48,11 +48,11 @@ Widget buildEpharmacyShimmer(BuildContext context, ColorScheme theme) {
           itemBuilder: (context, index) {
             return Shimmer.fromColors(
               direction: ShimmerDirection.ltr,
-              baseColor: theme.primary.withOpacity(0.3),
-              highlightColor: theme.secondary.withOpacity(0.5),
+              baseColor: theme.primary.withOpacity(0.4),
+              highlightColor: theme.secondary.withOpacity(0.4),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.3),
+                  color: theme.primary.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),

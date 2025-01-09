@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meditouch/common/widgets/custom_tinted_iconbutton.dart';
 import 'package:meditouch/features/dashboard/features/epharmacy/presentation/screens/gemini_medicine_scan.dart';
-
-import '../gemini_medicine_scan.dart';
 import 'epharmacy_medicine_scan_button.dart';
 
 Widget buildCustomAppBar(BuildContext context, ColorScheme theme) {

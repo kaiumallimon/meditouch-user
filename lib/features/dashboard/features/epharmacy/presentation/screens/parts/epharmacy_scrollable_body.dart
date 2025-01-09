@@ -1,11 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meditouch/common/widgets/custom_button.dart';
 import 'package:meditouch/features/dashboard/features/epharmacy/logics/epharmacy_events.dart';
 import 'package:quickalert/quickalert.dart';
-
-import '../../../../../../../common/widgets/custom_loading_animation.dart';
 import '../../../logics/epharmacy_bloc.dart';
 import '../../../logics/epharmacy_states.dart';
 import '../detailed_medicine.dart';
