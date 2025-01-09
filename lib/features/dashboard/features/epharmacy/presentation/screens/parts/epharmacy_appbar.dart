@@ -3,6 +3,9 @@ import 'package:get/get.dart';
 import 'package:meditouch/common/widgets/custom_tinted_iconbutton.dart';
 import 'package:meditouch/features/dashboard/features/epharmacy/presentation/screens/gemini_medicine_scan.dart';
 
+import '../gemini_medicine_scan.dart';
+import 'epharmacy_medicine_scan_button.dart';
+
 Widget buildCustomAppBar(BuildContext context, ColorScheme theme) {
   return Padding(
     padding: const EdgeInsets.only(top: 0, bottom: 10),
@@ -24,17 +27,14 @@ Widget buildCustomAppBar(BuildContext context, ColorScheme theme) {
                     color: theme.onSurface.withOpacity(.5), fontSize: 12)),
           ],
         ),
-        CustomTintedIconButton(
-            child: Image.asset(
-              'assets/icons/ai.png',
-              width: 20,
-              height: 20,
-              color: theme.primary,
-            ),
-            onPressed: () {
-              // go to ai image screen page:
-              Get.to(GeminiMedicineScan());
-            })
+
+        
+        buildGeminiMedicineScan(context, () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return const GeminiMedicineScan();
+          }));
+        }),
+
       ],
     ),
   );
