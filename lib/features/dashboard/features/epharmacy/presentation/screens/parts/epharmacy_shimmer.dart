@@ -52,7 +52,7 @@ Widget buildEpharmacyShimmer(BuildContext context, ColorScheme theme) {
               highlightColor: theme.secondary.withOpacity(0.4),
               child: Container(
                 decoration: BoxDecoration(
-                  color: theme.primary.withOpacity(0.2),
+                  color: theme.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
