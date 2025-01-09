@@ -1,7 +1,7 @@
-import 'package:meditouch/app/app_bloc_providers.dart';
-
+import 'package:get/get.dart';
 import '../features/dashboard/features/cart/presentation/screens/cart_screen.dart';
 import '../features/dashboard/features/order/presentation/screens/order_screen.dart';
+import 'app_bloc_providers.dart';
 import './app_exporter.dart';
 
 class MediTouchApp extends StatelessWidget {
@@ -11,27 +11,27 @@ class MediTouchApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // initialize the blocs using multiblocprovider
     return MultiBlocProvider(
-      providers: providers,
+      providers: providers, // Initialize Blocs using MultiBlocProvider
       child: BlocBuilder<ThemeCubit, bool>(
         builder: (context, darkMode) {
-          return MaterialApp(
+          return GetMaterialApp(
             debugShowCheckedModeBanner: false,
             theme: darkMode ? AppTheme().getDarkTheme() : AppTheme().getTheme(),
-            // define the routes
+
+            // Use GetX's navigation and routes
             initialRoute: "/",
-            routes: {
-              "/": (context) => const SplashScreen(),
-              "/welcome": (context) => const WelcomeScreen(),
-              "/login": (context) => LoginScreen(),
-              "/register": (context) => const RegisterScreen(),
-              "/dashboard": (context) => DashboardScreen(),
-              "/profile": (context) => ProfileScreen(),
-              "/theme": (context) => const ThemeScreen(),
-              "/cart": (context) => const CartScreen(),
-              "/orders": (context) => const OrderScreen(),
-            },
+            getPages: [
+              GetPage(name: "/", page: () => const SplashScreen()),
+              GetPage(name: "/welcome", page: () => const WelcomeScreen()),
+              GetPage(name: "/login", page: () => LoginScreen()),
+              GetPage(name: "/register", page: () => const RegisterScreen()),
+              GetPage(name: "/dashboard", page: () => DashboardScreen()),
+              GetPage(name: "/profile", page: () => ProfileScreen()),
+              GetPage(name: "/theme", page: () => const ThemeScreen()),
+              GetPage(name: "/cart", page: () => const CartScreen()),
+              GetPage(name: "/orders", page: () => const OrderScreen()),
+            ],
           );
         },
       ),

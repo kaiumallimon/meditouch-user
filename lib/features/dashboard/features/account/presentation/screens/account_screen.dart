@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:meditouch/common/widgets/custom_button.dart';
 import 'package:meditouch/common/widgets/custom_loading_animation.dart';
 import 'package:meditouch/features/dashboard/features/account/logics/account_states.dart';
@@ -57,7 +58,7 @@ class AccountScreen extends StatelessWidget {
                 if (state is AccountLogout) {
                   // reset the navigation index;
                   context.read<NavigationCubit>().reset();
-                  Navigator.of(context).pushReplacementNamed(
+                  Get.toNamed(
                     '/login',
                   );
                 }
@@ -91,8 +92,7 @@ class AccountScreen extends StatelessWidget {
                       // profile text
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context)
-                              .pushNamed('/profile', arguments: userInfo);
+                          Get.toNamed('/profile', arguments: userInfo);
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -239,7 +239,7 @@ class AccountScreen extends StatelessWidget {
               leading: Icon(Icons.dark_mode, color: theme.primary),
               tileColor: Colors.transparent,
               onTap: () {
-                Navigator.of(context).pushNamed('/theme');
+                Get.toNamed('/theme');
               },
               borderRadius: 0,
               title: Text('Appearances & Themes',
@@ -260,14 +260,14 @@ class AccountScreen extends StatelessWidget {
         'icon': Icons.shopping_bag,
         'label': 'Cart',
         'onTap': () {
-          Navigator.of(context).pushNamed('/cart');
+          Get.toNamed('/cart');
         }
       },
       {
         'icon': Icons.receipt_long,
         'label': 'Orders',
         'onTap': () {
-          Navigator.of(context).pushNamed('/orders');
+          Get.toNamed('/orders');
         }
       }, // Replaced with a proper icon
       {
@@ -339,7 +339,7 @@ class AccountScreen extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () {
-            Navigator.of(context).pushNamed('/profile', arguments: userInfo);
+            Get.toNamed('/profile', arguments: userInfo);
           },
           child: Container(
             height: 120,
