@@ -11,6 +11,7 @@ import '../../../logics/epharmacy_states.dart';
 import '../detailed_medicine.dart';
 import '../epharmacy_search.dart';
 import 'epharmacy_medicine_card.dart';
+import 'epharmacy_shimmer.dart';
 
 Widget buildCustomBody(BuildContext context, ColorScheme theme) {
   return BlocConsumer<EpharmacyBloc, EpharmacyStates>(
@@ -23,7 +24,8 @@ Widget buildCustomBody(BuildContext context, ColorScheme theme) {
     builder: (context, state) {
       // loading state
       if (state is EpharmacyLoadingState) {
-        return CustomLoadingAnimation(size: 30, color: theme.primary);
+        // return CustomLoadingAnimation(size: 30, color: theme.primary);
+        return buildEpharmacyShimmer(context, theme);
       }
 
       // loaded state
