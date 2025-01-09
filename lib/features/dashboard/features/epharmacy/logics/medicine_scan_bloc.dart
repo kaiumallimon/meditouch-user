@@ -1,7 +1,4 @@
-import 'dart:developer';
 import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meditouch/features/dashboard/features/epharmacy/data/repository/gemini_repository.dart';
