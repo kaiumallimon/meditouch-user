@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 import 'package:meditouch/common/widgets/widget_motion.dart';
 import 'package:meditouch/features/startup/welcome/logics/welcome_cubit.dart';
 import 'package:meditouch/features/startup/welcome/presentation/widgets/textstyles.dart';
@@ -180,9 +179,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                   text: index == 0 ? 'Register' : 'Login',
                                   onPressed: () {
                                     if (index == 0) {
-                                      Get.toNamed('/register');
+                                      Navigator.of(context)
+                                          .pushReplacementNamed('/register');
                                     } else {
-                                      Get.toNamed('/login');
+                                      Navigator.of(context)
+                                          .pushReplacementNamed('/login');
                                     }
 
                                     setWelcomePageWatched();
