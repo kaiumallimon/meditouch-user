@@ -35,7 +35,7 @@ class BkashRepository {
       ),
     );
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 ) {
       log("grant token: ${response.body}");
       return GrantTokenResponse.fromJson(response.body);
     } else {
