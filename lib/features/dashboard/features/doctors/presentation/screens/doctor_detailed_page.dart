@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:meditouch/app/app_exporter.dart';
 import 'package:meditouch/common/widgets/custom_loading_animation.dart';
 import 'package:meditouch/features/dashboard/features/doctors/data/models/doctor_model.dart';
@@ -72,98 +73,152 @@ Widget buildDetailedDoctorBody(
 
 Widget buildDoctorTimeSlotsCard(
     BuildContext context, ColorScheme theme, String doctorId) {
-  // print(doctor.timeSlots);
-
   return StreamBuilder<Map<String, dynamic>>(
-      stream: DetailedDoctorRepository().getDoctorDetails(doctorId),
-      builder: (context, snapshot) {
-        if (snapshot.hasError ||
-            !snapshot.hasData ||
-            snapshot.data!['status'] == false) {
-          return const Center(
-            child: Text('An error occurred while fetching doctor details'),
-          );
-        }
+    stream: DetailedDoctorRepository().getDoctorDetails(doctorId),
+    builder: (context, snapshot) {
+      if (snapshot.hasError ||
+          !snapshot.hasData ||
+          snapshot.data!['status'] == false) {
+        return const Center(
+          child: Text('An error occurred while fetching doctor details'),
+        );
+      }
 
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CustomLoadingAnimation(
-              size: 30,
-              color: theme.primary,
-            ),
-          );
-        }
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Center(
+          child: CustomLoadingAnimation(
+            size: 30,
+            color: theme.primary,
+          ),
+        );
+      }
 
-        final DoctorModel doctor = snapshot.data!['doctor'];
+      final DoctorModel doctor = snapshot.data!['doctor'];
 
-        return doctor.timeSlots.isEmpty
-            ? const Center(
-                child: Text(
-                  'No time slots available at the moment',
-                ),
-              )
-            : Container(
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: theme.primary.withOpacity(.1),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    for (final entry in doctor.timeSlots.entries)
-                      // Filter available time slots
-                      if (entry.value.any((slot) => slot['isBooked'] == false))
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              entry.key,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: theme.primary,
-                              ),
+      return doctor.timeSlots.isEmpty
+          ? const Center(
+              child: Text(
+                'No time slots available at the moment',
+              ),
+            )
+          : Container(
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: theme.primary.withOpacity(.1),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (final entry in doctor.timeSlots.entries)
+                    if (entry.value.any((slot) => slot['isBooked'] == false))
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            entry.key,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: theme.primary,
                             ),
-                            const SizedBox(height: 10),
-                            for (final slot in entry.value)
-                              if (slot['isBooked'] == false)
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            AppointmentBookScreen(
-                                          date: entry.key,
-                                          timeSlotIndex:
-                                              entry.value.indexOf(slot),
-                                          doctor: doctor,
-                                        ),
-                                      ),
+                          ),
+                          const SizedBox(height: 10),
+                          ListView.builder(
+                            shrinkWrap: true, // Prevents overflow
+                            physics:
+                                NeverScrollableScrollPhysics(), // Disable scrolling
+                            itemCount: entry.value
+                                .where((slot) => slot['isBooked'] == false)
+                                .toList()
+                                .length,
+                            itemBuilder: (context, index) {
+                              final availableSlots = entry.value
+                                  .where((slot) => slot['isBooked'] == false)
+                                  .toList();
+
+                              // Sorting the slots based on start time
+                              final sortedSlots = List.from(availableSlots)
+                                ..sort((a, b) {
+                                  // Extract and convert the start time from the string
+                                  DateTime parseTime(String time) {
+                                    final timePart =
+                                        time.split(" - ")[0].trim();
+
+                                    final timeParts = timePart.split(" ");
+                                    final hourMinute = timeParts[0].split(":");
+                                    final hour = int.parse(hourMinute[0]);
+                                    final minute = int.parse(hourMinute[1]);
+                                    final amPm = timeParts[1].toUpperCase();
+
+                                    // Adjust hour for AM/PM format
+                                    int adjustedHour = hour;
+                                    if (amPm == "PM" && hour != 12) {
+                                      adjustedHour += 12;
+                                    } else if (amPm == "AM" && hour == 12) {
+                                      adjustedHour = 0;
+                                    }
+
+                                    return DateTime(
+                                      2025,
+                                      1,
+                                      1,
+                                      adjustedHour,
+                                      minute,
+                                      0,
                                     );
-                                  },
-                                  child: Container(
-                                    margin: const EdgeInsets.only(bottom: 10),
-                                    decoration: BoxDecoration(
-                                      color: theme.surfaceContainer,
-                                      borderRadius: BorderRadius.circular(10),
+                                  }
+
+                                  try {
+                                    return parseTime(a['time'])
+                                        .compareTo(parseTime(b['time']));
+                                  } catch (e) {
+                                    print("Error parsing time: $e");
+                                    return 0; // Default comparison if parsing fails
+                                  }
+                                });
+
+                              final slot = sortedSlots[index];
+
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          AppointmentBookScreen(
+                                        date: entry.key,
+                                        timeSlotIndex:
+                                            entry.value.indexOf(slot),
+                                        doctor: doctor,
+                                      ),
                                     ),
-                                    child: ListTile(
-                                      title: Text(
-                                        slot['time'],
-                                        style: const TextStyle(fontSize: 15),
-                                      ),
-                                      trailing: Icon(
-                                        Icons.arrow_forward_ios,
-                                        size: 16,
-                                        color: theme.primary.withOpacity(.5),
-                                      ),
+                                  );
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.only(bottom: 10),
+                                  decoration: BoxDecoration(
+                                    color: theme.surfaceContainer,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: ListTile(
+                                    title: Text(
+                                      slot['time'],
+                                      style: const TextStyle(fontSize: 15),
+                                    ),
+                                    trailing: Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 16,
+                                      color: theme.primary.withOpacity(.5),
                                     ),
                                   ),
                                 ),
-                          ],
-                        ),
-                  ],
-                ),
-              );
-      });
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                ],
+              ),
+            );
+    },
+  );
 }
