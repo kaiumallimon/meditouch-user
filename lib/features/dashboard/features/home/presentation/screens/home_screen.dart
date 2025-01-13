@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meditouch/common/widgets/custom_loading_animation.dart';
 import 'package:meditouch/features/dashboard/features/home/logics/home_event.dart';
 import 'package:meditouch/features/dashboard/features/home/presentation/screens/parts/home_grid.dart';
-import 'package:shimmer/shimmer.dart';
+// import 'package:shimmer/shimmer.dart';
 
 import '../../logics/home_bloc.dart';
 import '../../logics/home_state.dart';
@@ -35,83 +35,83 @@ class HomeScreen extends StatelessWidget {
         },
         builder: (context, state) {
           if (state is HomeLoading) {
-            // return CustomLoadingAnimation(
-            //   color: theme.primary,
-            //   size: 30,
-            // );
-            return SingleChildScrollView(
-              physics: const NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: [
-                  const SizedBox(height: 20),
-                  Shimmer.fromColors(
-                    baseColor: theme.primary.withOpacity(0.3),
-                    highlightColor: theme.secondary.withOpacity(0.5),
-                    child: Container(
-                      height: 50,
-                      width: double.infinity,
-                      color: theme.primary.withOpacity(0.1),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Shimmer.fromColors(
-                    baseColor: theme.primary.withOpacity(0.3),
-                    highlightColor: theme.secondary.withOpacity(0.5),
-                    child: Container(
-                      height: 20,
-                      width: double.infinity,
-                      color: theme.primary.withOpacity(0.1),
-                    ),
-                  ),
-                  const SizedBox(height: 7),
-                  Shimmer.fromColors(
-                    baseColor: theme.primary.withOpacity(0.3),
-                    highlightColor: theme.secondary.withOpacity(0.5),
-                    child: Container(
-                      height: 40,
-                      width: double.infinity,
-                      color: theme.primary.withOpacity(0.1),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Shimmer.fromColors(
-                    baseColor: theme.primary.withOpacity(0.3),
-                    highlightColor: theme.secondary.withOpacity(0.5),
-                    child: Container(
-                      height: 120,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: theme.primary.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    height: 240,
-                    child: GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 10,
-                        ),
-                        itemBuilder: (context, index) {
-                          return Shimmer.fromColors(
-                              baseColor: theme.primary.withOpacity(0.3),
-                              highlightColor: theme.secondary.withOpacity(0.5),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: theme.primary.withOpacity(0.1),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ));
-                        }),
-                  )
-                ],
-              ),
+            return CustomLoadingAnimation(
+              color: theme.primary,
+              size: 30,
             );
+            // return SingleChildScrollView(
+            //   physics: const NeverScrollableScrollPhysics(),
+            //   padding: EdgeInsets.symmetric(horizontal: 20),
+            //   child: Column(
+            //     children: [
+            //       const SizedBox(height: 20),
+            //       Shimmer.fromColors(
+            //         baseColor: theme.primary.withOpacity(0.3),
+            //         highlightColor: theme.secondary.withOpacity(0.5),
+            //         child: Container(
+            //           height: 50,
+            //           width: double.infinity,
+            //           color: theme.primary.withOpacity(0.1),
+            //         ),
+            //       ),
+            //       const SizedBox(height: 20),
+            //       Shimmer.fromColors(
+            //         baseColor: theme.primary.withOpacity(0.3),
+            //         highlightColor: theme.secondary.withOpacity(0.5),
+            //         child: Container(
+            //           height: 20,
+            //           width: double.infinity,
+            //           color: theme.primary.withOpacity(0.1),
+            //         ),
+            //       ),
+            //       const SizedBox(height: 7),
+            //       Shimmer.fromColors(
+            //         baseColor: theme.primary.withOpacity(0.3),
+            //         highlightColor: theme.secondary.withOpacity(0.5),
+            //         child: Container(
+            //           height: 40,
+            //           width: double.infinity,
+            //           color: theme.primary.withOpacity(0.1),
+            //         ),
+            //       ),
+            //       const SizedBox(height: 20),
+            //       Shimmer.fromColors(
+            //         baseColor: theme.primary.withOpacity(0.3),
+            //         highlightColor: theme.secondary.withOpacity(0.5),
+            //         child: Container(
+            //           height: 120,
+            //           width: double.infinity,
+            //           decoration: BoxDecoration(
+            //             color: theme.primary.withOpacity(0.1),
+            //             borderRadius: BorderRadius.circular(8),
+            //           ),
+            //         ),
+            //       ),
+            //       const SizedBox(height: 20),
+            //       SizedBox(
+            //         height: 240,
+            //         child: GridView.builder(
+            //             gridDelegate:
+            //                 const SliverGridDelegateWithFixedCrossAxisCount(
+            //               crossAxisCount: 3,
+            //               mainAxisSpacing: 10,
+            //               crossAxisSpacing: 10,
+            //             ),
+            //             itemBuilder: (context, index) {
+            //               return Shimmer.fromColors(
+            //                   baseColor: theme.primary.withOpacity(0.3),
+            //                   highlightColor: theme.secondary.withOpacity(0.5),
+            //                   child: Container(
+            //                     decoration: BoxDecoration(
+            //                       color: theme.primary.withOpacity(0.1),
+            //                       borderRadius: BorderRadius.circular(8),
+            //                     ),
+            //                   ));
+            //             }),
+            //       )
+            //     ],
+            //   ),
+            // );
           }
 
           if (state is HomeError) {

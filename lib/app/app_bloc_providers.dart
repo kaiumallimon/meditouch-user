@@ -1,5 +1,6 @@
 import '../features/dashboard/features/cart/data/cart_repository.dart';
 import '../features/dashboard/features/cart/logics/cart_bloc.dart';
+import '../features/dashboard/features/doctors/logics/doctors_bloc.dart';
 import '../features/dashboard/features/epharmacy/logics/medicine_scan_bloc.dart';
 import '../features/dashboard/features/order/logics/order_bloc.dart';
 import './app_exporter.dart';
@@ -84,5 +85,12 @@ final providers = [
   // add medicine scan bloc
   BlocProvider<MedicineScanBloc>(
     create: (_) => MedicineScanBloc(),
+  ),
+
+
+  ///  add the doctors bloc
+  /// 
+  BlocProvider<DoctorsBloc>(
+    create: (_) => DoctorsBloc(),
   ),
 ];

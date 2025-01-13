@@ -19,7 +19,8 @@ Widget buildHomeGridMenu(BuildContext context, ColorScheme theme) {
               height: 25,
             ),
             onTap: () {
-              // Navigator.of(context).pushNamed(Routes.appointment);
+              // go to doctors screen:
+              Navigator.of(context).pushNamed('/doctors');
             },
             backgroundColor: theme.primaryContainer,
             textColor: theme.onSurface,

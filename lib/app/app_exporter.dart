@@ -28,3 +28,6 @@ export '../features/dashboard/features/home/logics/home_event.dart';
 export '../features/dashboard/features/profile/data/repository/profile_repository.dart';
 export '../features/dashboard/features/epharmacy/logics/epharmacy_search_bloc.dart';
 export '../features/dashboard/features/profile/logics/profile_bloc.dart';
+export '../features/dashboard/features/cart/presentation/screens/cart_screen.dart';
+export '../features/dashboard/features/doctors/presentation/screens/doctors_screen.dart';
+export '../features/dashboard/features/order/presentation/screens/order_screen.dart';

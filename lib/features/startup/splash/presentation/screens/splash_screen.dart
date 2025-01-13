@@ -15,51 +15,60 @@ class SplashScreen extends StatelessWidget {
     BlocProvider.of<SplashBloc>(context).add(SplashStartedEvent());
 
     // Hide the status bar
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
+    // Get the theme
+    final theme = Theme.of(context).colorScheme;
+
+    // Set the status bar and navigation bar themes
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarIconBrightness: Brightness.light,
+    ));
 
     // Build the UI
     return Scaffold(
-      body: SafeArea(
-        child: BlocListener<SplashBloc, SplashState>(
-          listener: (context, state) async {
-            // Get the Hive repository instance
-            final hiveRepository = HiveRepository();
-            final userInfo = await hiveRepository.getUserInfo();
+      body: BlocListener<SplashBloc, SplashState>(
+        listener: (context, state) async {
+          // Get the Hive repository instance
+          final hiveRepository = HiveRepository();
+          final userInfo = await hiveRepository.getUserInfo();
 
-            // Check the state
-            if (state is SplashLoadedState) {
-              if (userInfo != null &&
-                  userInfo.containsKey('id') &&
-                  (userInfo['id']?.toString().isNotEmpty ?? false)) {
-                // User is logged in, navigate to Dashboard
-                Navigator.of(context).pushNamed('/dashboard');
-              } else if (await getWelcomePageWatched()) {
-                // Welcome page watched, navigate to Login
-                Navigator.of(context).pushNamed('/dashboard');
-              } else {
-                // First time user, navigate to Welcome
-                Navigator.of(context).pushNamed('/dashboard');
-              }
+          // Check the state
+          if (state is SplashLoadedState) {
+            if (userInfo != null &&
+                userInfo.containsKey('id') &&
+                (userInfo['id']?.toString().isNotEmpty ?? false)) {
+              // User is logged in, navigate to Dashboard
+              Navigator.of(context).pushNamed('/dashboard');
+            } else if (await getWelcomePageWatched()) {
+              // Welcome page watched, navigate to Login
+              Navigator.of(context).pushNamed('/dashboard');
+            } else {
+              // First time user, navigate to Welcome
+              Navigator.of(context).pushNamed('/dashboard');
             }
-          },
-          child: Stack(
-            children: [
-              // Gradient background for the splash screen
-              const GradientBackground(),
+          }
+        },
+        child: Stack(
+          children: [
+            // Gradient background for the splash screen
+            const GradientBackground(),
 
-              // Center logo image
-              Positioned(
-                left: 0,
-                right: 0,
-                top: 0,
-                bottom: 0,
-                child: Image.asset(
-                  'assets/images/logo2.png',
-                  scale: 2,
-                ),
+            // Center logo image
+            Positioned(
+              left: 0,
+              right: 0,
+              top: 0,
+              bottom: 0,
+              child: Image.asset(
+                'assets/images/logo2.png',
+                scale: 2,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
