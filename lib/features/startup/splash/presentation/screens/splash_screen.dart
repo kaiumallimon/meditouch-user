@@ -45,10 +45,10 @@ class SplashScreen extends StatelessWidget {
               Navigator.of(context).pushNamed('/dashboard');
             } else if (await getWelcomePageWatched()) {
               // Welcome page watched, navigate to Login
-              Navigator.of(context).pushNamed('/dashboard');
+              Navigator.of(context).pushNamed('/login');
             } else {
               // First time user, navigate to Welcome
-              Navigator.of(context).pushNamed('/dashboard');
+              Navigator.of(context).pushNamed('/welcome');
             }
           }
         },
