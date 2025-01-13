@@ -15,6 +15,7 @@ class DoctorModel extends Equatable {
   final String licenseId;
   final String createdAt;
   final Map<String, dynamic> timeSlots;
+  final List<Rating>? ratings;
 
   const DoctorModel({
     required this.id,
@@ -31,9 +32,22 @@ class DoctorModel extends Equatable {
     required this.licenseId,
     required this.createdAt,
     required this.timeSlots,
+    this.ratings,
   });
 
   factory DoctorModel.fromJson(dynamic json, String id) {
+    // Extract the time slots map from the JSON
+    final timeSlots = json['timeslots'] as Map<String, dynamic>?;
+
+    // Handle the case where timeSlots is null or empty
+    final sortedTimeSlots = timeSlots != null
+        ? Map.fromEntries(
+            timeSlots.entries.toList()
+              ..sort((a, b) =>
+                  DateTime.parse(a.key).compareTo(DateTime.parse(b.key))),
+          )
+        : <String, dynamic>{};
+
     return DoctorModel(
       id: id,
       name: json['name'],
@@ -50,7 +64,9 @@ class DoctorModel extends Equatable {
           .toList(),
       licenseId: json['licenseId'],
       createdAt: json['createdAt'],
-      timeSlots: json['timeslots'],
+      timeSlots: sortedTimeSlots,
+      ratings:
+          json['ratings'] != null ? [Rating.fromJson(json['ratings'])] : null,
     );
   }
 
@@ -69,6 +85,7 @@ class DoctorModel extends Equatable {
       'licenseId': licenseId,
       'createdAt': createdAt,
       'timeslots': timeSlots,
+      'rating': ratings,
     };
   }
 
@@ -88,6 +105,7 @@ class DoctorModel extends Equatable {
         licenseId,
         createdAt,
         timeSlots,
+        ratings,
       ];
 }
 
@@ -123,5 +141,29 @@ class DegreeModel extends Equatable {
 
   List<DegreeModel> getDegrees(List<dynamic> json) {
     return json.map((e) => DegreeModel.fromJson(e)).toList();
+  }
+}
+
+class Rating {
+  final double value;
+  final String message;
+
+  Rating({
+    required this.value,
+    required this.message,
+  });
+
+  factory Rating.fromJson(dynamic json) {
+    return Rating(
+      value: json['value'] * 1.0,
+      message: json['message'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'value': value,
+      'message': message,
+    };
   }
 }

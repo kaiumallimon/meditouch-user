@@ -1,5 +1,6 @@
 import '../features/dashboard/features/cart/data/cart_repository.dart';
 import '../features/dashboard/features/cart/logics/cart_bloc.dart';
+import '../features/dashboard/features/doctors/logics/detailed_doctor_bloc.dart';
 import '../features/dashboard/features/doctors/logics/doctors_bloc.dart';
 import '../features/dashboard/features/epharmacy/logics/medicine_scan_bloc.dart';
 import '../features/dashboard/features/order/logics/order_bloc.dart';
@@ -93,4 +94,9 @@ final providers = [
   BlocProvider<DoctorsBloc>(
     create: (_) => DoctorsBloc(),
   ),
+
+  /// add detailed doctor bloc
+  /// 
+  /// 
+  
 ];

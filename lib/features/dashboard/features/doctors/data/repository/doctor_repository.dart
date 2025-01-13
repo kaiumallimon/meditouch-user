@@ -24,4 +24,43 @@ class DoctorRepository {
       return [];
     }
   }
+
+  /// Fetch the last day of the doctor's schedule
+  ///
+  ///
+
+  Future<DateTime> fetchLastDayOfDoctorSchedule(String doctorId) async {
+    try {
+      final doctorSchedule = await _firestore
+          .collection('db_client_doctor_accountinfo')
+          .doc(doctorId)
+          .get();
+
+      // Check if the document exists and contains the 'timeslots' field
+      if (doctorSchedule.exists && doctorSchedule.data() != null) {
+        final data = doctorSchedule.data()!;
+        if (data.containsKey('timeslots')) {
+          // Get the timeslots map
+          final timeslots = data['timeslots'] as Map<String, dynamic>;
+
+          // Sort the keys (dates) in ascending order
+          final sortedKeys = timeslots.keys.toList()..sort();
+
+          // Get the last key
+          final lastKey = sortedKeys.last;
+
+          // Parse the last key into a DateTime object
+          return DateTime.parse(lastKey);
+        }
+      }
+
+      // Log if the timeslots field is missing
+      log('Timeslots not found for doctorId: $doctorId');
+      return DateTime.now();
+    } catch (e) {
+      // Log the error and return the current date as fallback
+      log('Error fetching last day of doctor schedule: ${e.toString()}');
+      return DateTime.now();
+    }
+  }
 }
