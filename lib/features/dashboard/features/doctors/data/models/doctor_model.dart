@@ -14,7 +14,7 @@ class DoctorModel extends Equatable {
   final List<DegreeModel> degrees;
   final String licenseId;
   final String createdAt;
-  final Map<String, dynamic> timeSlots;
+  final Map<String, List<Map<String, dynamic>>> timeSlots;
   final List<Rating>? ratings;
 
   const DoctorModel({
@@ -36,17 +36,20 @@ class DoctorModel extends Equatable {
   });
 
   factory DoctorModel.fromJson(dynamic json, String id) {
-    // Extract the time slots map from the JSON
-    final timeSlots = json['timeslots'] as Map<String, dynamic>?;
-
-    // Handle the case where timeSlots is null or empty
-    final sortedTimeSlots = timeSlots != null
-        ? Map.fromEntries(
-            timeSlots.entries.toList()
-              ..sort((a, b) =>
-                  DateTime.parse(a.key).compareTo(DateTime.parse(b.key))),
-          )
-        : <String, dynamic>{};
+    /// Extract and sort time slots
+    final timeSlots = (json['timeSlots'] as Map<String, dynamic>?) ?? {};
+    final sortedTimeSlots = Map<String, List<Map<String, dynamic>>>.fromEntries(
+      timeSlots.entries.map(
+        (entry) {
+          // Ensure value is a list of maps
+          final slotList =
+              (entry.value as List?)?.cast<Map<String, dynamic>>() ?? [];
+          return MapEntry(entry.key, slotList);
+        },
+      ).toList()
+        ..sort(
+            (a, b) => DateTime.parse(a.key).compareTo(DateTime.parse(b.key))),
+    );
 
     return DoctorModel(
       id: id,
