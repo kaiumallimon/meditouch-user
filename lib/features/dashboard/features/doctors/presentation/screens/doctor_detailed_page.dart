@@ -1,8 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:intl/intl.dart';
+import 'package:get/get.dart';
 import 'package:meditouch/app/app_exporter.dart';
+import 'package:meditouch/common/widgets/custom_loading_animation.dart';
 import 'package:meditouch/features/dashboard/features/doctors/data/models/doctor_model.dart';
+import '../../data/repository/detailed_doctor_repository.dart';
+import '../../logics/detailed_doctor_controller.dart';
 import '../widgets/build_rating_stars.dart';
+import 'appointment_book_screen.dart';
 
 part './parts/doctor_info_card.dart';
 
@@ -16,6 +20,9 @@ class DoctorDetailedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
+
+    Get.put(() => DetailedDoctorController(doctor.id,
+        repository: DetailedDoctorRepository()));
 
     return SafeArea(
       child: Scaffold(
@@ -48,161 +55,115 @@ Widget buildDetailedDoctorBody(
 
         const SizedBox(height: 15),
 
-        // Appointment details card
-        doctor.timeSlots.isNotEmpty
-            ? DoctorAppointmentDetailsCard(theme: theme, doctor: doctor)
-            : const Center(
-                child: Text(
-                  "No available appointments at this time.",
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
+        Text('Available Time Slots',
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: theme.primary,
+                fontSize: 17)),
+        const SizedBox(height: 15),
+
+        /// Doctor's time slots card
+        ///
+        buildDoctorTimeSlotsCard(context, theme, doctor.id),
       ],
     ),
   );
 }
 
-class DoctorAppointmentDetailsCard extends StatefulWidget {
-  const DoctorAppointmentDetailsCard(
-      {super.key, required this.theme, required this.doctor});
+Widget buildDoctorTimeSlotsCard(
+    BuildContext context, ColorScheme theme, String doctorId) {
+  // print(doctor.timeSlots);
 
-  final ColorScheme theme;
-  final DoctorModel doctor;
+  return StreamBuilder<Map<String, dynamic>>(
+      stream: DetailedDoctorRepository().getDoctorDetails(doctorId),
+      builder: (context, snapshot) {
+        if (snapshot.hasError ||
+            !snapshot.hasData ||
+            snapshot.data!['status'] == false) {
+          return const Center(
+            child: Text('An error occurred while fetching doctor details'),
+          );
+        }
 
-  @override
-  State<DoctorAppointmentDetailsCard> createState() =>
-      _DoctorAppointmentDetailsCardState();
-}
-
-class _DoctorAppointmentDetailsCardState
-    extends State<DoctorAppointmentDetailsCard> {
-  @override
-  Widget build(BuildContext context) {
-    Map<String, dynamic> timeSlots = Map.from(widget.doctor.timeSlots);
-
-    // Filter out dates where all time slots have passed
-    timeSlots.removeWhere((key, value) {
-      final date = DateTime.parse(key);
-      final now = DateTime.now();
-
-      // Check if all time slots for the date are in the past
-      return value.every((timeRange) {
-        final startTimeString = timeRange.split(" - ")[0];
-        final parsedTime = _parseTime(startTimeString, date);
-        return parsedTime.isBefore(now);
-      });
-    });
-
-    if (timeSlots.isEmpty) {
-      return Center(
-        child: Text(
-          "No available appointments.",
-          style: TextStyle(
-            fontSize: 16,
-            color: widget.theme.onSurface.withOpacity(0.7),
-          ),
-        ),
-      );
-    }
-
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Available Appointments",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: widget.theme.primary,
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CustomLoadingAnimation(
+              size: 30,
+              color: theme.primary,
             ),
-          ),
-          const SizedBox(height: 20),
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: timeSlots.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 15),
-            itemBuilder: (context, index) {
-              final date = timeSlots.keys.elementAt(index);
-              final times = timeSlots[date];
+          );
+        }
 
-              return AppointmentDateCard(
-                date: date,
-                times: times,
-                theme: widget.theme,
+        final DoctorModel doctor = snapshot.data!['doctor'];
+
+        return doctor.timeSlots.isEmpty
+            ? const Center(
+                child: Text(
+                  'No time slots available at the moment',
+                ),
+              )
+            : Container(
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  color: theme.primary.withOpacity(.1),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (final entry in doctor.timeSlots.entries)
+                      // Filter available time slots
+                      if (entry.value.any((slot) => slot['isBooked'] == false))
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              entry.key,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: theme.primary,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            for (final slot in entry.value)
+                              if (slot['isBooked'] == false)
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            AppointmentBookScreen(
+                                          date: entry.key,
+                                          timeSlotIndex:
+                                              entry.value.indexOf(slot),
+                                          doctor: doctor,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    margin: const EdgeInsets.only(bottom: 10),
+                                    decoration: BoxDecoration(
+                                      color: theme.surfaceContainer,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: ListTile(
+                                      title: Text(
+                                        slot['time'],
+                                        style: const TextStyle(fontSize: 15),
+                                      ),
+                                      trailing: Icon(
+                                        Icons.arrow_forward_ios,
+                                        size: 16,
+                                        color: theme.primary.withOpacity(.5),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                          ],
+                        ),
+                  ],
+                ),
               );
-            },
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Helper method to parse time strings
-  DateTime _parseTime(String timeString, DateTime date) {
-    final format = DateFormat("h:mm a");
-    final time = format.parse(timeString); // Parse time
-    return DateTime(date.year, date.month, date.day, time.hour, time.minute);
-  }
-}
-
-class AppointmentDateCard extends StatelessWidget {
-  const AppointmentDateCard({
-    super.key,
-    required this.date,
-    required this.times,
-    required this.theme,
-  });
-
-  final String date;
-  final List<dynamic> times;
-  final ColorScheme theme;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      color: theme.primaryContainer,
-      shadowColor: theme.surfaceContainer,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              DateFormat.yMMMMd().format(DateTime.parse(date)),
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: theme.primary,
-              ),
-            ),
-            const SizedBox(height: 10),
-            ListView.separated(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: times.length,
-              separatorBuilder: (_, __) =>
-                  Divider(height: 1, color: theme.onSurface.withOpacity(0.2)),
-              itemBuilder: (context, index) {
-                final time = times[index];
-                return ListTile(
-                  title: Text(
-                    time,
-                    style: TextStyle(fontSize: 16, color: theme.onSurface),
-                  ),
-                  onTap: () {
-                    // Navigate to the appointment booking page
-                  },
-                  trailing: Icon(Icons.arrow_forward_ios,
-                      size: 16, color: theme.onSurface),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+      });
 }
