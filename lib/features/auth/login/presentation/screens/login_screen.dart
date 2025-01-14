@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meditouch/common/utils/system_colors.dart';
 import 'package:meditouch/features/auth/login/logic/login_bloc.dart';
 import 'package:meditouch/features/auth/login/logic/login_event.dart';
 import 'package:meditouch/features/auth/login/logic/login_state.dart';
@@ -24,13 +25,12 @@ class LoginScreen extends StatelessWidget {
     // Get theme
     final theme = Theme.of(context).colorScheme;
 
-    // // Set status bar and nav bar colors:
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: theme.surfaceContainer,
-      statusBarIconBrightness: theme.brightness,
-      systemNavigationBarColor: theme.surfaceContainer,
-      systemNavigationBarIconBrightness: theme.brightness,
-    ));
+    // // find theme cubit
+    // final themeCubit = BlocProvider.of<ThemeCubit>(context);
+
+    // bool darktheme = themeCubit.isDarkTheme();
+
+    // changeSystemColor(darktheme);
 
     // Get device height
 
@@ -57,13 +57,6 @@ class LoginScreen extends StatelessWidget {
           emailController.clear();
           passwordController.clear();
 
-          SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-            statusBarColor: theme.surface,
-            statusBarIconBrightness: theme.brightness,
-            systemNavigationBarColor: theme.surface,
-            systemNavigationBarIconBrightness: theme.brightness,
-          ));
-
           Navigator.pushReplacementNamed(context, '/dashboard');
         }
 
@@ -77,69 +70,67 @@ class LoginScreen extends StatelessWidget {
               disableBackBtn: true);
         }
       },
-      child: SafeArea(
-        child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            backgroundColor: theme.surfaceContainer,
-            body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 20),
-                    // Logo:
-                    _buildLogo(context, theme),
+      child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: theme.surfaceContainer,
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 25),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+                  // Logo:
+                  _buildLogo(context, theme),
 
-                    const SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
-                    // Welcome message:
-                    _buildWelcomeTitle(context, theme),
+                  // Welcome message:
+                  _buildWelcomeTitle(context, theme),
 
-                    const SizedBox(height: 10),
+                  const SizedBox(height: 10),
 
-                    // Sub-message:
-                    _buildSubtitle(context, theme),
+                  // Sub-message:
+                  _buildSubtitle(context, theme),
 
-                    const SizedBox(height: 30),
+                  const SizedBox(height: 30),
 
-                    // Email field:
-                    _buildEmailField(context, theme),
+                  // Email field:
+                  _buildEmailField(context, theme),
 
-                    const SizedBox(height: 15),
+                  const SizedBox(height: 15),
 
-                    // Password field:
-                    _buildPasswordField(context, theme),
+                  // Password field:
+                  _buildPasswordField(context, theme),
 
-                    const SizedBox(height: 10),
+                  const SizedBox(height: 10),
 
-                    // Forgot Password:
-                    _buildForgotPasswordWidget(context, theme),
+                  // Forgot Password:
+                  _buildForgotPasswordWidget(context, theme),
 
-                    const SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
-                    // Sign in button:
-                    _buildSignInButton(context, theme),
+                  // Sign in button:
+                  _buildSignInButton(context, theme),
 
-                    const SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
-                    // Create account:
-                    _buildCreateAccountWidget(context, theme),
+                  // Create account:
+                  _buildCreateAccountWidget(context, theme),
 
-                    const SizedBox(height: 30),
+                  const SizedBox(height: 30),
 
-                    // Or:
-                    _buildOrText(theme),
+                  // Or:
+                  _buildOrText(theme),
 
-                    const SizedBox(height: 30),
+                  const SizedBox(height: 30),
 
-                    // Continue with Google:
-                    _buildGoogleSignIn(context, theme),
-                  ],
-                ),
+                  // Continue with Google:
+                  _buildGoogleSignIn(context, theme),
+                ],
               ),
-            )),
-      ),
+            ),
+          )),
     );
   }
 
