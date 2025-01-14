@@ -25,45 +25,45 @@ class ProfileScreen extends StatelessWidget {
     final Map<String, dynamic> userInfo =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
-    return SafeArea(
-      child: BlocConsumer<ProfileBloc, ProfileState>(
-        listener: (context, state) {
-          if (state is ProfileUpdated) {
-            QuickAlert.show(
-              context: context,
-              type: QuickAlertType.success,
-              title: state.message,
-              text: state.message == 'No changes detected.'
-                  ? null
-                  : "Please restart the app to see changes",
-            );
-          }
-          if (state is ProfileUpdateError) {
-            QuickAlert.show(
-              context: context,
-              type: QuickAlertType.error,
-              title: 'Error',
-              text: state.message,
-            );
-          }
-        },
-        builder: (context, state) {
-          if (state is ProfileLoading) {
-            return Scaffold(
-                backgroundColor: theme.surfaceContainer,
-                body: CustomLoadingAnimation(size: 30, color: theme.primary));
-          }
-          if (state is ProfileError) {
-            return _buildErrorMessage(state.message);
-          }
-
-          return Scaffold(
-            backgroundColor: theme.surfaceContainer,
-            appBar: _buildAppBar(context, state, theme, userInfo['id']),
-            body: _buildProfileContent(context, state, theme, user: userInfo),
+    return BlocConsumer<ProfileBloc, ProfileState>(
+      listener: (context, state) {
+        if (state is ProfileUpdated) {
+          QuickAlert.show(
+            context: context,
+            type: QuickAlertType.success,
+            title: state.message,
+            text: state.message == 'No changes detected.'
+                ? null
+                : "Please restart the app to see changes",
           );
-        },
-      ),
+        }
+        if (state is ProfileUpdateError) {
+          QuickAlert.show(
+            context: context,
+            type: QuickAlertType.error,
+            title: 'Error',
+            text: state.message,
+          );
+        }
+      },
+      builder: (context, state) {
+        if (state is ProfileLoading) {
+          return Scaffold(
+              backgroundColor: theme.surfaceContainer,
+              body: CustomLoadingAnimation(size: 30, color: theme.primary));
+        }
+        if (state is ProfileError) {
+          return _buildErrorMessage(state.message);
+        }
+
+        return Scaffold(
+          backgroundColor: theme.surfaceContainer,
+          appBar: _buildAppBar(context, state, theme, userInfo['id']),
+          body: SafeArea(
+              child:
+                  _buildProfileContent(context, state, theme, user: userInfo)),
+        );
+      },
     );
   }
 
