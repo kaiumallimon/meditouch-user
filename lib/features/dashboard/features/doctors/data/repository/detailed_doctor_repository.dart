@@ -41,7 +41,33 @@ class DetailedDoctorRepository {
             }
           });
 
-          // Sort the keys (dates) in ascending order and create a new map
+          // filter out the past timeslots
+          final now = DateTime.now();
+
+          int count = 0;
+
+          result.removeWhere((key, value) {
+            // Parse the key (date string) into a DateTime object
+            final date = DateTime.parse(key);
+
+            // Condition to remove dates in the past
+            bool isPastDate = date.isBefore(DateTime.now());
+
+            // Optionally, you can add other conditions
+            // For example, remove if the timeslots list is empty:
+            bool isEmptyTimeSlots = (value.isEmpty);
+
+            // Remove the date if it meets the conditions
+            if (isPastDate || isEmptyTimeSlots) {
+              count++;
+              return true;
+            }
+
+            return false;
+          });
+
+          print('Removed $count past or empty dates');
+
           final sortedKeys = result.keys.toList()..sort();
           final sortedResult = {
             for (var key in sortedKeys) key: result[key]!,
