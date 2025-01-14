@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meditouch/common/widgets/widget_motion.dart';
 import 'package:meditouch/features/startup/welcome/logics/welcome_cubit.dart';
 import 'package:meditouch/features/startup/welcome/presentation/widgets/textstyles.dart';
 import 'package:meditouch/features/startup/welcome/presentation/widgets/welcome_next_button.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../../../../common/widgets/gradient_bg.dart';
 import '../widgets/welcome_log_reg_button.dart';
@@ -63,16 +61,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
 
-    // Retain status bar
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    // // Retain status bar
+    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
-    // Set status bar and navigation colors
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: theme.surface,
-      systemNavigationBarColor: theme.surface,
-      statusBarIconBrightness: theme.brightness,
-      systemNavigationBarIconBrightness: theme.brightness,
-    ));
+    // // Set status bar and navigation colors
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //   statusBarColor: theme.surface,
+    //   systemNavigationBarColor: theme.surface,
+    //   statusBarIconBrightness: theme.brightness,
+    //   systemNavigationBarIconBrightness: theme.brightness,
+    // ));
 
     final bloc = BlocProvider.of<WelcomeCubit>(context);
 
