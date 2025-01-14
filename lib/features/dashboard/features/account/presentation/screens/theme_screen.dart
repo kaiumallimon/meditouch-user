@@ -13,17 +13,17 @@ class ThemeScreen extends StatelessWidget {
     // get theme
     final theme = Theme.of(context).colorScheme;
 
-    return SafeArea(
-      child: Scaffold(
-        // app bar
-        appBar: AppBar(
-          title: const Text('Theme'),
-          backgroundColor: theme.surfaceContainer,
-          toolbarHeight: 70,
-        ),
+    return Scaffold(
+      // app bar
+      appBar: AppBar(
+        title: const Text('Theme'),
+        backgroundColor: theme.surfaceContainer,
+        toolbarHeight: 70,
+      ),
 
-        // body
-        body: Padding(
+      // body
+      body: SafeArea(
+        child: Padding(
           // padding
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Column(
