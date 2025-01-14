@@ -16,7 +16,8 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     on<PaymentGotLoading>(_onPaymentGotLoading);
   }
 
-  void _onPaymentGotLoading(PaymentGotLoading event, Emitter<PaymentState> emit) {
+  void _onPaymentGotLoading(
+      PaymentGotLoading event, Emitter<PaymentState> emit) {
     emit(PaymentLoading());
   }
 
@@ -72,6 +73,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
         paymentStatus: 'paid',
         videoCallId: null,
         paidAmount: executePaymentResponse.amount,
+        doctorDetails: event.doctor.toJson(),
       );
 
       await AppointmentBookRepository()
