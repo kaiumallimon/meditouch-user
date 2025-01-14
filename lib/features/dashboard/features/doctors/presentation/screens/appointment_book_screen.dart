@@ -45,7 +45,7 @@ class AppointmentBookScreen extends StatelessWidget {
         toolbarHeight: 70,
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -90,12 +90,12 @@ class AppointmentBookScreen extends StatelessWidget {
                           doctor.name,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 5),
                         Container(
                           padding:
-                              EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                             const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                           decoration: BoxDecoration(
                               color: theme.primary,
                               borderRadius: BorderRadius.circular(5)),
@@ -132,7 +132,7 @@ class AppointmentBookScreen extends StatelessWidget {
             const SizedBox(height: 20),
 
             Container(
-              padding: EdgeInsets.all(15),
+              padding:const EdgeInsets.all(15),
               decoration: BoxDecoration(
                 color: theme.primary.withOpacity(.1),
                 borderRadius: BorderRadius.circular(10),
@@ -192,7 +192,7 @@ class AppointmentBookScreen extends StatelessWidget {
                       children: [
                         Container(
                           width: double.infinity,
-                          padding: EdgeInsets.all(15),
+                          padding:const EdgeInsets.all(15),
                           decoration: BoxDecoration(
                             color: theme.primary.withOpacity(.1),
                             borderRadius: BorderRadius.circular(10),
@@ -227,7 +227,7 @@ class AppointmentBookScreen extends StatelessWidget {
                                         ),
                                         const SizedBox(height: 5),
                                         Text(
-                                          user!['name'],
+                                          user['name'],
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: theme.onSurface,

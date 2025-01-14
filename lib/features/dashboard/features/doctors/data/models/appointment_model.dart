@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:meditouch/features/dashboard/features/doctors/data/models/doctor_model.dart';
 
 class AppointmentModel extends Equatable {
   final String appointmentId;

@@ -37,6 +37,7 @@ Column buildEpharmacySearchInitialState(ColorScheme theme,
                 return InkWell(
                   onTap: () {
                     searchController.text = query;
+                    // ignore: invalid_use_of_protected_member
                     searchController.notifyListeners();
                     context.read<EpharmacySearchBloc>().add(
                           EpharmacySearchQueryEvent(query: query),

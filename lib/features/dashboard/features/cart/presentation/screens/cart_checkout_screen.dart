@@ -13,7 +13,6 @@ import '../../logics/cart_event.dart';
 import '../../logics/cart_state.dart';
 import 'parts/checkout_appbar.dart';
 import 'parts/checkout_body.dart';
-import 'parts/checkout_success.dart';
 
 class CartCheckoutScreen extends StatelessWidget {
   const CartCheckoutScreen(

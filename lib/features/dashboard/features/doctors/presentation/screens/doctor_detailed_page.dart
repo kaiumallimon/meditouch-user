@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:meditouch/app/app_exporter.dart';
 import 'package:meditouch/common/widgets/custom_loading_animation.dart';
 import 'package:meditouch/features/dashboard/features/doctors/data/models/doctor_model.dart';

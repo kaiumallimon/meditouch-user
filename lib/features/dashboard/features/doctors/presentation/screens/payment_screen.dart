@@ -1,14 +1,7 @@
-import 'dart:math';
-
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:meditouch/app/app_exporter.dart';
-import 'package:meditouch/common/models/bkash_create_payment_response.dart';
 import 'package:meditouch/common/widgets/custom_loading_animation.dart';
 import 'package:meditouch/features/dashboard/features/doctors/data/models/doctor_model.dart';
 import 'package:meditouch/features/dashboard/features/doctors/logics/payment_bloc.dart';
-import 'package:quickalert/quickalert.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../logics/payment_events.dart';
