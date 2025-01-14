@@ -11,70 +11,61 @@ import 'common/utils/welcome_util.dart';
 import 'features/dashboard/features/account/logics/theme_cubit.dart';
 
 void main() async {
-  ///
+  /// 
   /// Ensure that the Flutter app is initialized before running the app
-  ///
+  /// 
   WidgetsFlutterBinding.ensureInitialized();
 
   ///
   /// Initialize Firebase
-  ///
+  /// 
   await Firebase.initializeApp();
 
   ///
   /// Initialize Hive
-  ///
+  /// 
   await Hive.initFlutter();
+
 
   ///
   /// Initialize Hive Repository
-  ///
+  /// 
   var hiveRepository = HiveRepository();
   await hiveRepository.init();
 
   ///
   /// Check if the user is logged in
-  ///
+  /// 
   var userInfo = await hiveRepository.getUserInfo();
 
   bool isLoggedIn = userInfo != null &&
       userInfo.containsKey('id') &&
       (userInfo['id']?.toString().isNotEmpty ?? false);
 
-  ///
+  /// 
   /// Load the environment variables
-  ///
+  /// 
   await dotenv.load(fileName: ".env");
 
-  ///
+  /// 
   /// Load the theme cubit
-  ///
+  /// 
   final themeCubit = ThemeCubit();
   themeCubit.loadTheme();
 
-  ///
-  /// Check if the dark theme is enabled
-  ///
-  bool darktheme = themeCubit.isDarkTheme();
-
-  ///
-  /// Change the system color
-  ///
-  changeSystemColor(darktheme);
 
   ///
   /// Set the system UI mode
-  ///
+  /// 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-
   ///
-  /// Set the preferred orientations: Portrait only
-  ///
+  /// Set the preferred orientations
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
 
   ///
   /// Check if the welcome page has been watched
-  ///
+  /// 
   bool isWelcomeWatched = await getWelcomePageWatched();
 
   // run the app
