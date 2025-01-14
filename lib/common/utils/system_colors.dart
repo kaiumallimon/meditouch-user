@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 void changeSystemColor(bool darkTheme) {
-  SystemChrome.setSystemUIOverlayStyle(darkTheme
+  SystemChrome.setSystemUIOverlayStyle(!darkTheme
       ? SystemUiOverlayStyle(
           statusBarColor: Color.alphaBlend(
             const Color(0xFF470DC2).withOpacity(0.05), // Tint effect
