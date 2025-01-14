@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:meditouch/common/repository/hive_repository.dart';
 import 'package:http/http.dart' as http;
@@ -79,15 +78,7 @@ class LoginRepository {
   Future<void> logout(BuildContext context) async {
     try {
       await HiveRepository().deleteUserInfo();
-
-      final theme = Theme.of(context).colorScheme;
-
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light,
-        systemNavigationBarColor: theme.surface,
-        systemNavigationBarIconBrightness: theme.brightness,
-      ));
+      // ));
       Navigator.of(context).pushReplacementNamed('/login');
     } catch (e) {
       // Handle errors during logout
