@@ -8,7 +8,6 @@ import 'package:meditouch/features/dashboard/features/home/home.dart';
 import 'package:meditouch/features/dashboard/features/messages/messages.dart';
 import 'package:meditouch/features/dashboard/navigation/navbar/custom_navbar.dart';
 
-import '../../../features/appointments/data/repository/appointment_repository.dart';
 import '../../../navigation/logics/navigation_cubit.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -22,30 +21,30 @@ class DashboardScreen extends StatelessWidget {
     // get theme
     final colorScheme = Theme.of(context).colorScheme;
 
-    // set status bar and nav themes
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: colorScheme.surfaceContainer,
-        statusBarIconBrightness: colorScheme.brightness,
-        systemNavigationBarColor: Color.alphaBlend(
-          colorScheme.primary.withOpacity(0.08), // Tint effect
-          colorScheme.surface,
-        ),
-        systemNavigationBarIconBrightness: colorScheme.brightness));
+    // // set status bar and nav themes
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //     statusBarColor: colorScheme.surfaceContainer,
+    //     statusBarIconBrightness: colorScheme.brightness,
+    //     systemNavigationBarColor: Color.alphaBlend(
+    //       colorScheme.primary.withOpacity(0.08), // Tint effect
+    //       colorScheme.surface,
+    //     ),
+    //     systemNavigationBarIconBrightness: colorScheme.brightness));
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: colorScheme.surfaceContainer,
-        body: BlocBuilder<NavigationCubit, int>(
+    return Scaffold(
+      backgroundColor: colorScheme.surfaceContainer,
+      body: SafeArea(
+        child: BlocBuilder<NavigationCubit, int>(
             builder: (context, state) => screens[state]),
-        bottomNavigationBar: const CustomFloatingNavigationBar(),
       ),
+      bottomNavigationBar: const CustomFloatingNavigationBar(),
     );
   }
 
   final List<Widget> screens = [
     const HomeScreen(),
     const EpharmacyScreen(),
-    AppointmentScreen(),
+    const AppointmentScreen(),
     const MessagesScreen(),
     const AccountScreen()
   ];
