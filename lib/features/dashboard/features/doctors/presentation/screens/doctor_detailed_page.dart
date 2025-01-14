@@ -24,21 +24,19 @@ class DoctorDetailedPage extends StatelessWidget {
     Get.put(() => DetailedDoctorController(doctor.id,
         repository: DetailedDoctorRepository()));
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: theme.surfaceContainer,
-        appBar: AppBar(
-          elevation: 0,
-          surfaceTintColor: theme.surfaceContainer,
-          title: const Text(
-            "Book an appointment",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          backgroundColor: theme.surfaceContainer,
-          toolbarHeight: 70,
+    return Scaffold(
+      backgroundColor: theme.surfaceContainer,
+      appBar: AppBar(
+        elevation: 0,
+        surfaceTintColor: theme.surfaceContainer,
+        title: const Text(
+          "Book an appointment",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
-        body: buildDetailedDoctorBody(context, theme, doctor),
+        backgroundColor: theme.surfaceContainer,
+        toolbarHeight: 70,
       ),
+      body: SafeArea(child: buildDetailedDoctorBody(context, theme, doctor)),
     );
   }
 }
