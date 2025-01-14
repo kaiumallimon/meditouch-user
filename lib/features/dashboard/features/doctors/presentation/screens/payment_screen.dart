@@ -29,8 +29,7 @@ class PaymentScreen extends StatelessWidget {
     // get theme:
     final theme = Theme.of(context).colorScheme;
 
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: theme.onSurface),
@@ -44,61 +43,64 @@ class PaymentScreen extends StatelessWidget {
         elevation: 0,
         surfaceTintColor: theme.surfaceContainer,
       ),
-      body: BlocConsumer<PaymentBloc, PaymentState>(builder: (context, state) {
-        if (state is PaymentLoading) {
-          return CustomLoadingAnimation(size: 25, color: theme.primary);
-        }
+      body: SafeArea(
+        child:
+            BlocConsumer<PaymentBloc, PaymentState>(builder: (context, state) {
+          if (state is PaymentLoading) {
+            return CustomLoadingAnimation(size: 25, color: theme.primary);
+          }
 
-        if (state is PaymentFailure) {
-          return Center(
-            child: Text(state.errorMessage),
-          );
-        }
+          if (state is PaymentFailure) {
+            return Center(
+              child: Text(state.errorMessage),
+            );
+          }
 
-        if (state is PaymentCreated) {
-          return WebViewWidget(
-              controller: WebViewController()
-                ..setJavaScriptMode(JavaScriptMode.unrestricted)
-                ..setNavigationDelegate(
-                    NavigationDelegate(onPageFinished: (String url) async {
-                  if (url.contains('success')) {
-                    /// execute payment
-                    ///
-                    /// then
-                    ///
-                    /// book appointment
-                    ///
-                    /// and create a notification
-                    ///
+          if (state is PaymentCreated) {
+            return WebViewWidget(
+                controller: WebViewController()
+                  ..setJavaScriptMode(JavaScriptMode.unrestricted)
+                  ..setNavigationDelegate(
+                      NavigationDelegate(onPageFinished: (String url) async {
+                    if (url.contains('success')) {
+                      /// execute payment
+                      ///
+                      /// then
+                      ///
+                      /// book appointment
+                      ///
+                      /// and create a notification
+                      ///
 
-                    context.read<PaymentBloc>().add(ExecutePaymentRequested(
-                        paymentId: state.paymentId,
-                        grantToken: state.grantToken,
-                        doctor: doctorModel,
-                        patientDetails: patientDetails,
-                        appointmentDate: appointmentDate,
-                        appointmentTimeSlot: appointmentTimeSlot));
-                  } else if (url.contains('cancel')) {
-                    BlocProvider.of<PaymentBloc>(context)
-                        .add(PaymentGotError('Payment cancelled'));
-                  } else if (url.contains('failure')) {
-                    BlocProvider.of<PaymentBloc>(context)
-                        .add(PaymentGotError('Payment failed'));
-                  }
-                }))
-                ..loadRequest(Uri.parse(paymentUrl)));
-        }
-        if (state is PaymentSuccess) {
-          return Center(
-            child: Text(state.message),
-          );
-        }
+                      context.read<PaymentBloc>().add(ExecutePaymentRequested(
+                          paymentId: state.paymentId,
+                          grantToken: state.grantToken,
+                          doctor: doctorModel,
+                          patientDetails: patientDetails,
+                          appointmentDate: appointmentDate,
+                          appointmentTimeSlot: appointmentTimeSlot));
+                    } else if (url.contains('cancel')) {
+                      BlocProvider.of<PaymentBloc>(context)
+                          .add(PaymentGotError('Payment cancelled'));
+                    } else if (url.contains('failure')) {
+                      BlocProvider.of<PaymentBloc>(context)
+                          .add(PaymentGotError('Payment failed'));
+                    }
+                  }))
+                  ..loadRequest(Uri.parse(paymentUrl)));
+          }
+          if (state is PaymentSuccess) {
+            return Center(
+              child: Text(state.message),
+            );
+          }
 
-        return Container();
-      }, listener: (context, state) {
-        Navigator.pop(context);
-        Navigator.pop(context);
-      }),
-    ));
+          return Container();
+        }, listener: (context, state) {
+          Navigator.pop(context);
+          Navigator.pop(context);
+        }),
+      ),
+    );
   }
 }
