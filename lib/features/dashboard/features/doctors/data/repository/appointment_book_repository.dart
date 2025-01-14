@@ -53,6 +53,7 @@ class AppointmentBookRepository {
 
             if (index != -1) {
               periods[index]['isBooked'] = true;
+              periods[index]['bookedBy'] = appointmentModel.patientId;
 
               // Update the doctor's schedule
               await doctorScheduleRef.update({
