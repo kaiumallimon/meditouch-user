@@ -32,16 +32,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     // Retain the status bar
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
     //get theme
     final theme = Theme.of(context).colorScheme;
 
-    // set status bar color
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      systemNavigationBarColor: theme.surface,
-      systemNavigationBarIconBrightness: theme.brightness,
-    ));
+    // // set status bar color
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //   systemNavigationBarColor: theme.surface,
+    //   systemNavigationBarIconBrightness: theme.brightness,
+    // ));
 
     // get the bloc
     final registrationBloc = BlocProvider.of<RegisterBloc>(context);
