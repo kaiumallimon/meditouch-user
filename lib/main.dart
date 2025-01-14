@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:meditouch/common/repository/hive_repository.dart';
@@ -10,37 +11,70 @@ import 'common/utils/welcome_util.dart';
 import 'features/dashboard/features/account/logics/theme_cubit.dart';
 
 void main() async {
-  // ensure flutterBinding is initialized
+  ///
+  /// Ensure that the Flutter app is initialized before running the app
+  ///
   WidgetsFlutterBinding.ensureInitialized();
 
-  // initialize firebase
+  ///
+  /// Initialize Firebase
+  ///
   await Firebase.initializeApp();
 
-  // initialize hive: local database
+  ///
+  /// Initialize Hive
+  ///
   await Hive.initFlutter();
-  var hiveRepository = HiveRepository();
 
-  // initialize hive repository
+  ///
+  /// Initialize Hive Repository
+  ///
+  var hiveRepository = HiveRepository();
   await hiveRepository.init();
 
-  // get user info
+  ///
+  /// Check if the user is logged in
+  ///
   var userInfo = await hiveRepository.getUserInfo();
 
   bool isLoggedIn = userInfo != null &&
       userInfo.containsKey('id') &&
       (userInfo['id']?.toString().isNotEmpty ?? false);
 
-  // load the .env file
+  ///
+  /// Load the environment variables
+  ///
   await dotenv.load(fileName: ".env");
 
-  // theme
+  ///
+  /// Load the theme cubit
+  ///
   final themeCubit = ThemeCubit();
   themeCubit.loadTheme();
 
+  ///
+  /// Check if the dark theme is enabled
+  ///
   bool darktheme = themeCubit.isDarkTheme();
 
+  ///
+  /// Change the system color
+  ///
   changeSystemColor(darktheme);
 
+  ///
+  /// Set the system UI mode
+  ///
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
+  ///
+  /// Set the preferred orientations: Portrait only
+  ///
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  ///
+  /// Check if the welcome page has been watched
+  ///
   bool isWelcomeWatched = await getWelcomePageWatched();
 
   // run the app
