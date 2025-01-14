@@ -33,24 +33,22 @@ class DoctorsScreen extends StatelessWidget {
     // fetch doctors
     context.read<DoctorsBloc>().add(DoctorsEventFetch());
 
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: theme.surfaceContainer,
+      appBar: AppBar(
+        elevation: 0,
+        surfaceTintColor: theme.surfaceContainer,
+        title: const Text('Doctors',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
         backgroundColor: theme.surfaceContainer,
-        appBar: AppBar(
-          elevation: 0,
-          surfaceTintColor: theme.surfaceContainer,
-          title: const Text('Doctors',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          backgroundColor: theme.surfaceContainer,
-          toolbarHeight: 70,
-          actions: [
-            CustomTintedIconButton(
-                child: const Icon(Icons.search_rounded), onPressed: () {}),
-            const SizedBox(width: 13),
-          ],
-        ),
-        body: buildDoctorsBody(context, theme),
+        toolbarHeight: 70,
+        actions: [
+          CustomTintedIconButton(
+              child: const Icon(Icons.search_rounded), onPressed: () {}),
+          const SizedBox(width: 13),
+        ],
       ),
+      body: SafeArea(child: buildDoctorsBody(context, theme)),
     );
   }
 
