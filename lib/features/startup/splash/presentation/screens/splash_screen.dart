@@ -15,18 +15,10 @@ class SplashScreen extends StatelessWidget {
     BlocProvider.of<SplashBloc>(context).add(SplashStartedEvent());
 
     // Hide the status bar
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
     // Get the theme
     final theme = Theme.of(context).colorScheme;
-
-    // Set the status bar and navigation bar themes
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: Colors.transparent,
-      systemNavigationBarIconBrightness: Brightness.light,
-    ));
 
     // Build the UI
     return Scaffold(
