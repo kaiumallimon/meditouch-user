@@ -8,6 +8,7 @@ import 'package:meditouch/features/dashboard/features/home/home.dart';
 import 'package:meditouch/features/dashboard/features/messages/messages.dart';
 import 'package:meditouch/features/dashboard/navigation/navbar/custom_navbar.dart';
 
+import '../../../features/appointments/data/repository/appointment_repository.dart';
 import '../../../navigation/logics/navigation_cubit.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -44,7 +45,7 @@ class DashboardScreen extends StatelessWidget {
   final List<Widget> screens = [
     const HomeScreen(),
     const EpharmacyScreen(),
-    const AppointmentScreen(),
+    AppointmentScreen(),
     const MessagesScreen(),
     const AccountScreen()
   ];
