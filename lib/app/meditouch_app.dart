@@ -1,8 +1,15 @@
+import 'package:flutter/services.dart';
+
+import '../common/utils/system_colors.dart';
 import 'app_bloc_providers.dart';
 import './app_exporter.dart';
 
 class MediTouchApp extends StatelessWidget {
-  const MediTouchApp({super.key, required this.themeCubit, required this.isLoggedIn, required this.isWelcomeWatched});
+  const MediTouchApp(
+      {super.key,
+      required this.themeCubit,
+      required this.isLoggedIn,
+      required this.isWelcomeWatched});
 
   final ThemeCubit themeCubit;
   final bool isLoggedIn;
@@ -12,14 +19,21 @@ class MediTouchApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: providers, // Initialize Blocs using MultiBlocProvider
-      child: BlocBuilder<ThemeCubit, bool>(
+      child: BlocConsumer<ThemeCubit, bool>(
+        listener: (context, state) {
+          changeSystemColor(state);
+        },
         builder: (context, darkMode) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             theme: darkMode ? AppTheme().getDarkTheme() : AppTheme().getTheme(),
 
             // Use GetX's navigation and routes
-            initialRoute: isLoggedIn?  "/dashboard": isWelcomeWatched  ? "/login": "/welcome",
+            initialRoute: isLoggedIn
+                ? "/dashboard"
+                : isWelcomeWatched
+                    ? "/login"
+                    : "/welcome",
             routes: {
               // "/": (context) => const SplashScreen(),
               "/welcome": (context) => const WelcomeScreen(),
