@@ -137,7 +137,7 @@ class DegreeModel extends Equatable {
   Map<String, dynamic> toJson() {
     return {
       'degree': degree,
-      'institute': institute,
+      'institution': institute,
       'passedYear': year,
     };
   }
