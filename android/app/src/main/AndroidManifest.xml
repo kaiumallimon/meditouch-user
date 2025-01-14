@@ -11,6 +11,7 @@
         android:name="${applicationName}"
         android:icon="@mipmap/app_icon2"
         android:allowBackup="false"
+        android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="false">
         <activity
             android:name=".MainActivity"
