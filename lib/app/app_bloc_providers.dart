@@ -1,3 +1,6 @@
+
+import '../features/dashboard/features/appointments/data/repository/appointment_repository.dart';
+import '../features/dashboard/features/appointments/logics/appointment_bloc.dart';
 import '../features/dashboard/features/cart/data/cart_repository.dart';
 import '../features/dashboard/features/cart/logics/cart_bloc.dart';
 import '../features/dashboard/features/doctors/logics/detailed_doctor_bloc.dart';
@@ -103,6 +106,13 @@ final providers = [
 
   BlocProvider<PaymentBloc>(
     create: (_) => PaymentBloc(),
+  ),
+
+
+  // add appointment bloc
+  BlocProvider<AppointmentCubit>(
+    create: (_) => AppointmentCubit(
+    ),
   ),
   
 ];
