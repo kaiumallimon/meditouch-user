@@ -1,9 +1,7 @@
 
-import '../features/dashboard/features/appointments/data/repository/appointment_repository.dart';
 import '../features/dashboard/features/appointments/logics/appointment_bloc.dart';
 import '../features/dashboard/features/cart/data/cart_repository.dart';
 import '../features/dashboard/features/cart/logics/cart_bloc.dart';
-import '../features/dashboard/features/doctors/logics/detailed_doctor_bloc.dart';
 import '../features/dashboard/features/doctors/logics/doctors_bloc.dart';
 import '../features/dashboard/features/doctors/logics/payment_bloc.dart';
 import '../features/dashboard/features/epharmacy/logics/medicine_scan_bloc.dart';
