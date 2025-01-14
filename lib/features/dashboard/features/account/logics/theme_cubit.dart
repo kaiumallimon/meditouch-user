@@ -30,4 +30,10 @@ class ThemeCubit extends Cubit<bool> {
       emit(!currentTheme);
     }
   }
+
+
+  // function to get the current theme
+  bool isDarkTheme() {
+    return state;
+  }
 }
