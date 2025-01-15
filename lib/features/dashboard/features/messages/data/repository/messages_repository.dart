@@ -137,6 +137,40 @@ class MessagesRepository {
     return ConversationModel.fromMap(doc.data()!, doc.id);
   }
 
+
+  // get conversations of a user
+  Stream<List<ConversationModel>> getConversations(String userId) {
+    return _firestore
+        .collection('db_client_multi_conversations')
+        .where('patientId', isEqualTo: userId)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs
+          .map((doc) => ConversationModel.fromMap(doc.data(), doc.id))
+          .toList();
+    });
+  }
+
+  Stream<DoctorModel> getDoctor(String doctorId) {
+    return _firestore
+        .collection('db_client_doctor_accountinfo')
+        .doc(doctorId)
+        .snapshots()
+        .map((doc) => DoctorModel.fromJson(doc.data()!, doc.id));
+  }
+
+  Future<String?> uploadImage(XFile image) async {
+    try {
+      final fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      final reference = _storage.ref().child('images/$fileName');
+      await reference.putFile(File(image.path));
+      return await reference.getDownloadURL();
+    } catch (e) {
+      print('Error uploading image: $e');
+      return null;
+    }
+  }
+
   // 'doctorId': doctorId,
   //     'patientId': patientId,
   //     'lastMessage': lastMessage,
