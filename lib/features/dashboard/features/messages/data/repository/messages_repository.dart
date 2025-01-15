@@ -68,6 +68,29 @@ class MessagesRepository {
     });
   }
 
+
+  ////
+  ///
+  /// send a message
+  /// 
+  /// 
+  Future<bool> sendMessage(String conversationId, MessageModel message)async{
+    try {
+      _firestore.collection('db_client_multi_messages').add(message.toMap());
+      _firestore.collection('db_client_multi_conversations').doc(conversationId).update({
+        'lastMessage': message.content,
+        'lastMessageType': message.type,
+        'lastTimeStamp': message.timestamp,
+        'isRead': false,
+        'from': message.from,
+      });
+      return true;
+    } catch (e) {
+      print('Error sending message: $e');
+      return false;
+    }
+  }
+
   ///
   ///
   ///
