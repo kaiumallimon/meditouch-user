@@ -1,11 +1,21 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../../../data/model/message_model.dart';
 import '../../../data/repository/messages_repository.dart';
 
-Container bottomInputField(ColorScheme theme, String conversationId,
-    TextEditingController messageController, String doctorId, String userId) {
+Container bottomInputField(
+    BuildContext context,
+    ColorScheme theme,
+    String conversationId,
+    TextEditingController messageController,
+    String doctorId,
+    String userId) {
   return Container(
     height: 80,
     width: double.infinity,
@@ -14,7 +24,46 @@ Container bottomInputField(ColorScheme theme, String conversationId,
     child: Row(
       children: [
         // image picker
-        IconButton(onPressed: () {}, icon: const Icon(Icons.image)),
+        IconButton(
+            onPressed: () {
+              // TODO: Implement image picker
+              pickImage().then((image) async {
+                if (image == null) return;
+
+                QuickAlert.show(
+                    context: context,
+                    type: QuickAlertType.loading,
+                    barrierDismissible: false);
+
+                // Upload the image to Firebase Storage
+                String? url = await MessagesRepository().uploadImage(image);
+
+                if (url == null) {
+                  Navigator.of(context).pop();
+                  QuickAlert.show(
+                      context: context,
+                      type: QuickAlertType.error,
+                      text: "Failed to send image");
+                  return;
+                }
+
+                // Send the image URL as a message
+                MessagesRepository().sendMessage(
+                    conversationId,
+                    MessageModel(
+                        conversationId: conversationId,
+                        from: 'patient',
+                        content: url,
+                        isRead: false,
+                        receiverId: doctorId,
+                        senderId: userId,
+                        timestamp: Timestamp.fromDate(DateTime.now()),
+                        type: 'image'));
+
+                Navigator.of(context).pop();
+              });
+            },
+            icon: const Icon(Icons.image)),
 
         const SizedBox(width: 5),
 
@@ -68,4 +117,20 @@ Container bottomInputField(ColorScheme theme, String conversationId,
       ],
     ),
   );
+}
+
+Future<XFile?> pickImage() async {
+  final ImagePicker picker = ImagePicker();
+
+  try {
+    // Pick an image from the gallery
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+    // Return the selected image (or null if no image is picked)
+    return image;
+  } catch (e) {
+    // Handle errors, e.g., user cancels the picker or permissions are denied
+    debugPrint('Error picking image: $e');
+    return null;
+  }
 }
