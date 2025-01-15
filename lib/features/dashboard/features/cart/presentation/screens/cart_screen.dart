@@ -23,11 +23,11 @@ class CartScreen extends StatelessWidget {
 
     context.read<CartBloc>().add(LoadCart());
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: theme.surface,
-        appBar: cartAppBar(context, theme),
-        body: RefreshIndicator(
+    return Scaffold(
+      backgroundColor: theme.surface,
+      appBar: cartAppBar(context, theme),
+      body: SafeArea(
+        child: RefreshIndicator(
           onRefresh: () async {
             context.read<CartBloc>().add(LoadCart());
           },
@@ -49,32 +49,32 @@ class CartScreen extends StatelessWidget {
             },
           ),
         ),
-        floatingActionButton: BlocBuilder<CartBloc, CartState>(
-          builder: (context, state) {
-            return state is CartLoaded && state.selectedItems.isNotEmpty
-                ? FloatingActionButton.extended(
-                    backgroundColor: theme.secondary,
-                    foregroundColor: theme.onSecondary,
-                    onPressed: () {
-                      // go to the checkout screen
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BlocProvider(
-                            create: (context) => PaymentCubit(),
-                            child: CartCheckoutScreen(
-                              cartItems: state.selectedCartItems,
-                              selectedItems: state.selectedItems,
-                            ),
+      ),
+      floatingActionButton: BlocBuilder<CartBloc, CartState>(
+        builder: (context, state) {
+          return state is CartLoaded && state.selectedItems.isNotEmpty
+              ? FloatingActionButton.extended(
+                  backgroundColor: theme.secondary,
+                  foregroundColor: theme.onSecondary,
+                  onPressed: () {
+                    // go to the checkout screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BlocProvider(
+                          create: (context) => PaymentCubit(),
+                          child: CartCheckoutScreen(
+                            cartItems: state.selectedCartItems,
+                            selectedItems: state.selectedItems,
                           ),
                         ),
-                      );
-                    },
-                    label: const Text("Proceed to checkout"),
-                  )
-                : const SizedBox.shrink();
-          },
-        ),
+                      ),
+                    );
+                  },
+                  label: const Text("Proceed to checkout"),
+                )
+              : const SizedBox.shrink();
+        },
       ),
     );
   }
