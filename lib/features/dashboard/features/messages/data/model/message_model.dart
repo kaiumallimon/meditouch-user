@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MessageModel {
-  final String id;
+  final String? id;
   final String conversationId;
   final String senderId;
   final String receiverId;
@@ -12,7 +12,7 @@ class MessageModel {
   final Timestamp timestamp;
 
   MessageModel({
-    required this.id,
+    this.id,
     required this.conversationId,
     required this.senderId,
     required this.receiverId,
