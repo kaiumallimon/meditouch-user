@@ -26,69 +26,70 @@ class CartCheckoutScreen extends StatelessWidget {
     // get theme
     final theme = Theme.of(context).colorScheme;
 
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       backgroundColor: theme.surfaceContainer,
       // appbar
       appBar: checkoutAppBar(theme),
 
       // body
-      body: BlocConsumer<CartBloc, CartState>(
-        listener: (context, state) {
-          // listen for checkout success and errors
-          if (state is CartCheckoutSuccess) {
-            QuickAlert.show(
-                context: context,
-                type: QuickAlertType.success,
-                onConfirmBtnTap: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                  context.read<CartBloc>().add(LoadCart());
-                },
-                text:
-                    'Your order has been placed successfully, go to orders to track your order');
-          }
+      body: SafeArea(
+        child: BlocConsumer<CartBloc, CartState>(
+          listener: (context, state) {
+            // listen for checkout success and errors
+            if (state is CartCheckoutSuccess) {
+              QuickAlert.show(
+                  context: context,
+                  type: QuickAlertType.success,
+                  onConfirmBtnTap: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    context.read<CartBloc>().add(LoadCart());
+                  },
+                  text:
+                      'Your order has been placed successfully, go to orders to track your order');
+            }
 
-          if (state is CartCheckoutError) {
-            QuickAlert.show(
-                context: context,
-                type: QuickAlertType.error,
-                title: 'Error',
-                onConfirmBtnTap: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                  context.read<CartBloc>().add(LoadCart());
-                },
-                text: state.message);
-          }
-        },
-        builder: (context, state) {
-          if (state is CartCheckoutLoading) {
-            return CustomLoadingAnimation(size: 30, color: theme.primary);
-          }
+            if (state is CartCheckoutError) {
+              QuickAlert.show(
+                  context: context,
+                  type: QuickAlertType.error,
+                  title: 'Error',
+                  onConfirmBtnTap: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    context.read<CartBloc>().add(LoadCart());
+                  },
+                  text: state.message);
+            }
+          },
+          builder: (context, state) {
+            if (state is CartCheckoutLoading) {
+              return CustomLoadingAnimation(size: 30, color: theme.primary);
+            }
 
-          // if (state is CartCheckoutSuccess) {
-          //   return checkoutSuccess(theme, context);
-          // }
+            // if (state is CartCheckoutSuccess) {
+            //   return checkoutSuccess(theme, context);
+            // }
 
-          if (state is CartPaymentWebview) {
-            return checkoutWebView(
-                theme, context, state, cartItems, selectedItems);
-          }
+            if (state is CartPaymentWebview) {
+              return checkoutWebView(
+                  theme, context, state, cartItems, selectedItems);
+            }
 
-          // if (state is CartCheckoutError) {
-          //   return Center(
-          //     child: Text(
-          //       state.message,
-          //       style: TextStyle(color: theme.error),
-          //     ),
-          //   );
-          // }
+            // if (state is CartCheckoutError) {
+            //   return Center(
+            //     child: Text(
+            //       state.message,
+            //       style: TextStyle(color: theme.error),
+            //     ),
+            //   );
+            // }
 
-          return checkoutBody(context, theme, cartItems, selectedItems);
-        },
+            return checkoutBody(context, theme, cartItems, selectedItems);
+          },
+        ),
       ),
-    ));
+    );
   }
 }
 
