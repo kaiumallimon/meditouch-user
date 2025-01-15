@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -6,6 +7,7 @@ import 'package:meditouch/features/dashboard/features/doctors/data/models/doctor
 import 'package:meditouch/features/dashboard/features/messages/data/model/message_model.dart';
 import 'package:meditouch/features/dashboard/features/messages/data/repository/messages_repository.dart';
 
+import '../../../../../../common/widgets/image_view_remote.dart';
 import 'parts/conversation_bottom_input.dart';
 
 class ConverationScreen extends StatelessWidget {
@@ -93,13 +95,13 @@ class ConverationScreen extends StatelessWidget {
                                   final message = messages[index];
 
                                   return buildMessageCard(
-                                      theme, message, doctorId);
+                                      context, theme, message, doctorId);
                                 },
                               ),
                       ),
 
                       // Input field
-                      bottomInputField(theme, conversationId,
+                      bottomInputField(context, theme, conversationId,
                           _messageController, doctorId, userId),
                     ],
                   );
@@ -121,54 +123,100 @@ class ConverationScreen extends StatelessWidget {
   final TextEditingController _messageController = TextEditingController();
 }
 
-Widget buildMessageCard(
-    ColorScheme theme, MessageModel message, String doctorId) {
+Widget buildMessageCard(BuildContext context, ColorScheme theme,
+    MessageModel message, String doctorId) {
   return Align(
     alignment: message.from == 'doctor' && message.senderId == doctorId
         ? Alignment.centerLeft
         : Alignment.centerRight,
-    child: Container(
-      constraints: const BoxConstraints(
-        maxWidth: 200,
-      ),
-      margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-      decoration: BoxDecoration(
-        color: message.from == 'doctor'
-            ? theme.onPrimary.withOpacity(.1)
-            : theme.primary,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            message.content,
-            style: TextStyle(
-              color: message.from == 'doctor'
-                  ? theme.onSurface
-                  : theme.onPrimary,
-              fontSize: 14,
+    child: message.type == 'text'
+        ? Container(
+            constraints: const BoxConstraints(
+              maxWidth: 200,
             ),
-          ),
-          const SizedBox(height: 5), // Add spacing between message and time
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Text(
-              formatTime(message.timestamp), // Assuming `message.time` contains the formatted time
-              style: TextStyle(
-                color: theme.onSurface.withOpacity(0.6),
-                fontSize: 12,
+            margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+            decoration: BoxDecoration(
+              color: message.from == 'doctor'
+                  ? theme.onPrimary.withOpacity(.1)
+                  : theme.primary,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  message.content,
+                  style: TextStyle(
+                    color: message.from == 'doctor'
+                        ? theme.onSurface
+                        : theme.onPrimary,
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(
+                    height: 5), // Add spacing between message and time
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Text(
+                    formatTime(message
+                        .timestamp), // Assuming `message.time` contains the formatted time
+                    style: TextStyle(
+                      color: theme.onSurface.withOpacity(0.6),
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        : GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => ImageViewer(imageUrl: message.content),
+              ));
+            },
+            child: Container(
+              margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Stack(
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl: message.content,
+                      fit: BoxFit.cover,
+                      width: 200,
+                      height: 200,
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          color: theme.surface.withOpacity(0.6),
+                          borderRadius: BorderRadius.only(
+                            bottomRight: Radius.circular(10),
+                            topLeft: Radius.circular(10),
+                          ),
+                        ),
+                        child: Text(
+                          formatTime(message.timestamp),
+                          style: TextStyle(
+                            color: theme.onSurface.withOpacity(0.6),
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ],
-      ),
-    ),
   );
 }
-
 
 String formatTime(Timestamp timestamp) {
   // output format: 01/01/2021 12:00 PM
