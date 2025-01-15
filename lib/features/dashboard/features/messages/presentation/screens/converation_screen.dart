@@ -1,11 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:meditouch/common/widgets/custom_loading_animation.dart';
 import 'package:meditouch/features/dashboard/features/doctors/data/models/doctor_model.dart';
 import 'package:meditouch/features/dashboard/features/messages/data/model/message_model.dart';
 import 'package:meditouch/features/dashboard/features/messages/data/repository/messages_repository.dart';
 
+import 'parts/conversation_bottom_input.dart';
+
 class ConverationScreen extends StatelessWidget {
-  const ConverationScreen(
+  ConverationScreen(
       {super.key,
       required this.userId,
       required this.doctorId,
@@ -67,6 +71,10 @@ class ConverationScreen extends StatelessWidget {
 
                   final messages = snapshot.data!;
 
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    scrollToBottom();
+                  });
+
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -77,63 +85,22 @@ class ConverationScreen extends StatelessWidget {
                                 child: Text('No messages yet!'),
                               )
                             : ListView.builder(
+                                controller: _scrollController,
+                                physics: BouncingScrollPhysics(),
                                 itemCount: messages.length,
+                                padding: EdgeInsets.only(bottom: 20, top: 20),
                                 itemBuilder: (context, index) {
                                   final message = messages[index];
 
-                                  return ListTile(
-                                    title: Text(message.content),
-                                    subtitle:
-                                        Text(message.timestamp.toString()),
-                                  );
+                                  return buildMessageCard(
+                                      theme, message, doctorId);
                                 },
                               ),
                       ),
 
                       // Input field
-                      Container(
-                        height: 80,
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(10),
-                        color: theme.surfaceContainer,
-                        child: Row(
-                          children: [
-                            // image picker
-                            IconButton(
-                                onPressed: () {}, icon: Icon(Icons.image)),
-
-                            const SizedBox(width: 5),
-
-                            // text field
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: theme.surface,
-                                  borderRadius: BorderRadius.circular(40),
-                                ),
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 20),
-                                child: TextField(
-                                  maxLines: null,
-                                  enableSuggestions: true,
-                                  decoration: InputDecoration(
-                                    hintText: 'Type a message...',
-                                    hintStyle: TextStyle(
-                                        color: theme.onSurface.withOpacity(.5)),
-                                    border: InputBorder.none,
-                                    focusedBorder: InputBorder.none,
-                                    enabledBorder: InputBorder.none,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 5),
-                            // send button
-                            IconButton(
-                                onPressed: () {}, icon: Icon(Icons.send)),
-                          ],
-                        ),
-                      )
+                      bottomInputField(theme, conversationId,
+                          _messageController, doctorId, userId),
                     ],
                   );
                 },
@@ -142,4 +109,70 @@ class ConverationScreen extends StatelessWidget {
           }),
     );
   }
+
+  void scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    }
+  }
+
+  final ScrollController _scrollController = ScrollController();
+
+  final TextEditingController _messageController = TextEditingController();
+}
+
+Widget buildMessageCard(
+    ColorScheme theme, MessageModel message, String doctorId) {
+  return Align(
+    alignment: message.from == 'doctor' && message.senderId == doctorId
+        ? Alignment.centerLeft
+        : Alignment.centerRight,
+    child: Container(
+      constraints: const BoxConstraints(
+        maxWidth: 200,
+      ),
+      margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+      decoration: BoxDecoration(
+        color: message.from == 'doctor'
+            ? theme.onPrimary.withOpacity(.1)
+            : theme.primary,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            message.content,
+            style: TextStyle(
+              color: message.from == 'doctor'
+                  ? theme.onSurface
+                  : theme.onPrimary,
+              fontSize: 14,
+            ),
+          ),
+          const SizedBox(height: 5), // Add spacing between message and time
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Text(
+              formatTime(message.timestamp), // Assuming `message.time` contains the formatted time
+              style: TextStyle(
+                color: theme.onSurface.withOpacity(0.6),
+                fontSize: 12,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+
+String formatTime(Timestamp timestamp) {
+  // output format: 01/01/2021 12:00 PM
+  final date = timestamp.toDate();
+  final formattedDate = DateFormat('dd/MM/yyyy hh:mm a').format(date);
+  return formattedDate;
 }
