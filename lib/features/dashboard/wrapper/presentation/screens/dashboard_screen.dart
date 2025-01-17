@@ -47,13 +47,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
     //     systemNavigationBarIconBrightness: colorScheme.brightness));
 
     return Scaffold(
-      backgroundColor: colorScheme.surfaceContainer,
-      body: SafeArea(
-        child: BlocBuilder<NavigationCubit, int>(
-            builder: (context, state) => screens[state]),
-      ),
-      bottomNavigationBar: const CustomFloatingNavigationBar(),
-    );
+        backgroundColor: colorScheme.surfaceContainer,
+        body: SafeArea(
+          child: BlocBuilder<NavigationCubit, int>(
+              builder: (context, state) => screens[state]),
+        ),
+        bottomNavigationBar: const CustomFloatingNavigationBar(),
+
+        // floatingActionButton:
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          backgroundColor: colorScheme.secondary,
+          child: Icon(Icons.chat, color: Colors.black),
+          shape: CircleBorder(),
+          elevation: 5,
+        ));
   }
 
   final List<Widget> screens = [
