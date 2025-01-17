@@ -13,9 +13,10 @@ part './parts/doctor_info_card.dart';
 // doctor_detailed_page.dart
 
 class DoctorDetailedPage extends StatelessWidget {
-  const DoctorDetailedPage({super.key, required this.doctor});
+  const DoctorDetailedPage({super.key, required this.doctor, required this.rating});
 
   final DoctorModel doctor;
+  final double rating;
 
   @override
   Widget build(BuildContext context) {
@@ -36,20 +37,20 @@ class DoctorDetailedPage extends StatelessWidget {
         backgroundColor: theme.surfaceContainer,
         toolbarHeight: 70,
       ),
-      body: SafeArea(child: buildDetailedDoctorBody(context, theme, doctor)),
+      body: SafeArea(child: buildDetailedDoctorBody(context, theme, doctor,rating)),
     );
   }
 }
 
 Widget buildDetailedDoctorBody(
-    BuildContext context, ColorScheme theme, DoctorModel doctor) {
+    BuildContext context, ColorScheme theme, DoctorModel doctor, double rating) {
   return SingleChildScrollView(
     padding: const EdgeInsets.symmetric(horizontal: 20),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Doctor personal details card
-        buildDoctorInfoCard(theme, doctor),
+        buildDoctorInfoCard(theme, doctor,rating),
 
         const SizedBox(height: 15),
 
@@ -91,6 +92,44 @@ Widget buildDoctorTimeSlotsCard(
       }
 
       final DoctorModel doctor = snapshot.data!['doctor'];
+
+      doctor.timeSlots.forEach((key, value) {
+        // Parse the date from the key
+        final slotDate = DateTime.parse(key); // Assuming the key is in "YYYY-MM-DD" format
+        final now = DateTime.now();
+
+        // Remove any past time slots from the value list
+        value.removeWhere((slot) {
+          final timeRange = slot['time'].split(" - ")[1].trim(); // Get the end time
+          final timeParts = timeRange.split(" ");
+          final hourMinute = timeParts[0].split(":");
+          final hour = int.parse(hourMinute[0]);
+          final minute = int.parse(hourMinute[1]);
+          final amPm = timeParts[1].toUpperCase();
+
+          // Adjust hour for AM/PM format
+          int adjustedHour = hour;
+          if (amPm == "PM" && hour != 12) {
+            adjustedHour += 12;
+          } else if (amPm == "AM" && hour == 12) {
+            adjustedHour = 0;
+          }
+
+          // Create DateTime for the slot's end time
+          final slotTime = DateTime(
+            slotDate.year,
+            slotDate.month,
+            slotDate.day,
+            adjustedHour,
+            minute,
+            0,
+          );
+
+          // Return true if the slot time is before now, causing it to be removed
+          return slotTime.isBefore(now) || slot['isBooked'] == true;
+        });
+      });
+
 
       return doctor.timeSlots.isEmpty
           ? const Center(
@@ -173,6 +212,43 @@ Widget buildDoctorTimeSlotsCard(
                                     return 0; // Default comparison if parsing fails
                                   }
                                 });
+
+                              // filter past appointments
+                              // params: [date, from-to]
+                              final now = DateTime.now();
+
+                              // sortedSlots.removeWhere((slot) {
+                              //   final time = slot['time'].split(" - ")[1].trim();
+                              //   print(time);
+                              //   final timeParts = time.split(" ");
+                              //   final hourMinute = timeParts[0].split(":");
+                              //   final hour = int.parse(hourMinute[0]);
+                              //   final minute = int.parse(hourMinute[1]);
+                              //   final amPm = timeParts[1].toUpperCase();
+                              //
+                              //   // Adjust hour for AM/PM format
+                              //   int adjustedHour = hour;
+                              //   if (amPm == "PM" && hour != 12) {
+                              //     adjustedHour += 12;
+                              //   } else if (amPm == "AM" && hour == 12) {
+                              //     adjustedHour = 0;
+                              //   }
+                              //
+                              //   print(" Adjusted hour: ${adjustedHour}");
+                              //
+                              //   final slotTime = DateTime(
+                              //     now.year,
+                              //     now.month,
+                              //     now.day,
+                              //     adjustedHour,
+                              //     minute,
+                              //     0,
+                              //   );
+                              //
+                              //
+                              //
+                              //   return slotTime.isBefore(now);
+                              // });
 
                               final slot = sortedSlots[index];
 
