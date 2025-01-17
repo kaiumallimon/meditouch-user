@@ -30,8 +30,8 @@ class ConverationScreen extends StatelessWidget {
       appBar: AppBar(
         toolbarHeight: 70,
         title: Text(doctor.name, maxLines: 1, overflow: TextOverflow.ellipsis),
-        backgroundColor: theme.primary,
-        foregroundColor: theme.onPrimary,
+        backgroundColor: theme.surfaceContainer,
+        foregroundColor: theme.onSurface,
         elevation: 0,
       ),
       body: FutureBuilder<String>(
@@ -138,7 +138,7 @@ Widget buildMessageCard(BuildContext context, ColorScheme theme,
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
             decoration: BoxDecoration(
               color: message.from == 'doctor'
-                  ? theme.onPrimary.withOpacity(.1)
+                  ? theme.onSurface.withOpacity(.1)
                   : theme.primary,
               borderRadius: BorderRadius.circular(10),
             ),
@@ -163,7 +163,9 @@ Widget buildMessageCard(BuildContext context, ColorScheme theme,
                     formatTime(message
                         .timestamp), // Assuming `message.time` contains the formatted time
                     style: TextStyle(
-                      color: theme.onSurface.withOpacity(0.6),
+                      color: message.from == 'doctor'
+                          ? theme.onSurface.withOpacity(0.6)
+                          : theme.onPrimary.withOpacity(0.6),
                       fontSize: 12,
                     ),
                   ),
