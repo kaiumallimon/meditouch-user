@@ -6,6 +6,9 @@ import 'package:meditouch/features/dashboard/features/appointments/data/reposito
 import 'package:meditouch/features/dashboard/features/doctors/presentation/screens/doctor_detailed_page.dart';
 import 'package:meditouch/features/dashboard/features/home/logics/home_event.dart';
 import 'package:meditouch/features/dashboard/features/home/presentation/screens/parts/home_grid.dart';
+import 'package:meditouch/features/dashboard/features/nurses/data/model/nurse_model.dart';
+import 'package:meditouch/features/dashboard/features/nurses/data/repository/nurse_repository.dart';
+import 'package:meditouch/features/dashboard/features/nurses/presentation/screens/nurse_screen.dart';
 // import 'package:shimmer/shimmer.dart';
 
 import '../../logics/home_bloc.dart';
@@ -140,7 +143,7 @@ class HomeScreen extends StatelessWidget {
                         const SizedBox(height: 10),
                         buildGreeting(theme, userInfo['name']),
                         const SizedBox(height: 20),
-                        buildAppointmentBox(theme, 2),
+                        buildAppointmentBox(theme, 2, userInfo['id']),
                         const SizedBox(height: 25),
                         Text('What are you looking for?',
                             style: TextStyle(
@@ -160,6 +163,19 @@ class HomeScreen extends StatelessWidget {
                         const SizedBox(height: 15),
                         buildTopRatedDoctors(theme),
 
+                        const SizedBox(height: 30),
+                        // available nurses
+                        Text(
+                          'Available Nurses',
+                          style: TextStyle(
+                            color: theme.onSurface,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        const SizedBox(height: 15),
+                        buildAvailableNurses(theme),
+
                         const SizedBox(height: 40),
                       ],
                     ),
@@ -174,6 +190,91 @@ class HomeScreen extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  SizedBox buildAvailableNurses(ColorScheme theme) {
+    return SizedBox(
+      height: 200,
+      width: double.infinity,
+      child: StreamBuilder(
+          stream: NurseRepository().getNurses(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                  child:
+                      CustomLoadingAnimation(size: 20, color: theme.primary));
+            }
+
+            if (snapshot.hasError) {
+              return const Center(child: Text('An error occurred'));
+            }
+
+            final List<NurseModel> nurses = snapshot.data!;
+            // final doctors = data['doctor'];
+
+            return ListView.builder(
+              shrinkWrap: true,
+              itemCount: nurses.length,
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              itemBuilder: (context, index) {
+                final nurse = nurses[index];
+
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => HireNursePage()));
+                  },
+                  child: Container(
+                    width: 170,
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                        color: theme.primary,
+                        borderRadius: BorderRadius.circular(13),
+                        boxShadow: [
+                          BoxShadow(
+                              color: theme.primary.withOpacity(.2),
+                              blurRadius: 10,
+                              offset: const Offset(0, 5))
+                        ]),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: CachedNetworkImage(
+                              imageUrl: nurse.image,
+                              fit: BoxFit.cover,
+                              progressIndicatorBuilder:
+                                  (context, url, progress) {
+                                return Center(
+                                    child: CustomLoadingAnimation(
+                                        size: 15, color: theme.onPrimary));
+                              },
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 15),
+                        Text(
+                          nurse.name,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: theme.onPrimary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          }),
     );
   }
 
