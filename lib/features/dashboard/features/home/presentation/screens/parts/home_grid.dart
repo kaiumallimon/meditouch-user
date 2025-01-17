@@ -1,4 +1,5 @@
 import 'package:meditouch/app/app_exporter.dart';
+import 'package:meditouch/features/dashboard/features/healthtips/presentation/screen/healthtips_screen.dart';
 
 import '../../widgets/home_grid_item.dart';
 
@@ -26,14 +27,18 @@ Widget buildHomeGridMenu(BuildContext context, ColorScheme theme) {
             textColor: theme.onSurface,
           ),
           HomeGridItem(
-            title: 'Appointments',
+            title: 'Health News',
             icon: Image.asset(
-              'assets/icons/doctor-flaticon.png',
+              'assets/icons/news-report.png',
               width: 25,
               height: 25,
             ),
             onTap: () {
-              // Navigator.of(context).pushNamed(Routes.appointment);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => UserHealthTipsPage(),
+                ),
+              );
             },
             backgroundColor: theme.primaryContainer,
             textColor: theme.onSurface,
