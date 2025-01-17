@@ -13,6 +13,11 @@ ListView scannedMedicineList(ScanResult state, ColorScheme theme) {
             itemBuilder: (context, index) {
               return Container(
                 margin: const EdgeInsets.only(bottom: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: theme.primaryContainer
+                ),
                 child: ListTile(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -20,7 +25,7 @@ ListView scannedMedicineList(ScanResult state, ColorScheme theme) {
                             medicineName: state.medicines[index].medicineName,
                             slug: state.medicines[index].slug)));
                   },
-                  tileColor: theme.primaryContainer,
+                  // tileColor: theme.primaryContainer,
                   leading: CachedNetworkImage(
                     imageUrl:
                         getImageUrl(state.medicines[index].medicineImage),
