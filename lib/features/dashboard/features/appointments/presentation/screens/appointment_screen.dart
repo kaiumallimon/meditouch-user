@@ -11,6 +11,8 @@ import 'package:meditouch/features/dashboard/features/appointments/logics/appoin
 import 'package:meditouch/features/dashboard/features/doctors/data/models/appointment_model.dart';
 import 'package:meditouch/features/dashboard/features/doctors/data/models/doctor_model.dart';
 
+import 'call_screen.dart';
+
 class AppointmentScreen extends StatelessWidget {
   const AppointmentScreen({super.key});
 
@@ -186,29 +188,25 @@ class AppointmentScreen extends StatelessWidget {
                     CachedNetworkImageProvider(doctorDetails.imageUrl),
               ),
             ),
-            if (appointment.videoCallId != null)
+            if (appointment.videoCallId != null && !appointment.isCompleted)
               Positioned(
-                right: 60,
+                right: 10,
                 top: -10,
                 child: buildActionButton(
                   theme,
                   CupertinoIcons.video_camera,
                   () {
-                    // Join meeting logic
+                    // implement video call
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => CallScreen(
+                              callId: appointment.videoCallId!,
+                              image: appointment.patientDetails['image'],
+                              userId: appointment.patientId,
+                              userName: appointment.patientDetails['name'],
+                            )));
                   },
                 ),
               ),
-            Positioned(
-              right: 10,
-              top: -10,
-              child: buildActionButton(
-                theme,
-                CupertinoIcons.chat_bubble,
-                () {
-                  // Message logic
-                },
-              ),
-            ),
           ],
         ),
       ),
