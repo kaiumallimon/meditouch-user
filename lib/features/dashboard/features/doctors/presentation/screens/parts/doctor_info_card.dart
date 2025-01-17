@@ -1,6 +1,6 @@
 part of './../doctor_detailed_page.dart';
 
-Container buildDoctorInfoCard(ColorScheme theme, DoctorModel doctor) {
+Container buildDoctorInfoCard(ColorScheme theme, DoctorModel doctor, double rating) {
   return Container(
     padding: EdgeInsets.all(15),
     decoration: BoxDecoration(
@@ -105,7 +105,7 @@ Container buildDoctorInfoCard(ColorScheme theme, DoctorModel doctor) {
         const SizedBox(height: 10),
 
         // rating
-        (doctor.ratings != null)
+        (rating != 0)
             ? Center(
                 child: Row(
                   spacing: 5,
@@ -115,12 +115,12 @@ Container buildDoctorInfoCard(ColorScheme theme, DoctorModel doctor) {
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: buildRatingStars(
-                          double.parse(doctor.ratings!.length.toString()),
+                          rating,
                           theme),
                     ),
 
                     Text(
-                      '(${doctor.ratings!.length})',
+                      '(${rating.toStringAsFixed(1)})',
                       style: TextStyle(fontSize: 16, color: theme.onSurface),
                     ),
                   ],
