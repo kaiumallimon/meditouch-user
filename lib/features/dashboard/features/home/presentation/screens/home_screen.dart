@@ -141,7 +141,12 @@ class HomeScreen extends StatelessWidget {
                         buildGreeting(theme, userInfo['name']),
                         const SizedBox(height: 20),
                         buildAppointmentBox(theme, 2),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 25),
+                        Text('What are you looking for?',
+                            style: TextStyle(
+                                color: theme.onSurface,
+                                fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 15),
                         buildHomeGridMenu(context, theme),
                         const SizedBox(height: 20),
                         // top 5 doctors
