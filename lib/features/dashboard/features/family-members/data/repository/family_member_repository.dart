@@ -112,6 +112,30 @@ class FamilyMemberRepository {
     });
   }
 
+  Future<FamilyMemberModel?> getFamilyMembersFuture(String userId) async {
+    try {
+      final snapshot = await _firestore
+          .collection("db_client_family_members") // Assuming collection name is 'familyMembers'
+          .where('userId', isEqualTo: userId)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        var document = snapshot.docs.first;
+        return FamilyMemberModel.fromMap(
+          document.data(),
+          document.id,
+        );
+      }
+      // If no data is found, return null
+      return null;
+    } catch (e) {
+      // Handle any errors, maybe log or rethrow
+      print("Error getting family member: $e");
+      return null;
+    }
+  }
+
+
 
   // REMOVE a family member from the list by their email:
 

@@ -59,7 +59,7 @@ class PersonModel {
     return {
       'name': name,
       'email': email,
-      'phoneNumber': phoneNumber,
+      'phone': phoneNumber,
       'dob': dob,
       'gender': gender,
       'relationShip': relationShip,
@@ -71,10 +71,24 @@ class PersonModel {
     return PersonModel(
         name: map['name'],
         email: map['email'],
-        phoneNumber: map['phoneNumber'],
+        phoneNumber: map['phone'],
         dob: map['dob'],
         gender: map['gender'],
         image: map['image'],
         relationShip: map['relationShip']);
   }
+
+  // default constructor
+  factory PersonModel.defaultConstructor() {
+    return const PersonModel(
+      name: '',
+      email: '',
+      phoneNumber: '',
+      dob: '',
+      gender: '',
+      relationShip: '',
+      image: null, // nullable field can remain null
+    );
+  }
+
 }

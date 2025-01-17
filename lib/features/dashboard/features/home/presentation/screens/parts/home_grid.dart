@@ -2,6 +2,7 @@ import 'package:meditouch/app/app_exporter.dart';
 import 'package:meditouch/features/dashboard/features/community/presentation/screens/community_screen.dart';
 import 'package:meditouch/features/dashboard/features/emergency/presentation/screen/emergency_screen.dart';
 import 'package:meditouch/features/dashboard/features/healthtips/presentation/screen/healthtips_screen.dart';
+import 'package:meditouch/features/dashboard/features/medication/presentation/screens/medication_screen.dart';
 import 'package:meditouch/features/dashboard/features/nurses/presentation/screens/nurse_screen.dart';
 
 import '../../widgets/home_grid_item.dart';
@@ -54,7 +55,11 @@ Widget buildHomeGridMenu(BuildContext context, ColorScheme theme) {
               height: 25,
             ),
             onTap: () {
-              // Navigator.of(context).pushNamed(Routes.appointment);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => MedicationReminderViewPage(),
+                ),
+              );
             },
             backgroundColor: theme.primaryContainer,
             textColor: theme.onSurface,

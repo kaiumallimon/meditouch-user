@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meditouch/common/widgets/custom_loading_animation.dart';
 import 'package:meditouch/features/dashboard/features/doctors/presentation/screens/doctor_search_screen.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:meditouch/features/ai-chat/data/repository/ai_chat_repository.dart';
@@ -18,11 +19,29 @@ class _AiModelChatScreenState extends State<AiModelChatScreen> {
   bool _isLoading = false;
 
   late Box _chatBox;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _loadMessages();
+
+    // Scroll to bottom when the page is first loaded
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToBottom();
+    });
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+        _saveMessages();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();  // Dispose the scroll controller
+    super.dispose();
   }
 
   Future<void> _loadMessages() async {
@@ -30,6 +49,11 @@ class _AiModelChatScreenState extends State<AiModelChatScreen> {
     final storedMessages = _chatBox.get('messages', defaultValue: []);
     setState(() {
       _messages.addAll(List<Map<String, dynamic>>.from(storedMessages));
+    });
+
+    // Ensure scroll to bottom when new messages are loaded
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToBottom();
     });
   }
 
@@ -42,12 +66,12 @@ class _AiModelChatScreenState extends State<AiModelChatScreen> {
       _messages.add({
         'sender': 'user',
         'text': message,
-        'timestamp': DateTime.now().toIso8601String()
+        'timestamp': DateTime.now().toIso8601String(),
       });
       _isLoading = true;
     });
 
-    await _saveMessages(); // Save user message to Hive
+    await _saveMessages();  // Save user message to Hive
 
     final response = await _repository.getChatResponse(message);
 
@@ -69,7 +93,23 @@ class _AiModelChatScreenState extends State<AiModelChatScreen> {
       _isLoading = false;
     });
 
-    await _saveMessages(); // Save AI response to Hive
+    _scrollController.animateTo(
+      _scrollController.position.maxScrollExtent,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+    );
+
+    await _saveMessages();  // Save AI response to Hive
+  }
+
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
   }
 
   @override
@@ -90,110 +130,113 @@ class _AiModelChatScreenState extends State<AiModelChatScreen> {
             Expanded(
               child: _messages.isEmpty
                   ? const Center(
-                      child: Text(
-                        'Start chatting with our very own AI model!',
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    )
+                child: Text(
+                  'Start chatting with our very own AI model!',
+                  style: TextStyle(color: Colors.grey),
+                ),
+              )
                   : ListView.builder(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 20),
-                      itemCount: _messages.length,
-                      itemBuilder: (context, index) {
-                        final message = _messages[index];
-                        final isUser = message['sender'] == 'user';
+                physics: const BouncingScrollPhysics(),
+                controller: _scrollController,
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 10, vertical: 20),
+                itemCount: _messages.length,
+                itemBuilder: (context, index) {
+                  final message = _messages[index];
+                  final isUser = message['sender'] == 'user';
 
-                        return Align(
-                          alignment: isUser
-                              ? Alignment.centerRight
-                              : Alignment.centerLeft,
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 5, horizontal: 10),
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
+                  return Align(
+                    alignment: isUser
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 10),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: isUser
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context)
+                            .colorScheme
+                            .primaryContainer,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            message['text'] ?? '',
+                            style: TextStyle(
                               color: isUser
-                                  ? Theme.of(context).colorScheme.primary
+                                  ? Colors.white
                                   : Theme.of(context)
-                                      .colorScheme
-                                      .primaryContainer,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  message['text'] ?? '',
-                                  style: TextStyle(
-                                    color: isUser
-                                        ? Colors.white
-                                        : Theme.of(context)
-                                            .colorScheme
-                                            .onSurface,
-                                  ),
-                                ),
-                                if (!isUser &&
-                                    message['suggested_doctors'] != null)
-                                  const SizedBox(height: 10),
-                                if (!isUser &&
-                                    message['suggested_doctors'] != null)
-                                  ...?List<String>.from(
-                                          message['suggested_doctors']
-                                              as List<dynamic>)
-                                      .map(
-                                    (doctor) => GestureDetector(
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    DoctorSearchScreen(
-                                                      searchQuery: doctor,
-                                                    )));
-                                      },
-                                      child: Container(
-                                        margin:
-                                            const EdgeInsets.only(bottom: 10),
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 15, vertical: 8),
-                                        decoration: BoxDecoration(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .secondary,
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Text(
-                                              doctor,
-                                              style: const TextStyle(
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 5),
-                                            const Icon(
-                                              Icons.arrow_forward_rounded,
-                                              color: Colors.black,
-                                              size: 15,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                              ],
+                                  .colorScheme
+                                  .onSurface,
                             ),
                           ),
-                        );
-                      },
+                          if (!isUser &&
+                              message['suggested_doctors'] != null)
+                            const SizedBox(height: 10),
+                          if (!isUser &&
+                              message['suggested_doctors'] != null)
+                            ...?List<String>.from(
+                                message['suggested_doctors']
+                                as List<dynamic>)
+                                .map(
+                                  (doctor) => GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              DoctorSearchScreen(
+                                                searchQuery: doctor,
+                                              )));  // Navigate to doctor search
+                                },
+                                child: Container(
+                                  margin:
+                                  const EdgeInsets.only(bottom: 10),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary,
+                                    borderRadius:
+                                    BorderRadius.circular(20),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        doctor,
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 5),
+                                      const Icon(
+                                        Icons.arrow_forward_rounded,
+                                        color: Colors.black,
+                                        size: 15,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
+                  );
+                },
+              ),
             ),
             if (_isLoading)
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: CircularProgressIndicator(),
+              Padding(
+                padding: EdgeInsets.all(10.0),
+                child: CustomLoadingAnimation(
+                    size: 25, color: Theme.of(context).colorScheme.primary),
               ),
             // Chat input
             _buildChatInput(context),

@@ -18,11 +18,13 @@ class AppointmentBookScreen extends StatelessWidget {
       {super.key,
       required this.date,
       required this.timeSlotIndex,
-      required this.doctor});
+      required this.doctor,
+      required this.user});
 
   final String date;
   final int timeSlotIndex;
   final DoctorModel doctor;
+  final Map<String, dynamic> user;
 
   @override
   Widget build(BuildContext context) {
@@ -175,189 +177,166 @@ class AppointmentBookScreen extends StatelessWidget {
 
               const SizedBox(height: 15),
 
-              FutureBuilder(
-                  future: HiveRepository().getUserInfo(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else if (snapshot.hasError || !snapshot.hasData) {
-                      return const Center(
-                        child: Text('An error occurred!'),
-                      );
-                    } else {
-                      final user = snapshot.data;
-                      return Column(
-                        children: [
-                          Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(15),
-                            decoration: BoxDecoration(
-                              color: theme.primary.withOpacity(.1),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Row(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: CachedNetworkImage(
-                                    imageUrl: user!['image'],
-                                    height: 170,
-                                    width: 100,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                const SizedBox(width: 15),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'Name',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.normal,
-                                              color: theme.onSurface
-                                                  .withOpacity(.5),
-                                            ),
-                                          ),
-                                          const SizedBox(height: 5),
-                                          Text(
-                                            user['name'],
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: theme.onSurface,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 10),
-                                          Text(
-                                            'Email',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.normal,
-                                              color: theme.onSurface
-                                                  .withOpacity(.5),
-                                            ),
-                                          ),
-                                          const SizedBox(height: 5),
-                                          Text(
-                                            user['email'],
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: theme.onSurface,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 10),
-                                          Text(
-                                            'Phone',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.normal,
-                                              color: theme.onSurface
-                                                  .withOpacity(.5),
-                                            ),
-                                          ),
-                                          const SizedBox(height: 5),
-                                          Text(
-                                            user['phone'],
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: theme.onSurface,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
+              Column(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      color: theme.primary.withOpacity(.1),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: CachedNetworkImage(
+                            imageUrl: user!['image'],
+                            height: 170,
+                            width: 100,
+                            fit: BoxFit.cover,
                           ),
-
-                          const SizedBox(height: 20),
-
-                          /// Continue
-                          ///
-                          /// to
-                          ///
-                          /// payment
-                          ///
-                          ///
-                          /// to book the appointment
-                          Text(
-                            'Go ahead and pay the visiting fee to book the appointment.',
-                            style: TextStyle(
-                              color: theme.onSurface.withOpacity(.5),
-                            ),
-                          ),
-
-                          const SizedBox(height: 20),
-
-                          BlocConsumer<PaymentBloc, PaymentState>(
-                            listener: (context, state) {
-                              if (state is PaymentSuccess) {
-                                QuickAlert.show(
-                                  context: context,
-                                  title: 'Success',
-                                  text: "Appointment booked successfully!",
-                                  type: QuickAlertType.success,
-                                  onConfirmBtnTap: () => Navigator.pop(context),
-                                );
-                              }
-                              if (state is PaymentTokenGranted) {
-                                /// Create payment
-                                ///
-                                /// For now, the amount is fixed to 1
-                                ///
-                                /// Test with 1 BDT
-
-                                context
-                                    .read<PaymentBloc>()
-                                    .add(CreatePaymentRequested(
-                                      grantToken: state.grantToken,
-                                      amount: '1',
-                                    ));
-                              }
-
-                              if (state is PaymentCreated) {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => PaymentScreen(
-                                      appointmentDate: date,
-                                      appointmentTimeSlot:
-                                          doctor.timeSlots[date]![timeSlotIndex]
-                                              ['time'],
-                                      doctorModel: doctor,
-                                      patientDetails: user,
-                                      patientId: user['id'],
-                                      paymentUrl: state.paymentUrl,
+                        ),
+                        const SizedBox(width: 15),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Name',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.normal,
+                                      color: theme.onSurface.withOpacity(.5),
                                     ),
                                   ),
-                                );
-                              }
-                            },
-                            builder: (context, state) {
-                              return CustomButton(
-                                size: const Size(600, 50),
-                                text: "Pay now",
-                                onPressed: () {
-                                  context
-                                      .read<PaymentBloc>()
-                                      .add(GrantTokenRequested());
-                                },
-                                bgColor: theme.primary,
-                                fgColor: theme.onPrimary,
-                                isLoading: state is PaymentLoading,
-                              );
-                            },
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    user['name'],
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: theme.onSurface,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    'Email',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.normal,
+                                      color: theme.onSurface.withOpacity(.5),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    user['email'],
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: theme.onSurface,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    'Phone',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.normal,
+                                      color: theme.onSurface.withOpacity(.5),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    user['phone'],
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: theme.onSurface,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  /// Continue
+                  ///
+                  /// to
+                  ///
+                  /// payment
+                  ///
+                  ///
+                  /// to book the appointment
+                  Text(
+                    'Go ahead and pay the visiting fee to book the appointment.',
+                    style: TextStyle(
+                      color: theme.onSurface.withOpacity(.5),
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  BlocConsumer<PaymentBloc, PaymentState>(
+                    listener: (context, state) {
+                      if (state is PaymentSuccess) {
+                        QuickAlert.show(
+                          context: context,
+                          title: 'Success',
+                          text: "Appointment booked successfully!",
+                          type: QuickAlertType.success,
+                          onConfirmBtnTap: () => Navigator.pop(context),
+                        );
+                      }
+                      if (state is PaymentTokenGranted) {
+                        /// Create payment
+                        ///
+                        /// For now, the amount is fixed to 1
+                        ///
+                        /// Test with 1 BDT
+
+                        context.read<PaymentBloc>().add(CreatePaymentRequested(
+                              grantToken: state.grantToken,
+                              amount: '1',
+                            ));
+                      }
+
+                      if (state is PaymentCreated) {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => PaymentScreen(
+                              appointmentDate: date,
+                              appointmentTimeSlot: doctor
+                                  .timeSlots[date]![timeSlotIndex]['time'],
+                              doctorModel: doctor,
+                              patientDetails: user,
+                              patientId: user['id'],
+                              paymentUrl: state.paymentUrl,
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                    builder: (context, state) {
+                      return CustomButton(
+                        size: const Size(600, 50),
+                        text: "Pay now",
+                        onPressed: () {
+                          context
+                              .read<PaymentBloc>()
+                              .add(GrantTokenRequested());
+                        },
+                        bgColor: theme.primary,
+                        fgColor: theme.onPrimary,
+                        isLoading: state is PaymentLoading,
                       );
-                    }
-                  }),
+                    },
+                  ),
+                ],
+              )
             ],
           ),
         ),

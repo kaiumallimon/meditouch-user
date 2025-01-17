@@ -10,6 +10,8 @@ import 'package:meditouch/features/dashboard/features/appointments/data/reposito
 import 'package:meditouch/features/dashboard/features/appointments/logics/appointment_bloc.dart';
 import 'package:meditouch/features/dashboard/features/doctors/data/models/appointment_model.dart';
 import 'package:meditouch/features/dashboard/features/doctors/data/models/doctor_model.dart';
+import 'package:meditouch/features/dashboard/features/family-members/data/models/family_member_model.dart';
+import 'package:meditouch/features/dashboard/features/family-members/data/repository/family_member_repository.dart';
 
 import 'call_screen.dart';
 
@@ -68,60 +70,113 @@ class AppointmentScreen extends StatelessWidget {
 
           final user = futureSnapshot.data!;
 
-          return StreamBuilder(
-            stream: AppointmentRepository().getAppointments(user['id']),
-            builder: (context, streamSnapshot) {
-              if (streamSnapshot.connectionState == ConnectionState.waiting) {
-                return CustomLoadingAnimation(size: 25, color: theme.primary);
-              }
+          return FutureBuilder(
+              future:
+                  FamilyMemberRepository().getFamilyMembersFuture(user['id']),
+              builder: (context, familySnapshot) {
+                if (familySnapshot.connectionState == ConnectionState.waiting) {
+                  return CustomLoadingAnimation(size: 25, color: theme.primary);
+                }
 
-              if (streamSnapshot.hasError ||
-                  !streamSnapshot.hasData ||
-                  streamSnapshot.data!['status'] == false) {
-                return const Center(child: Text('An error occurred!'));
-              }
+                if (familySnapshot.hasError || !familySnapshot.hasData) {
+                  return const Center(child: Text('Failed to load user info'));
+                }
 
-              final allAppointments = streamSnapshot.data!['data'];
-              final upcomingAppointments = (allAppointments['upcoming']
-                  as List<AppointmentModel>)
-                ..sort((a, b) => DateTime.parse(b.bookingTime)
-                    .compareTo(DateTime.parse(a.bookingTime)));
-              final pastAppointments = (allAppointments['past']
-                  as List<AppointmentModel>)
-                ..sort((a, b) => DateTime.parse(b.bookingTime)
-                    .compareTo(DateTime.parse(a.bookingTime)));
+                final FamilyMemberModel familyMembers = familySnapshot.data!;
 
-              return BlocBuilder<AppointmentCubit, String>(
-                builder: (context, state) {
-                  final appointments = state == 'upcoming'
-                      ? upcomingAppointments
-                      : pastAppointments;
+                return StreamBuilder(
+                  stream: AppointmentRepository().getAppointments(user['id']),
+                  builder: (context, streamSnapshot) {
+                    if (streamSnapshot.connectionState ==
+                        ConnectionState.waiting) {
+                      return CustomLoadingAnimation(
+                          size: 25, color: theme.primary);
+                    }
 
-                  return appointments.isEmpty
-                      ? const Center(child: Text('No appointments found'))
-                      : ListView.builder(
-                          itemCount: appointments.length,
-                          padding: const EdgeInsets.symmetric(vertical: 40),
-                          physics: const BouncingScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return buildAppointmentCard(
-                              context,
-                              appointments[index],
-                              theme,
-                            );
-                          },
-                        );
-                },
-              );
-            },
-          );
+                    if (streamSnapshot.hasError ||
+                        !streamSnapshot.hasData ||
+                        streamSnapshot.data!['status'] == false) {
+                      return const Center(child: Text('An error occurred!'));
+                    }
+
+                    final allAppointments = streamSnapshot.data!['data'];
+                    final upcomingAppointments = (allAppointments['upcoming']
+                        as List<AppointmentModel>)
+                      ..sort((a, b) => DateTime.parse(b.bookingTime)
+                          .compareTo(DateTime.parse(a.bookingTime)));
+                    final pastAppointments = (allAppointments['past']
+                        as List<AppointmentModel>)
+                      ..sort((a, b) => DateTime.parse(b.bookingTime)
+                          .compareTo(DateTime.parse(a.bookingTime)));
+
+                    return BlocBuilder<AppointmentCubit, String>(
+                      builder: (context, state) {
+                        final appointments = state == 'upcoming'
+                            ? upcomingAppointments
+                            : pastAppointments;
+
+                        return appointments.isEmpty
+                            ? const Center(child: Text('No appointments found'))
+                            : ListView.builder(
+                                itemCount: appointments.length,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 40),
+                                physics: const BouncingScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  // check if the patient email matches with any of the family members
+                                  final appointment = appointments[index];
+                                  final patientEmail =
+                                      appointment.patientDetails['email'];
+
+                                  final PersonModel familyMember =
+                                      familyMembers.familyMembers.firstWhere(
+                                    (member) => member.email == patientEmail,
+                                    orElse: () =>
+                                        PersonModel.defaultConstructor(),
+                                  );
+
+                                  // Check if the familyMember is the default empty model
+                                  if (familyMember.name.isEmpty &&
+                                      familyMember.email.isEmpty &&
+                                      familyMember.phoneNumber.isEmpty &&
+                                      familyMember.dob.isEmpty &&
+                                      familyMember.gender.isEmpty &&
+                                      familyMember.relationShip.isEmpty &&
+                                      familyMember.image == null) {
+                                    // This means it's the default (empty) constructor
+                                    print(
+                                        "This is the default (empty) family member.");
+                                    return buildAppointmentCard(context,
+                                        appointments[index], theme, null);
+                                  } else {
+                                    // This means it's a valid family member
+                                    print(
+                                        "This is a valid family member: ${familyMember.name}");
+
+                                    return buildAppointmentCard(
+                                      context,
+                                      appointments[index],
+                                      theme,
+                                      familyMember,
+                                    );
+                                  }
+                                },
+                              );
+                      },
+                    );
+                  },
+                );
+              });
         },
       ),
     );
   }
 
   Widget buildAppointmentCard(
-      BuildContext context, AppointmentModel appointment, ColorScheme theme) {
+      BuildContext context,
+      AppointmentModel appointment,
+      ColorScheme theme,
+      PersonModel? familyMember) {
     final doctorDetails = DoctorModel.fromJson(
       appointment.doctorDetails,
       appointment.doctorId,
@@ -176,6 +231,16 @@ class AppointmentScreen extends StatelessWidget {
                   Icons.calendar_month,
                   'Booked on: ${DateTimeFormatUtil().getFormattedAddedDateTime(appointment.bookingTime)}',
                 ),
+
+                // Check if the familyMemberRelationShip is null
+                if (familyMember != null) ...[
+                  const SizedBox(height: 10),
+                  buildInfoRow(
+                    theme,
+                    Icons.person,
+                    'For: ${familyMember.relationShip} (${familyMember.name})',
+                  ),
+                ]
               ],
             ),
             Positioned(
@@ -199,7 +264,7 @@ class AppointmentScreen extends StatelessWidget {
                     // implement video call
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => CallScreen(
-                          appointment: appointment,
+                              appointment: appointment,
                               callId: appointment.videoCallId!,
                               image: appointment.patientDetails['image'],
                               userId: appointment.patientId,

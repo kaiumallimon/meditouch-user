@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:meditouch/app/app_exporter.dart';
 import 'package:meditouch/common/widgets/custom_loading_animation.dart';
 import 'package:meditouch/features/dashboard/features/doctors/data/models/doctor_model.dart';
+import 'package:meditouch/features/dashboard/features/family-members/data/repository/family_member_repository.dart';
 import '../../data/repository/detailed_doctor_repository.dart';
 import '../../logics/detailed_doctor_controller.dart';
 import '../widgets/build_rating_stars.dart';
@@ -13,7 +14,8 @@ part './parts/doctor_info_card.dart';
 // doctor_detailed_page.dart
 
 class DoctorDetailedPage extends StatelessWidget {
-  const DoctorDetailedPage({super.key, required this.doctor, required this.rating});
+  const DoctorDetailedPage(
+      {super.key, required this.doctor, required this.rating});
 
   final DoctorModel doctor;
   final double rating;
@@ -37,20 +39,21 @@ class DoctorDetailedPage extends StatelessWidget {
         backgroundColor: theme.surfaceContainer,
         toolbarHeight: 70,
       ),
-      body: SafeArea(child: buildDetailedDoctorBody(context, theme, doctor,rating)),
+      body: SafeArea(
+          child: buildDetailedDoctorBody(context, theme, doctor, rating)),
     );
   }
 }
 
-Widget buildDetailedDoctorBody(
-    BuildContext context, ColorScheme theme, DoctorModel doctor, double rating) {
+Widget buildDetailedDoctorBody(BuildContext context, ColorScheme theme,
+    DoctorModel doctor, double rating) {
   return SingleChildScrollView(
     padding: const EdgeInsets.symmetric(horizontal: 20),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Doctor personal details card
-        buildDoctorInfoCard(theme, doctor,rating),
+        buildDoctorInfoCard(theme, doctor, rating),
 
         const SizedBox(height: 15),
 
@@ -95,12 +98,14 @@ Widget buildDoctorTimeSlotsCard(
 
       doctor.timeSlots.forEach((key, value) {
         // Parse the date from the key
-        final slotDate = DateTime.parse(key); // Assuming the key is in "YYYY-MM-DD" format
+        final slotDate =
+            DateTime.parse(key); // Assuming the key is in "YYYY-MM-DD" format
         final now = DateTime.now();
 
         // Remove any past time slots from the value list
         value.removeWhere((slot) {
-          final timeRange = slot['time'].split(" - ")[1].trim(); // Get the end time
+          final timeRange =
+              slot['time'].split(" - ")[1].trim(); // Get the end time
           final timeParts = timeRange.split(" ");
           final hourMinute = timeParts[0].split(":");
           final hour = int.parse(hourMinute[0]);
@@ -129,7 +134,6 @@ Widget buildDoctorTimeSlotsCard(
           return slotTime.isBefore(now) || slot['isBooked'] == true;
         });
       });
-
 
       return doctor.timeSlots.isEmpty
           ? const Center(
@@ -254,17 +258,22 @@ Widget buildDoctorTimeSlotsCard(
 
                               return GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          AppointmentBookScreen(
-                                        date: entry.key,
-                                        timeSlotIndex:
-                                            entry.value.indexOf(slot),
-                                        doctor: doctor,
-                                      ),
-                                    ),
-                                  );
+                                  // move towards the middleware to select
+                                  // family member and then book appointment
+                                  showBottomSheet(context, theme, entry.key,
+                                      entry.value.indexOf(slot), doctor);
+
+                                  // Navigator.of(context).push(
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) =>
+                                  //         AppointmentBookScreen(
+                                  //       date: entry.key,
+                                  //       timeSlotIndex:
+                                  //           entry.value.indexOf(slot),
+                                  //       doctor: doctor,
+                                  //     ),
+                                  //   ),
+                                  // );
                                 },
                                 child: Container(
                                   margin: const EdgeInsets.only(bottom: 10),
@@ -294,4 +303,194 @@ Widget buildDoctorTimeSlotsCard(
             );
     },
   );
+}
+
+void showBottomSheet(BuildContext context, ColorScheme theme, String date,
+    int timeslotIndex, DoctorModel doctor) {
+  showModalBottomSheet(
+      context: context,
+      useSafeArea: true,
+      isScrollControlled: true,
+      builder: (context) => Container(
+            width: double.infinity,
+            height: MediaQuery.of(context).size.height * 0.6,
+            decoration: BoxDecoration(
+              color: theme.surfaceContainer,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            padding: const EdgeInsets.all(20),
+            child: FutureBuilder<Map<String, dynamic>?>(
+                future: HiveRepository().getUserInfo(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CustomLoadingAnimation(
+                        size: 20,
+                        color: theme.primary,
+                      ),
+                    );
+                  }
+
+                  if (snapshot.hasError || !snapshot.hasData) {
+                    return const Center(
+                      child:
+                          Text('An error occurred while fetching user details'),
+                    );
+                  }
+
+                  final user = snapshot.data!;
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Select for whom you want to book the appointment',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: theme.onSurface,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => AppointmentBookScreen(
+                                date: date,
+                                timeSlotIndex: timeslotIndex,
+                                doctor: doctor,
+                                user: user,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 10),
+                          decoration: BoxDecoration(
+                            color: theme.primaryContainer,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              radius: 20,
+                              backgroundImage: CachedNetworkImageProvider(
+                                user['image'],
+                              ),
+                            ),
+                            title: const Text(
+                              "For Me",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            subtitle: Text(
+                              user['name'],
+                              style: TextStyle(
+                                color: theme.primary,
+                              ),
+                            ),
+                            trailing: Icon(
+                              Icons.arrow_forward_ios,
+                              size: 16,
+                              color: theme.primary.withOpacity(.5),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Expanded(
+                          child: StreamBuilder(
+                              stream: FamilyMemberRepository()
+                                  .getFamilyMemberStream(user['id']),
+                              builder: (context, familySnapshot) {
+                                if (familySnapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Center(
+                                    child: CustomLoadingAnimation(
+                                      size: 20,
+                                      color: theme.primary,
+                                    ),
+                                  );
+                                }
+
+                                if (familySnapshot.hasError ||
+                                    !familySnapshot.hasData) {
+                                  return const Center(
+                                    child: Text(
+                                        'An error occurred while fetching family members'),
+                                  );
+                                }
+
+                                final data = familySnapshot.data!;
+
+                                final familyMembers = data.familyMembers;
+
+                                return ListView.builder(
+                                  itemCount: familyMembers.length,
+                                  itemBuilder: (context, index) {
+                                    final member = familyMembers[index];
+
+                                    final membersMap = member.toMap();
+                                    membersMap['id'] = user['id'];
+
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                AppointmentBookScreen(
+                                              date: date,
+                                              timeSlotIndex: timeslotIndex,
+                                              doctor: doctor,
+                                              user: membersMap,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        margin:
+                                            const EdgeInsets.only(bottom: 10),
+                                        decoration: BoxDecoration(
+                                          color: theme.primaryContainer,
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                        ),
+                                        child: ListTile(
+                                          leading: CircleAvatar(
+                                            radius: 20,
+                                            backgroundImage:
+                                                CachedNetworkImageProvider(
+                                                    member.image!),
+                                          ),
+                                          title: Text(
+                                            member.name,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          subtitle: Text(
+                                            member.relationShip,
+                                            style: TextStyle(
+                                              color: theme.primary,
+                                            ),
+                                          ),
+                                          trailing: Icon(
+                                            Icons.arrow_forward_ios,
+                                            size: 16,
+                                            color:
+                                                theme.primary.withOpacity(.5),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              }))
+                    ],
+                  );
+                }),
+          ));
 }

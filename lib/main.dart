@@ -12,6 +12,10 @@ import 'common/permissions/permissions_manager.dart';
 import 'common/push_notification/notification_service.dart';
 import 'common/utils/welcome_util.dart';
 import 'features/dashboard/features/account/logics/theme_cubit.dart';
+import 'package:timezone/data/latest.dart' as tz;
+
+import 'features/dashboard/features/medication/data/repository/medication_db_helper.dart';
+import 'features/dashboard/features/medication/data/repository/medication_notification_service.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseBackgroundHandler(RemoteMessage message) async {
@@ -39,8 +43,14 @@ void main() async {
   ///
   var hiveRepository = HiveRepository();
   await hiveRepository.init();
-// Open a Hive box for storing messages
+  // Open a Hive box for storing messages
   await Hive.openBox('chatMessages');
+  // await MedicationNotificationService.init();
+
+  tz.initializeTimeZones();
+
+  //initialize reminder database
+  await MedicationDBHelper().database;
 
   ///
   /// Check if the user is logged in

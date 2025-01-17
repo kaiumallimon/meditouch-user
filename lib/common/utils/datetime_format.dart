@@ -28,4 +28,10 @@ class DateTimeFormatUtil {
     return '$formattedDate, $timeslot';
     
   }
+
+  String getCurrentFormattedDateMY(DateTime now) {
+    DateFormat formatter = DateFormat('MMM yyyy');
+    return formatter.format(now);
+  }
+
 }

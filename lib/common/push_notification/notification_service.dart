@@ -83,6 +83,7 @@
 // }
 
 import 'dart:io';
+import 'package:timezone/timezone.dart' as tz;
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -231,4 +232,69 @@ class NotificationService {
       sound: true,
     );
   }
+
+
+  // Future<void> scheduleNotification(
+  //     {required DateTime startDate,
+  //       required DateTime endDate,
+  //       required TimeOfDay notificationTime,
+  //       required String title,
+  //       required String body}) async {
+  //   try {
+  //     // Get the local timezone
+  //     final location = tz.local;
+  //
+  //     // Convert start and end dates to TZDateTime objects
+  //     tz.TZDateTime startDateTime = tz.TZDateTime(
+  //       location,
+  //       startDate.year,
+  //       startDate.month,
+  //       startDate.day,
+  //       notificationTime.hour,
+  //       notificationTime.minute,
+  //     );
+  //
+  //     tz.TZDateTime endDateTime = tz.TZDateTime(
+  //       location,
+  //       endDate.year,
+  //       endDate.month,
+  //       endDate.day,
+  //       notificationTime.hour,
+  //       notificationTime.minute,
+  //     );
+  //
+  //     // Check if the start date is before the end date
+  //     if (startDateTime.isAfter(endDateTime)) {
+  //       print("Start date cannot be after the end date.");
+  //       return;
+  //     }
+  //
+  //     // Schedule notifications between start and end dates
+  //     tz.TZDateTime currentTime = startDateTime;
+  //     while (currentTime.isBefore(endDateTime)) {
+  //       await _flutterLocalNotificationPlugin.zonedSchedule(
+  //         currentTime.hashCode,
+  //         title,
+  //         body,
+  //         currentTime,
+  //
+  //         const NotificationDetails(
+  //           android: AndroidNotificationDetails(
+  //             'high_importance_channel',
+  //             'High Importance Notifications',
+  //             importance: Importance.high,
+  //             priority: Priority.high,
+  //           ),
+  //         ),
+  //         // androidAllowWhileIdle: true,
+  //         uiLocalNotificationDateInterpretation:
+  //         UILocalNotificationDateInterpretation.absoluteTime, androidScheduleMode: AndroidScheduleMode.alarmClock,
+  //       );
+  //       currentTime = currentTime.add(Duration(days: 1)); // Schedule for next day
+  //     }
+  //   } catch (e) {
+  //     print("Error scheduling notification: $e");
+  //   }
+  // }
+
 }
