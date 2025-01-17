@@ -29,16 +29,10 @@ class AppointmentRepository {
           final time = appointment.appointmentTimeSlot.split('-')[0].trim();
           final dateTime = '$date $time';
 
-          print('DateTime: $dateTime');
-
           final appointmentDateTime = parseDateTime(dateTime);
-
-          print('AppointmentDateTime: $appointmentDateTime');
 
           // check if the date is in the past
           bool isPast = appointmentDateTime.isBefore(DateTime.now());
-
-          print('IsPast: $isPast');
 
           // Separate appointments based on the 'isCompleted' field
           if (data['isCompleted'] == true || isPast) {
@@ -72,6 +66,23 @@ class AppointmentRepository {
       };
     }
   }
+
+  Stream<bool> isCallFinished(String appointmentId) async* {
+    try {
+      final snapshots = _firestore
+          .collection('db_client_multi_appointments')
+          .doc(appointmentId)
+          .snapshots();
+
+      await for (final snapshot in snapshots) {
+        final data = snapshot.data();
+        yield data!['isCompleted'];
+      }
+    } catch (e) {
+      log('Failed to check call status: $e');
+      yield false;
+    }
+  }
 }
 
 /// Parses a datetime string into a DateTime object.
@@ -79,6 +90,6 @@ class AppointmentRepository {
 /// The [dateTimeString] must follow the format "yyyy-MM-dd h:mm a".
 /// Returns the corresponding DateTime object.
 DateTime parseDateTime(String dateTimeString) {
-  final format = DateFormat("yyyy-MM-dd h:mm a"); // Define the pattern
+  final format = DateFormat("yyyy-MM-dd h:mm a");
   return format.parse(dateTimeString);
 }
