@@ -18,6 +18,7 @@ class RemotePrescriptions extends StatelessWidget {
     final theme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         title: Text('Remote Prescriptions',
             style: TextStyle(color: theme.onSurface)),
         backgroundColor: theme.surfaceContainer,

@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:meditouch/features/dashboard/features/appointments/presentation/screens/rating_screen.dart';
+import 'package:meditouch/features/dashboard/features/doctors/data/models/appointment_model.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 
 import '../../../../../../common/constants/secrets.dart';
@@ -68,12 +70,14 @@ class CallScreen extends StatelessWidget {
       required this.userId,
       required this.userName,
       required this.image,
-      required this.callId});
+      required this.callId,
+      required this.appointment});
 
   final String userId;
   final String userName;
   final String callId;
   final String image;
+  final AppointmentModel appointment;
 
   @override
   Widget build(BuildContext context) {
@@ -87,8 +91,24 @@ class CallScreen extends StatelessWidget {
           userName: userName,
           onDispose: () async {
             // exit the call
-            Navigator.of(context).pop();
+            // Navigator.of(context).pop();
+            // go to rating screen
+            // Navigator.of(context).pushReplacement(MaterialPageRoute(
+            //     builder: (context) => RatingScreen(
+            //           appointment: appointment,
+            //         )));
           },
+          events: ZegoUIKitPrebuiltCallEvents(
+            onCallEnd: (event, _) {
+              // exit the call
+              // Navigator.of(context).pop();
+              // go to rating screen
+              Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => RatingScreen(
+                        appointment: appointment,
+                      )));
+            },
+          ),
           config: ZegoUIKitPrebuiltCallConfig()
             ..avatarBuilder = (BuildContext context, Size size,
                 ZegoUIKitUser? user, Map extraInfo) {

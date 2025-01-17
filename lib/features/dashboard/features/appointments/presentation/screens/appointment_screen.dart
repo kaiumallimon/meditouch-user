@@ -199,6 +199,7 @@ class AppointmentScreen extends StatelessWidget {
                     // implement video call
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => CallScreen(
+                          appointment: appointment,
                               callId: appointment.videoCallId!,
                               image: appointment.patientDetails['image'],
                               userId: appointment.patientId,
