@@ -63,4 +63,17 @@ class DoctorRepository {
       return DateTime.now();
     }
   }
+
+  // get all doctors
+  // return a list of doctors
+  // type: Stream<List<DoctorModel>>
+
+  Stream<List<DoctorModel>> getDoctors() {
+    return _firestore
+        .collection('db_client_doctor_accountinfo')
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((e) => DoctorModel.fromJson(e.data(), e.id))
+            .toList());
+  }
 }
