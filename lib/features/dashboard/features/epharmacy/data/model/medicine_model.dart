@@ -96,6 +96,26 @@ class Medicine extends Equatable {
         rxRequired,
         unitPrices,
       ];
+
+
+  // default model
+  // default model
+  Medicine.defaultMedicine()
+      : id = 0,
+        medicineName = '',
+        categoryName = '',
+        slug = '',
+        genericName = '',
+        strength = '',
+        manufacturerName = '',
+        discountType = '',
+        discountValue = 0.0,
+        isDiscountable = false,
+        isAvailable = false,
+        medicineImage = '',
+        rxRequired = false,
+        unitPrices = [];
+
 }
 
 class UnitPrice extends Equatable {
@@ -124,6 +144,8 @@ class UnitPrice extends Equatable {
       'price': price,
     };
   }
+
+
 
   @override
   List<Object?> get props => [unit, unitSize, price];
