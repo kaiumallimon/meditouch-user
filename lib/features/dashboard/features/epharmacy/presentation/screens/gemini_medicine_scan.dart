@@ -17,12 +17,10 @@ class GeminiMedicineScan extends StatelessWidget {
     // Get the theme
     final theme = Theme.of(context).colorScheme;
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: theme.surfaceContainer,
-        appBar: medicineScanAppbar(context, theme),
-        body: geminiMedicineScanBody(context, theme),
-      ),
+    return Scaffold(
+      backgroundColor: theme.surfaceContainer,
+      appBar: medicineScanAppbar(context, theme),
+      body: SafeArea(child: geminiMedicineScanBody(context, theme)),
     );
   }
 
