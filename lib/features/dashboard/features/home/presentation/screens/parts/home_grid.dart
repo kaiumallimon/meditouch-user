@@ -1,5 +1,6 @@
 import 'package:meditouch/app/app_exporter.dart';
 import 'package:meditouch/features/dashboard/features/healthtips/presentation/screen/healthtips_screen.dart';
+import 'package:meditouch/features/dashboard/features/nurses/presentation/screens/nurse_screen.dart';
 
 import '../../widgets/home_grid_item.dart';
 
@@ -7,7 +8,7 @@ Widget buildHomeGridMenu(BuildContext context, ColorScheme theme) {
   return SizedBox(
     height: 240,
     child: GridView.count(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         crossAxisCount: 3,
         mainAxisSpacing: 10,
         crossAxisSpacing: 10,
@@ -44,9 +45,9 @@ Widget buildHomeGridMenu(BuildContext context, ColorScheme theme) {
             textColor: theme.onSurface,
           ),
           HomeGridItem(
-            title: 'Appointments',
+            title: 'Medications',
             icon: Image.asset(
-              'assets/icons/doctor-flaticon.png',
+              'assets/icons/drugs.png',
               width: 25,
               height: 25,
             ),
@@ -57,9 +58,26 @@ Widget buildHomeGridMenu(BuildContext context, ColorScheme theme) {
             textColor: theme.onSurface,
           ),
           HomeGridItem(
-            title: 'Appointments',
+            title: 'Hire Nurse',
             icon: Image.asset(
-              'assets/icons/doctor-flaticon.png',
+              'assets/icons/nurse.png',
+              width: 25,
+              height: 25,
+            ),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => HireNursePage(),
+                ),
+              );
+            },
+            backgroundColor: theme.primaryContainer,
+            textColor: theme.onSurface,
+          ),
+          HomeGridItem(
+            title: 'Emergency',
+            icon: Image.asset(
+              'assets/icons/ambulance-flaticon.png',
               width: 25,
               height: 25,
             ),
@@ -70,22 +88,9 @@ Widget buildHomeGridMenu(BuildContext context, ColorScheme theme) {
             textColor: theme.onSurface,
           ),
           HomeGridItem(
-            title: 'Appointments',
+            title: 'Community',
             icon: Image.asset(
-              'assets/icons/doctor-flaticon.png',
-              width: 25,
-              height: 25,
-            ),
-            onTap: () {
-              // Navigator.of(context).pushNamed(Routes.appointment);
-            },
-            backgroundColor: theme.primaryContainer,
-            textColor: theme.onSurface,
-          ),
-          HomeGridItem(
-            title: 'Appointments',
-            icon: Image.asset(
-              'assets/icons/doctor-flaticon.png',
+              'assets/icons/partners.png',
               width: 25,
               height: 25,
             ),
