@@ -58,6 +58,7 @@ dependencies:
   firebase_analytics: ^11.4.0
   zego_uikit_prebuilt_call: ^4.16.21
   zego_uikit_prebuilt_video_conference: ^2.9.8
+  flutter_rating_bar: ^4.0.1
 
 dev_dependencies:
   flutter_test:
