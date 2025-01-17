@@ -67,6 +67,8 @@ dependencies:
   slider_button: ^2.1.0
   avatar_glow: ^3.0.1
   animated_text_kit: ^4.2.2
+  weekly_date_picker: ^1.4.2
+  timezone: ^0.10.0
 
 dev_dependencies:
   flutter_test:
