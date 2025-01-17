@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meditouch/common/push_notification/notification_service.dart';
+import 'package:meditouch/features/ai-chat/presentation/screens/ai_model_chat.dart';
 import 'package:meditouch/features/dashboard/features/account/presentation/screens/account_screen.dart';
 import 'package:meditouch/features/dashboard/features/appointments/appointments.dart';
 import 'package:meditouch/features/dashboard/features/epharmacy/epharmacy.dart';
@@ -56,7 +57,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
         // floatingActionButton:
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => AiModelChatScreen()));
+          },
           backgroundColor: colorScheme.secondary,
           child: Icon(Icons.chat, color: Colors.black),
           shape: CircleBorder(),
