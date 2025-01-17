@@ -35,13 +35,20 @@ class _CommunityScreenState extends State<CommunityScreen> {
     final theme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Community"),elevation: 0,surfaceTintColor: theme.surfaceContainer,),
-      body: Column(
-        children: [
-          _buildPostInput(context, theme),
-          const SizedBox(height: 20),
-          Expanded(child: _buildPostList(context, theme)),
-        ],
+      backgroundColor: theme.surfaceContainer,
+      appBar: AppBar(
+
+        backgroundColor: theme.surfaceContainer,
+        title: const Text("Community"),elevation: 0,surfaceTintColor: theme.surfaceContainer,),
+      body: SafeArea(
+        child: Column(
+          children: [
+            const SizedBox(height: 10),
+            _buildPostInput(context, theme),
+            const SizedBox(height: 20),
+            Expanded(child: _buildPostList(context, theme)),
+          ],
+        ),
       ),
     );
   }
