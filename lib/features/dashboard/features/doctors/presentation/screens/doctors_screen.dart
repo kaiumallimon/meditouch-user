@@ -10,6 +10,7 @@ import 'package:meditouch/features/dashboard/features/doctors/logics/doctors_sta
 
 import '../../logics/doctors_event.dart';
 import 'doctor_detailed_page.dart';
+import 'doctor_search_screen.dart';
 
 class DoctorsScreen extends StatelessWidget {
   const DoctorsScreen({super.key});
@@ -45,7 +46,9 @@ class DoctorsScreen extends StatelessWidget {
         toolbarHeight: 70,
         actions: [
           CustomTintedIconButton(
-              child: const Icon(Icons.search_rounded), onPressed: () {}),
+              child: const Icon(Icons.search_rounded), onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => DoctorSearchScreen()));
+          }),
           const SizedBox(width: 13),
         ],
       ),
