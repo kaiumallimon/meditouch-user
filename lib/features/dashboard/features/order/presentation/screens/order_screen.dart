@@ -24,39 +24,40 @@ class OrderScreen extends StatelessWidget {
     // load the orders
     BlocProvider.of<OrderBloc>(context).add(const OrderLoad());
 
-    return SafeArea(
-        child: Scaffold(
-      // set background color
-      backgroundColor: theme.surfaceContainer,
-      // custom app bar
-      appBar: ordersAppBar(context, theme),
-
-      // custom body
-      body: BlocBuilder<OrderBloc, OrderState>(
-        builder: (context, state) {
-          if (state is OrderLoading) {
-            return CustomLoadingAnimation(size: 30, color: theme.primary);
-          }
-
-          if (state is OrderLoaded) {
-            return RefreshIndicator(
-                onRefresh: () => Future.sync(() {
-                      BlocProvider.of<OrderBloc>(context)
-                          .add(const OrderLoad());
-                    }),
-                child: ordersBody(context, theme, state));
-          }
-
-          if (state is OrderError) {
-            return Center(
-              child: Text(state.message),
-            );
-          }
-
-          return Container();
-        },
-      ),
-    ));
+    return Scaffold(
+          // set background color
+          backgroundColor: theme.surfaceContainer,
+          // custom app bar
+          appBar: ordersAppBar(context, theme),
+    
+          // custom body
+          body: SafeArea(
+            child: BlocBuilder<OrderBloc, OrderState>(
+                builder: (context, state) {
+                  if (state is OrderLoading) {
+                    return CustomLoadingAnimation(size: 30, color: theme.primary);
+                  }
+                
+                  if (state is OrderLoaded) {
+                    return RefreshIndicator(
+              onRefresh: () => Future.sync(() {
+                    BlocProvider.of<OrderBloc>(context)
+                        .add(const OrderLoad());
+                  }),
+              child: ordersBody(context, theme, state));
+                  }
+                
+                  if (state is OrderError) {
+                    return Center(
+            child: Text(state.message),
+                    );
+                  }
+                
+                  return Container();
+                },
+            ),
+          ),
+        );
   }
 }
 
