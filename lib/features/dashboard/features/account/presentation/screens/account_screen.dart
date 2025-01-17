@@ -270,10 +270,10 @@ class AccountScreen extends StatelessWidget {
         }
       }, // Replaced with a proper icon
       {
-        'icon': Icons.bookmark,
-        'label': 'Appointments',
+        'icon': Icons.description,
+        'label': 'Prescriptions',
         'onTap': () {
-          // Navigator.of(context).pushNamed('/appointments');
+          Navigator.of(context).pushNamed('/prescriptions');
         }
       }, // Corrected icon for profile
     ];
