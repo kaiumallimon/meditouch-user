@@ -1,5 +1,6 @@
 import 'package:meditouch/app/app_exporter.dart';
 import 'package:meditouch/features/dashboard/features/community/presentation/screens/community_screen.dart';
+import 'package:meditouch/features/dashboard/features/emergency/presentation/screen/emergency_screen.dart';
 import 'package:meditouch/features/dashboard/features/healthtips/presentation/screen/healthtips_screen.dart';
 import 'package:meditouch/features/dashboard/features/nurses/presentation/screens/nurse_screen.dart';
 
@@ -82,8 +83,16 @@ Widget buildHomeGridMenu(BuildContext context, ColorScheme theme) {
               width: 25,
               height: 25,
             ),
-            onTap: () {
-              // Navigator.of(context).pushNamed(Routes.appointment);
+            onTap: () async {
+              final Map<String, dynamic>? user =
+                  await HiveRepository().getUserInfo();
+              final userId = user!['id'];
+
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => EmergencyPage(userId: userId),
+                ),
+              );
             },
             backgroundColor: theme.primaryContainer,
             textColor: theme.onSurface,
