@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 
 import '../common/utils/system_colors.dart';
+import '../features/dashboard/features/prescription/presentation/view/prescription_screen.dart';
 import 'app_bloc_providers.dart';
 import './app_exporter.dart';
 
@@ -45,6 +46,7 @@ class MediTouchApp extends StatelessWidget {
               "/cart": (context) => const CartScreen(),
               "/orders": (context) => const OrderScreen(),
               "/doctors": (context) => const DoctorsScreen(),
+              "/prescriptions": (context) => const PrescriptionScreen(),
             },
           );
         },
