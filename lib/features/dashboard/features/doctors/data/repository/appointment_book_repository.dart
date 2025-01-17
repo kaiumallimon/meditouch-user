@@ -80,4 +80,15 @@ class AppointmentBookRepository {
       return false;
     }
   }
+
+
+  // Stream<List<AppointmentModel>> getUpcomingAppointmentsOfUser(String userId) {
+  //   return _firestore
+  //       .collection('db_client_multi_appointments')
+  //       .where('patientId', isEqualTo: userId)
+  //       .snapshots()
+  //       .map((snapshot) => snapshot.docs
+  //           .map((doc) => AppointmentModel.fromJson(doc.data(), doc.id))
+  //           .toList());
+  // }
 }
