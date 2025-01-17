@@ -39,6 +39,8 @@ void main() async {
   ///
   var hiveRepository = HiveRepository();
   await hiveRepository.init();
+// Open a Hive box for storing messages
+  await Hive.openBox('chatMessages');
 
   ///
   /// Check if the user is logged in

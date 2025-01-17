@@ -1,3 +1,5 @@
+import '../features/ai-chat/data/repository/ai_chat_repository.dart';
+import '../features/ai-chat/logics/ai_chat_bloc.dart';
 import '../features/dashboard/features/appointments/logics/appointment_bloc.dart';
 import '../features/dashboard/features/appointments/logics/call_monitoring_bloc.dart';
 import '../features/dashboard/features/cart/data/cart_repository.dart';
@@ -128,5 +130,10 @@ final providers = [
     create: (_) => CommunityBloc(
       CommunityRepository(),
     ),
+  ),
+
+  // add ai chat bloc
+  BlocProvider<AiChatBloc>(
+    create: (_) => AiChatBloc(AiChatRepository()),
   ),
 ];
