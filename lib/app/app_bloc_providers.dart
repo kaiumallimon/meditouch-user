@@ -1,5 +1,6 @@
 
 import '../features/dashboard/features/appointments/logics/appointment_bloc.dart';
+import '../features/dashboard/features/appointments/logics/call_monitoring_bloc.dart';
 import '../features/dashboard/features/cart/data/cart_repository.dart';
 import '../features/dashboard/features/cart/logics/cart_bloc.dart';
 import '../features/dashboard/features/doctors/logics/doctors_bloc.dart';
@@ -118,5 +119,11 @@ final providers = [
   // messages bloc
   BlocProvider<MessagesSearchBloc>(
     create: (_) => MessagesSearchBloc(),
+  ),
+
+
+  // call monitoring bloc
+  BlocProvider<CallMonitoringBloc>(
+    create: (_) => CallMonitoringBloc(),
   ),
 ];
