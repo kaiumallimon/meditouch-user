@@ -48,9 +48,9 @@ class _CombinedMedicinePageState extends State<CombinedMedicinePage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
-    return SafeArea(
-      child: Scaffold(
-        body: Column(
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
           children: [
             CustomAppBar(
               title: 'Medicines',
@@ -67,13 +67,13 @@ class _CombinedMedicinePageState extends State<CombinedMedicinePage> {
                 itemBuilder: (context, index) {
                   final combinedMedicine = widget.combinedMedicines[index];
                   final quantityController = quantityControllers[index]!;
-
+        
                   // Determine the container color based on selection
                   bool isSelected = selectedMedicines[index] ?? false;
                   Color containerColor = isSelected
                       ? theme.secondary // Highlight color when selected
                       : theme.primary; // Default color when not selected
-
+        
                   return GestureDetector(
                     onTap: () {
                       setState(() {
@@ -157,7 +157,7 @@ class _CombinedMedicinePageState extends State<CombinedMedicinePage> {
                 },
               ),
             ),
-
+        
             // Add to Cart Button
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
