@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meditouch/common/push_notification/notification_service.dart';
 import 'package:meditouch/features/dashboard/features/account/presentation/screens/account_screen.dart';
 import 'package:meditouch/features/dashboard/features/appointments/appointments.dart';
 import 'package:meditouch/features/dashboard/features/epharmacy/epharmacy.dart';
@@ -10,8 +11,22 @@ import 'package:meditouch/features/dashboard/navigation/navbar/custom_navbar.dar
 
 import '../../../navigation/logics/navigation_cubit.dart';
 
-class DashboardScreen extends StatelessWidget {
-  DashboardScreen({super.key});
+class DashboardScreen extends StatefulWidget {
+  const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  NotificationService notificationService = NotificationService();
+
+  @override
+  void initState() {
+    super.initState();
+    notificationService.firebaseInit(context);
+    notificationService.setupInteractedMessage(context);
+  }
 
   @override
   Widget build(BuildContext context) {
