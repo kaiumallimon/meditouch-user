@@ -32,64 +32,62 @@ class DetailedMedicineScreen extends StatelessWidget {
           .add(FetchDetailedMedicineEvent(slug));
     });
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: theme.surfaceContainer,
-        body: BlocConsumer<DetailedMedicineBloc, DetailedMedicineState>(
-          builder: (context, state) {
-            if (state is DetailedMedicineLoading) {
-              // return CustomLoadingAnimation(size: 30, color: theme.primary);
-              return detailedMedicineShimmer(theme);
-            }
+    return Scaffold(
+      backgroundColor: theme.surfaceContainer,
+      body: BlocConsumer<DetailedMedicineBloc, DetailedMedicineState>(
+        builder: (context, state) {
+          if (state is DetailedMedicineLoading) {
+            // return CustomLoadingAnimation(size: 30, color: theme.primary);
+            return detailedMedicineShimmer(theme);
+          }
 
-            if (state is DetailedMedicineError) {
-              return Center(child: Text(state.message));
-            }
+          if (state is DetailedMedicineError) {
+            return Center(child: Text(state.message));
+          }
 
-            if (state is DetailedMedicineSuccess) {
-              return CustomScrollView(
-                physics: const BouncingScrollPhysics(),
-                slivers: [
-                  DetailedMedicineSliverAppBar(
-                      theme, state, medicineName, strength),
-                  const SliverToBoxAdapter(child: SizedBox(height: 8)),
-                  BuildSliverList(context, theme, state),
-                ],
-              );
-            }
+          if (state is DetailedMedicineSuccess) {
+            return CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                DetailedMedicineSliverAppBar(
+                    theme, state, medicineName, strength),
+                const SliverToBoxAdapter(child: SizedBox(height: 8)),
+                BuildSliverList(context, theme, state),
+              ],
+            );
+          }
 
-            return const SizedBox.shrink();
-          },
-          listener: (context, state) {
-            if (state is CartAddError) {
-              QuickAlert.show(
-                  context: context,
-                  type: QuickAlertType.error,
-                  text: state.message,
-                  onConfirmBtnTap: () {
-                    context
-                        .read<DetailedMedicineBloc>()
-                        .add(FetchDetailedMedicineEvent(slug));
-                    Navigator.pop(context);
-                  },
-                  barrierColor: theme.onSurface.withOpacity(.5));
-            }
+          return const SizedBox.shrink();
+        },
+        listener: (context, state) {
+          if (state is CartAddError) {
+            QuickAlert.show(
+                context: context,
+                type: QuickAlertType.error,
+                text: state.message,
+                onConfirmBtnTap: () {
+                  context
+                      .read<DetailedMedicineBloc>()
+                      .add(FetchDetailedMedicineEvent(slug));
+                  Navigator.pop(context);
+                },
+                barrierColor: theme.onSurface.withOpacity(.5));
+          }
 
-            if (state is AddToCartSuccess) {
-              QuickAlert.show(
-                  context: context,
-                  type: QuickAlertType.success,
-                  text: state.message,
-                  onConfirmBtnTap: () {
-                    context
-                        .read<DetailedMedicineBloc>()
-                        .add(FetchDetailedMedicineEvent(slug));
-                    Navigator.pop(context);
-                  },
-                  barrierColor: theme.onSurface.withOpacity(.5));
-            }
-          },
-        ),
+          if (state is AddToCartSuccess) {
+            QuickAlert.show(
+                context: context,
+                type: QuickAlertType.success,
+                text: state.message,
+                onConfirmBtnTap: () {
+                  context
+                      .read<DetailedMedicineBloc>()
+                      .add(FetchDetailedMedicineEvent(slug));
+                  Navigator.pop(context);
+                },
+                barrierColor: theme.onSurface.withOpacity(.5));
+          }
+        },
       ),
     );
   }
