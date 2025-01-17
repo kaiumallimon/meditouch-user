@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:meditouch/features/dashboard/features/account/logics/account_states.dart';
 import '../../../../../common/repository/hive_repository.dart';
 import 'account_events.dart';
@@ -28,6 +29,14 @@ class AccountBloc extends Bloc<AccountEvents, AccountStates> {
   Future<void> _logout(
       AccountLogoutRequested event, Emitter<AccountStates> emit) async {
     await hiveRepository.deleteUserInfo();
+    await clearMessages();
     emit(AccountLogout());
+  }
+
+
+  Future<void> clearMessages() async {
+    // Open the Hive box
+    Box _chatBox = await Hive.openBox('chatMessages');
+    await _chatBox.clear(); // Clears all the stored messages
   }
 }
