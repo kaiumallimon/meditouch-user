@@ -20,7 +20,7 @@ Container bottomInputField(
     height: 80,
     width: double.infinity,
     padding: const EdgeInsets.all(10),
-    color: theme.surfaceContainer,
+    color: theme.primaryContainer,
     child: Row(
       children: [
         // image picker
