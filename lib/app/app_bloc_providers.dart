@@ -1,8 +1,9 @@
-
 import '../features/dashboard/features/appointments/logics/appointment_bloc.dart';
 import '../features/dashboard/features/appointments/logics/call_monitoring_bloc.dart';
 import '../features/dashboard/features/cart/data/cart_repository.dart';
 import '../features/dashboard/features/cart/logics/cart_bloc.dart';
+import '../features/dashboard/features/community/data/repository/community_repository.dart';
+import '../features/dashboard/features/community/logics/community_bloc.dart';
 import '../features/dashboard/features/doctors/logics/doctors_bloc.dart';
 import '../features/dashboard/features/doctors/logics/payment_bloc.dart';
 import '../features/dashboard/features/epharmacy/logics/medicine_scan_bloc.dart';
@@ -92,38 +93,40 @@ final providers = [
     create: (_) => MedicineScanBloc(),
   ),
 
-
   ///  add the doctors bloc
-  /// 
+  ///
   BlocProvider<DoctorsBloc>(
     create: (_) => DoctorsBloc(),
   ),
 
   /// add detailed doctor bloc
-  /// 
-  /// 
+  ///
+  ///
   //add payment bloc
 
   BlocProvider<PaymentBloc>(
     create: (_) => PaymentBloc(),
   ),
 
-
   // add appointment bloc
   BlocProvider<AppointmentCubit>(
-    create: (_) => AppointmentCubit(
-    ),
+    create: (_) => AppointmentCubit(),
   ),
-  
 
   // messages bloc
   BlocProvider<MessagesSearchBloc>(
     create: (_) => MessagesSearchBloc(),
   ),
 
-
   // call monitoring bloc
   BlocProvider<CallMonitoringBloc>(
     create: (_) => CallMonitoringBloc(),
+  ),
+
+  // add community bloc
+  BlocProvider<CommunityBloc>(
+    create: (_) => CommunityBloc(
+      CommunityRepository(),
+    ),
   ),
 ];
