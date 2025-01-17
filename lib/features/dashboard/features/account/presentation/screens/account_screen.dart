@@ -6,6 +6,7 @@ import 'package:meditouch/common/widgets/custom_loading_animation.dart';
 import 'package:meditouch/features/dashboard/features/account/logics/account_states.dart';
 import 'package:meditouch/features/dashboard/features/account/presentation/widgets/custom_multipletile.dart';
 import 'package:meditouch/features/dashboard/features/account/presentation/widgets/custom_tile.dart';
+import 'package:meditouch/features/dashboard/features/family-members/presentation/screens/family_member_screen.dart';
 import 'package:quickalert/models/quickalert_animtype.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -194,10 +195,7 @@ class AccountScreen extends StatelessWidget {
               tileColor: Colors.transparent,
               borderRadius: 0,
               onTap: () {
-                QuickAlert.show(
-                    context: context,
-                    type: QuickAlertType.warning,
-                    text: "This feature is not available yet");
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>FamilyMemberScreen()));
               },
               title: Text('View/Manage family members',
                   style: TextStyle(
