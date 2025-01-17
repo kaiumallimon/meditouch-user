@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:meditouch/app/app_exporter.dart';
 import 'package:meditouch/common/widgets/custom_loading_animation.dart';
 import 'package:meditouch/common/widgets/custom_tinted_iconbutton.dart';
+import 'package:meditouch/features/dashboard/features/appointments/data/repository/review_repository.dart';
 import 'package:meditouch/features/dashboard/features/doctors/data/models/doctor_model.dart';
 import 'package:meditouch/features/dashboard/features/doctors/logics/doctors_bloc.dart';
 import 'package:meditouch/features/dashboard/features/doctors/logics/doctors_state.dart';
@@ -108,117 +109,128 @@ class DoctorsScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       itemBuilder: (context, index) {
         DoctorModel doctor = doctors[index];
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => DoctorDetailedPage(doctor: doctor),
-              ),
-            );
-          },
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                color: theme.primary,
-                borderRadius: BorderRadius.circular(13),
-                boxShadow: [
-                  BoxShadow(
-                      color: theme.primary.withOpacity(.2),
-                      blurRadius: 10,
-                      offset: const Offset(0, 5))
-                ]),
-            child: Row(
-              spacing: 20,
-              children: [
-                // Doctor image
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: CachedNetworkImage(
-                    imageUrl: doctor.imageUrl,
-                    width: 100,
-                    height: 130,
-                    fit: BoxFit.cover,
-                    progressIndicatorBuilder: (context, url, progress) {
-                      return Center(
-                        child: CustomLoadingAnimation(
-                            size: 15, color: theme.onPrimary),
-                      );
-                    },
+        return FutureBuilder<double>(
+          future: ReviewRepository().calculateRating(doctor.id),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CustomLoadingAnimation(size: 20, color: theme.primary));
+            }
+
+            double rating = snapshot.data ?? 0;
+
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DoctorDetailedPage(doctor: doctor, rating: rating,),
                   ),
-                ),
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    color: theme.primary,
+                    borderRadius: BorderRadius.circular(13),
+                    boxShadow: [
+                      BoxShadow(
+                          color: theme.primary.withOpacity(.2),
+                          blurRadius: 10,
+                          offset: const Offset(0, 5))
+                    ]),
+                child: Row(
+                  spacing: 20,
+                  children: [
+                    // Doctor image
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: CachedNetworkImage(
+                        imageUrl: doctor.imageUrl,
+                        width: 100,
+                        height: 130,
+                        fit: BoxFit.cover,
+                        progressIndicatorBuilder: (context, url, progress) {
+                          return Center(
+                            child: CustomLoadingAnimation(
+                                size: 15, color: theme.onPrimary),
+                          );
+                        },
+                      ),
+                    ),
 
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 8,
-                    children: [
-                      // Doctor name
-                      Text(doctor.name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              height: 1.2,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: theme.onPrimary)),
-
-                      // Doctor specialization
-                      Text(doctor.specialization,
-                          style: TextStyle(
-                              height: 1,
-                              fontSize: 14,
-                              color: theme.onPrimary.withOpacity(.6))),
-
-                      const SizedBox(),
-
-                      // Doctor rating
-                      Row(
-                        spacing: 5,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        spacing: 8,
                         children: [
-                          Icon(Icons.star,
-                              color: theme.onPrimary.withOpacity(.5), size: 16),
-                          Text(
-                              doctor.ratings == null
-                                  ? 'No ratings yet'
-                                  : "Rating: ${calculateRating(doctor.ratings!)}",
+                          // Doctor name
+                          Text(doctor.name,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  height: 1.2,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: theme.onPrimary)),
+
+                          // Doctor specialization
+                          Text(doctor.specialization,
                               style: TextStyle(
                                   height: 1,
-                                  fontSize: 13,
-                                  color: theme.onPrimary.withOpacity(.5))),
+                                  fontSize: 14,
+                                  color: theme.onPrimary.withOpacity(.6))),
+
+                          const SizedBox(),
+
+                          // Doctor rating
+                          Row(
+                            spacing: 5,
+                            children: [
+                              Icon(Icons.star,
+                                  color: theme.onPrimary.withOpacity(.5), size: 16),
+                              Text(
+                                  rating == 0
+                                      ? 'No ratings yet'
+                                      : "Rating: $rating",
+                                  style: TextStyle(
+                                      height: 1,
+                                      fontSize: 13,
+                                      color: theme.onPrimary.withOpacity(.5))),
+                            ],
+                          ),
+
+                          const SizedBox(),
+
+                          // district:
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                            decoration: BoxDecoration(
+                                color: theme.secondary,
+                                borderRadius: BorderRadius.circular(5)),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.location_on_rounded,
+                                    color: Colors.black, size: 16),
+                                const SizedBox(width: 5),
+                                Text(doctor.district,
+                                    style: const TextStyle(
+                                        height: 1,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black)),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
-
-                      const SizedBox(),
-
-                      // district:
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
-                        decoration: BoxDecoration(
-                            color: theme.secondary,
-                            borderRadius: BorderRadius.circular(5)),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(Icons.location_on_rounded,
-                                color: Colors.black, size: 16),
-                            const SizedBox(width: 5),
-                            Text(doctor.district,
-                                style: const TextStyle(
-                                    height: 1,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black)),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
+            );
+          }
         );
       },
     );
