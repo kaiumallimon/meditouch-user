@@ -1,6 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meditouch/common/widgets/custom_loading_animation.dart';
+import 'package:meditouch/features/dashboard/features/appointments/data/repository/review_repository.dart';
+import 'package:meditouch/features/dashboard/features/doctors/presentation/screens/doctor_detailed_page.dart';
 import 'package:meditouch/features/dashboard/features/home/logics/home_event.dart';
 import 'package:meditouch/features/dashboard/features/home/presentation/screens/parts/home_grid.dart';
 // import 'package:shimmer/shimmer.dart';
@@ -139,7 +142,20 @@ class HomeScreen extends StatelessWidget {
                         const SizedBox(height: 20),
                         buildAppointmentBox(theme, 2),
                         const SizedBox(height: 20),
-                        buildHomeGridMenu(context, theme)
+                        buildHomeGridMenu(context, theme),
+                        const SizedBox(height: 20),
+                        // top 5 doctors
+                        Text(
+                          'Top Rated Doctors',
+                          style: TextStyle(
+                            color: theme.onSurface,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 15),
+                        buildTopRatedDoctors(theme),
+
+                        const SizedBox(height: 40),
                       ],
                     ),
                   ),
@@ -153,6 +169,115 @@ class HomeScreen extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  SizedBox buildTopRatedDoctors(ColorScheme theme) {
+    return SizedBox(
+      height: 200,
+      width: double.infinity,
+      child: StreamBuilder(
+          stream: ReviewRepository().getTopRatedDoctors(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                  child:
+                      CustomLoadingAnimation(size: 20, color: theme.primary));
+            }
+
+            if (snapshot.hasError) {
+              return const Center(child: Text('An error occurred'));
+            }
+
+            final data = snapshot.data!;
+            // final doctors = data['doctor'];
+
+            return ListView.builder(
+              shrinkWrap: true,
+              itemCount: data.length,
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              itemBuilder: (context, index) {
+                final doctor = data[index]['doctor'];
+                final rating = data[index]['rating'];
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DoctorDetailedPage(
+                                doctor: doctor, rating: rating)));
+                  },
+                  child: Stack(
+                    children: [
+                      Container(
+                        width: 170,
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                            color: theme.primary,
+                            borderRadius: BorderRadius.circular(13),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: theme.primary.withOpacity(.2),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 5))
+                            ]),
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: CachedNetworkImage(
+                                  imageUrl: doctor.imageUrl,
+                                  fit: BoxFit.cover,
+                                  progressIndicatorBuilder:
+                                      (context, url, progress) {
+                                    return Center(
+                                        child: CustomLoadingAnimation(
+                                            size: 15, color: theme.onPrimary));
+                                  },
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 15),
+                            Text(
+                              doctor.name,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: theme.onPrimary,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Positioned(
+                          top: 0,
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: theme.secondary,
+                              borderRadius: const BorderRadius.only(
+                                  bottomLeft: Radius.circular(10),
+                                  topRight: Radius.circular(10)),
+                            ),
+                            child: Text(
+                              rating.toStringAsFixed(1),
+                              style: TextStyle(
+                                color: theme.onPrimary,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ))
+                    ],
+                  ),
+                );
+              },
+            );
+          }),
     );
   }
 
