@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:meditouch/common/repository/hive_repository.dart';
@@ -50,6 +51,13 @@ class LoginRepository {
 
       // Add UID to the data
       data['id'] = user.uid;
+
+      // save device token
+      bool deviceTokenResponse = await saveDeviceToken(user.uid);
+
+      if (!deviceTokenResponse) {
+        return {"status": "error", "error": "Failed to save device token."};
+      }
 
       // Return the user data
       return {"status": "success", "message": "Login successful", "user": data};
@@ -134,6 +142,39 @@ class LoginRepository {
         "status": "error",
         "error": "An unexpected error occurred. Please try again."
       };
+    }
+  }
+
+  /// Function to save the device token to Firestore
+  ///
+  /// This function saves the device token to Firestore for the given user ID.
+
+  Future<bool> saveDeviceToken(String userId) async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    String? token = await messaging.getToken();
+
+    if (token != null) {
+      try {
+        // Save the userId as the key and deviceToken as the value in a separate collection
+        await FirebaseFirestore.instance
+            .collection('dob_client_multi_device_tokens')
+            .doc(userId)
+            .set(
+                {
+              'userId': userId, // Save userId
+              'deviceToken': token, // Save deviceToken
+            },
+                SetOptions(
+                    merge:
+                        true)); // Use merge to avoid overwriting other fields if the document exists
+
+        return true; // Return true if the operation is successful
+      } catch (e) {
+        print('Error saving device token: $e');
+        return false; // Return false if an error occurs
+      }
+    } else {
+      return false; // Return false if the token is null
     }
   }
 }
