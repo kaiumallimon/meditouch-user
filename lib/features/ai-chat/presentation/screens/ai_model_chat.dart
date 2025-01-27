@@ -4,6 +4,7 @@ import 'package:meditouch/features/dashboard/features/doctors/presentation/scree
 import 'package:quickalert/quickalert.dart';
 import 'package:meditouch/features/ai-chat/data/repository/ai_chat_repository.dart';
 import 'package:hive/hive.dart';
+import 'package:shimmer/shimmer.dart';
 
 class AiModelChatScreen extends StatefulWidget {
   const AiModelChatScreen({Key? key}) : super(key: key);
@@ -14,7 +15,7 @@ class AiModelChatScreen extends StatefulWidget {
 
 class _AiModelChatScreenState extends State<AiModelChatScreen> {
   final TextEditingController _controller = TextEditingController();
-  final List<Map<String, dynamic>> _messages = [];
+  final List<dynamic> _messages = [];
   final AiChatRepository _repository = AiChatRepository();
   bool _isLoading = false;
 
@@ -32,7 +33,8 @@ class _AiModelChatScreenState extends State<AiModelChatScreen> {
     });
 
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
         _saveMessages();
       }
     });
@@ -40,7 +42,7 @@ class _AiModelChatScreenState extends State<AiModelChatScreen> {
 
   @override
   void dispose() {
-    _scrollController.dispose();  // Dispose the scroll controller
+    _scrollController.dispose(); // Dispose the scroll controller
     super.dispose();
   }
 
@@ -48,7 +50,7 @@ class _AiModelChatScreenState extends State<AiModelChatScreen> {
     _chatBox = Hive.box('chatMessages');
     final storedMessages = _chatBox.get('messages', defaultValue: []);
     setState(() {
-      _messages.addAll(List<Map<String, dynamic>>.from(storedMessages));
+      _messages.addAll(List<dynamic>.from(storedMessages));
     });
 
     // Ensure scroll to bottom when new messages are loaded
@@ -71,7 +73,7 @@ class _AiModelChatScreenState extends State<AiModelChatScreen> {
       _isLoading = true;
     });
 
-    await _saveMessages();  // Save user message to Hive
+    await _saveMessages(); // Save user message to Hive
 
     final response = await _repository.getChatResponse(message);
 
@@ -99,7 +101,7 @@ class _AiModelChatScreenState extends State<AiModelChatScreen> {
       curve: Curves.easeOut,
     );
 
-    await _saveMessages();  // Save AI response to Hive
+    await _saveMessages(); // Save AI response to Hive
   }
 
   void _scrollToBottom() {
@@ -130,114 +132,149 @@ class _AiModelChatScreenState extends State<AiModelChatScreen> {
             Expanded(
               child: _messages.isEmpty
                   ? const Center(
-                child: Text(
-                  'Start chatting with our very own AI model!',
-                  style: TextStyle(color: Colors.grey),
-                ),
-              )
-                  : ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                controller: _scrollController,
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 10, vertical: 20),
-                itemCount: _messages.length,
-                itemBuilder: (context, index) {
-                  final message = _messages[index];
-                  final isUser = message['sender'] == 'user';
-
-                  return Align(
-                    alignment: isUser
-                        ? Alignment.centerRight
-                        : Alignment.centerLeft,
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 10),
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: isUser
-                            ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context)
-                            .colorScheme
-                            .primaryContainer,
-                        borderRadius: BorderRadius.circular(12),
+                      child: Text(
+                        'Start chatting with our very own AI model!',
+                        style: TextStyle(color: Colors.grey),
                       ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            message['text'] ?? '',
-                            style: TextStyle(
-                              color: isUser
-                                  ? Colors.white
-                                  : Theme.of(context)
-                                  .colorScheme
-                                  .onSurface,
-                            ),
-                          ),
-                          if (!isUser &&
-                              message['suggested_doctors'] != null)
-                            const SizedBox(height: 10),
-                          if (!isUser &&
-                              message['suggested_doctors'] != null)
-                            ...?List<String>.from(
-                                message['suggested_doctors']
-                                as List<dynamic>)
-                                .map(
-                                  (doctor) => GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              DoctorSearchScreen(
-                                                searchQuery: doctor,
-                                              )));  // Navigate to doctor search
-                                },
-                                child: Container(
-                                  margin:
-                                  const EdgeInsets.only(bottom: 10),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 15, vertical: 8),
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context)
+                    )
+                  : ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      controller: _scrollController,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 20),
+                      itemCount: _messages.length + (_isLoading ? 1 : 0),
+                      itemBuilder: (context, index) {
+                        if (_isLoading && index == _messages.length) {
+                          // Special message: "Typing..." or "Loading..."
+                          return Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 10.0),
+                              child: Row(
+                                children: [
+                                  const SizedBox(width: 8),
+                                  Shimmer.fromColors(
+                                    baseColor:
+                                        Theme.of(context).colorScheme.onSurface,
+                                    highlightColor: Theme.of(context)
                                         .colorScheme
-                                        .secondary,
-                                    borderRadius:
-                                    BorderRadius.circular(20),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        doctor,
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                        ),
+                                        .primary
+                                        .withOpacity(0.5),
+                                    child: Text(
+                                      'Medibot is typing...',
+                                      style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                        fontStyle: FontStyle.italic,
                                       ),
-                                      const SizedBox(width: 5),
-                                      const Icon(
-                                        Icons.arrow_forward_rounded,
-                                        color: Colors.black,
-                                        size: 15,
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
                             ),
-                        ],
-                      ),
+                          );
+                        }
+
+                        final message = _messages[index];
+                        final isUser = message['sender'] == 'user';
+
+                        if (_isLoading) _scrollToBottom();
+
+                        return Align(
+                          alignment: isUser
+                              ? Alignment.centerRight
+                              : Alignment.centerLeft,
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 10),
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: isUser
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context)
+                                      .colorScheme
+                                      .primaryContainer,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  message['text'] ?? '',
+                                  style: TextStyle(
+                                    color: isUser
+                                        ? Colors.white
+                                        : Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                  ),
+                                ),
+                                if (!isUser &&
+                                    message['suggested_doctors'] != null)
+                                  const SizedBox(height: 10),
+                                if (!isUser &&
+                                    message['suggested_doctors'] != null)
+                                  ...?List<String>.from(
+                                          message['suggested_doctors']
+                                              as List<dynamic>)
+                                      .map(
+                                    (doctor) => GestureDetector(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DoctorSearchScreen(
+                                                      searchQuery: doctor,
+                                                    ))); // Navigate to doctor search
+                                      },
+                                      child: Container(
+                                        margin:
+                                            const EdgeInsets.only(bottom: 10),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15, vertical: 8),
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .secondary,
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              doctor,
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 5),
+                                            const Icon(
+                                              Icons.arrow_forward_rounded,
+                                              color: Colors.black,
+                                              size: 15,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
             ),
-            if (_isLoading)
-              Padding(
-                padding: EdgeInsets.all(10.0),
-                child: CustomLoadingAnimation(
-                    size: 25, color: Theme.of(context).colorScheme.primary),
-              ),
+            // if (_isLoading)
+            //   Padding(
+            //     padding: EdgeInsets.all(10.0),
+            //     child: CustomLoadingAnimation(
+            //         size: 25, color: Theme.of(context).colorScheme.primary),
+            //   ),
             // Chat input
             _buildChatInput(context),
           ],

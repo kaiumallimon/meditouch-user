@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:meditouch/common/push_notification/notification_service.dart';
 import 'package:meditouch/features/ai-chat/presentation/screens/ai_model_chat.dart';
+import 'package:meditouch/features/ai-medication/presentation/view/ai_medication.dart';
 import 'package:meditouch/features/dashboard/features/account/presentation/screens/account_screen.dart';
 import 'package:meditouch/features/dashboard/features/appointments/appointments.dart';
 import 'package:meditouch/features/dashboard/features/epharmacy/epharmacy.dart';
@@ -56,15 +58,52 @@ class _DashboardScreenState extends State<DashboardScreen> {
         bottomNavigationBar: const CustomFloatingNavigationBar(),
 
         // floatingActionButton:
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => AiModelChatScreen()));
-          },
-          backgroundColor: colorScheme.secondary,
-          child: Icon(Icons.chat, color: Colors.black),
-          shape: CircleBorder(),
-          elevation: 5,
+        floatingActionButton: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 50,
+              height: 50,
+              child: IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => AiModelChatScreen()));
+                },
+                icon: Icon(Icons.chat, color: Colors.black, size: 20),
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(colorScheme.secondary),
+                  shape: MaterialStateProperty.all(CircleBorder()),
+                  elevation: MaterialStateProperty.all(5),
+                ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            Container(
+              width: 50,
+              height: 50,
+              child: IconButton(
+                onPressed: () async {
+                  // capture image
+                  XFile? image = await ImagePicker()
+                      .pickImage(source: ImageSource.camera, imageQuality: 50);
+
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => AiMedication(
+                            medicineImage: image!,
+                          )));
+                },
+                icon: Icon(Icons.camera_alt,
+                    color: colorScheme.onPrimary, size: 20),
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(colorScheme.primary),
+                  shape: MaterialStateProperty.all(CircleBorder()),
+                  elevation: MaterialStateProperty.all(5),
+                ),
+              ),
+            ),
+          ],
         ));
   }
 

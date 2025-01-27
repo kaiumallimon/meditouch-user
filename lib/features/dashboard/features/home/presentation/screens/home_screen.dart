@@ -230,6 +230,7 @@ class HomeScreen extends StatelessWidget {
                   },
                   child: Container(
                     width: 170,
+                    margin: const EdgeInsets.only(right: 10),
                     padding: const EdgeInsets.all(14),
                     decoration: BoxDecoration(
                         color: theme.primary,
@@ -314,71 +315,78 @@ class HomeScreen extends StatelessWidget {
                             builder: (context) => DoctorDetailedPage(
                                 doctor: doctor, rating: rating)));
                   },
-                  child: Stack(
-                    children: [
-                      Container(
-                        width: 170,
-                        padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(
-                            color: theme.primary,
-                            borderRadius: BorderRadius.circular(13),
-                            boxShadow: [
-                              BoxShadow(
-                                  color: theme.primary.withOpacity(.2),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 5))
-                            ]),
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: CachedNetworkImage(
-                                  imageUrl: doctor.imageUrl,
-                                  fit: BoxFit.cover,
-                                  progressIndicatorBuilder:
-                                      (context, url, progress) {
-                                    return Center(
-                                        child: CustomLoadingAnimation(
-                                            size: 15, color: theme.onPrimary));
-                                  },
+                  child: Container(
+                    padding: EdgeInsets.zero,
+                    margin: const EdgeInsets.only(right: 10),
+                    child: Stack(
+                      children: [
+                        Container(
+                          width: 170,
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                              color: theme.primary,
+                              borderRadius: BorderRadius.circular(13),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: theme.primary.withOpacity(.2),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 5))
+                              ]),
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: Hero(
+                                  tag: doctor.imageUrl,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: CachedNetworkImage(
+                                      imageUrl: doctor.imageUrl,
+                                      fit: BoxFit.cover,
+                                      progressIndicatorBuilder:
+                                          (context, url, progress) {
+                                        return Center(
+                                            child: CustomLoadingAnimation(
+                                                size: 15, color: theme.onPrimary));
+                                      },
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(height: 15),
-                            Text(
-                              doctor.name,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: theme.onPrimary,
-                                fontWeight: FontWeight.bold,
+                              const SizedBox(height: 15),
+                              Text(
+                                doctor.name,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: theme.onPrimary,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      Positioned(
-                          top: 0,
-                          right: 0,
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: theme.secondary,
-                              borderRadius: const BorderRadius.only(
-                                  bottomLeft: Radius.circular(10),
-                                  topRight: Radius.circular(10)),
-                            ),
-                            child: Text(
-                              rating.toStringAsFixed(1),
-                              style: TextStyle(
-                                color: theme.onPrimary,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
+                        Positioned(
+                            top: 0,
+                            right: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: theme.secondary,
+                                borderRadius: const BorderRadius.only(
+                                    bottomLeft: Radius.circular(10),
+                                    topRight: Radius.circular(10)),
                               ),
-                            ),
-                          ))
-                    ],
+                              child: Text(
+                                rating.toStringAsFixed(1),
+                                style: TextStyle(
+                                  color: theme.onPrimary,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ))
+                      ],
+                    ),
                   ),
                 );
               },

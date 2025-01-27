@@ -336,7 +336,7 @@ class AccountScreen extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () {
-            Navigator.of(context).pushNamed('/cart', arguments: userInfo);
+            Navigator.of(context).pushNamed('/profile', arguments: userInfo);
           },
           child: Container(
             height: 120,

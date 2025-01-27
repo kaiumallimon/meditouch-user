@@ -16,9 +16,12 @@ Container buildDoctorInfoCard(ColorScheme theme, DoctorModel doctor, double rati
               border: Border.all(color: theme.primary, width: 2),
               shape: BoxShape.circle,
             ),
-            child: CircleAvatar(
-              radius: 50,
-              backgroundImage: CachedNetworkImageProvider(doctor.imageUrl),
+            child: Hero(
+              tag: doctor.imageUrl,
+              child: CircleAvatar(
+                radius: 50,
+                backgroundImage: CachedNetworkImageProvider(doctor.imageUrl),
+              ),
             ),
           ),
         ),

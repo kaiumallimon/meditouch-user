@@ -145,19 +145,22 @@ class DoctorsScreen extends StatelessWidget {
                   spacing: 20,
                   children: [
                     // Doctor image
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: CachedNetworkImage(
-                        imageUrl: doctor.imageUrl,
-                        width: 100,
-                        height: 130,
-                        fit: BoxFit.cover,
-                        progressIndicatorBuilder: (context, url, progress) {
-                          return Center(
-                            child: CustomLoadingAnimation(
-                                size: 15, color: theme.onPrimary),
-                          );
-                        },
+                    Hero(
+                      tag: doctor.imageUrl,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: CachedNetworkImage(
+                          imageUrl: doctor.imageUrl,
+                          width: 100,
+                          height: 130,
+                          fit: BoxFit.cover,
+                          progressIndicatorBuilder: (context, url, progress) {
+                            return Center(
+                              child: CustomLoadingAnimation(
+                                  size: 15, color: theme.onPrimary),
+                            );
+                          },
+                        ),
                       ),
                     ),
 

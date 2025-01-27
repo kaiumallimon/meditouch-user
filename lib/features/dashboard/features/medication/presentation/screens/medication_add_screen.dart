@@ -176,30 +176,21 @@ class _MedicationReminderAddPageState extends State<MedicationReminderAddPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Medication Reminder'),
+        actions: [
+          IconButton.filled(
+            onPressed: () {
+              _saveReminders(context);
+            },
+            icon: Icon(Icons.save,color: theme.onPrimary,),
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Column(
           children: [
-            CustomAppBar(
-              title: "Schedule a dose",
-              subtitle: "Set a reminder to take your pills on time",
-              subtitleColor: theme.onPrimary.withOpacity(.7),
-              textColor: theme.onPrimary,
-              textSize: 18,
-              bgColor: theme.primary,
-              trailing: IconButton(
-                icon: Icon(Icons.save),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: theme.onPrimary,
-                  shape: CircleBorder(),
-                  shadowColor: theme.onPrimary.withOpacity(.5),
-                  elevation: 5,
-                  side: BorderSide(color: theme.onPrimary, width: 2),
-                ),
-                onPressed: () => _saveReminders(context),
-              ),
-            ),
-
-            const SizedBox(height: 10),
+            
 
             // Dynamic list of medicine input fields
             Expanded(

@@ -12,7 +12,6 @@ import '../../data/model/medication_model.dart';
 import '../../data/repository/medication_db_helper.dart';
 import 'medication_add_screen.dart';
 
-
 class MedicationReminderViewPage extends StatefulWidget {
   const MedicationReminderViewPage({super.key});
 
@@ -82,162 +81,140 @@ class _MedicationReminderViewPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context).colorScheme;
 
-    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    //     statusBarColor: theme.primary,
-    //     statusBarIconBrightness: Brightness.light));
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: theme.surfaceContainer,
+        statusBarIconBrightness: theme.brightness));
 
-    return WillPopScope(
-      onWillPop: () async {
-        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-            statusBarColor: theme.surface,
-            statusBarIconBrightness: theme.brightness));
-        return true;
-      },
-      child: Scaffold(
-        body: SafeArea(
-          child: Column(
-            children: [
-              CustomAppBar(
-                title: 'Medication Reminder',
-                subtitle: 'Reminder to take your pills on time',
-                subtitleColor: theme.onPrimary.withOpacity(.7),
-                textColor: theme.onPrimary,
-                textSize: 18,
-                bgColor: theme.primary,
-                trailing: IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                            const MedicationReminderAddPage()));
-                  },
-                  style: ElevatedButton.styleFrom(
-                    shape: const CircleBorder(),
-                    side: BorderSide(
-                        color: theme.onPrimary.withOpacity(.5), width: 2),
-                  ),
-                  icon: Icon(Icons.add, color: theme.onPrimary),
-                ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Medication Reminder'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const MedicationReminderAddPage()));
+            },
+            icon: const Icon(Icons.add),
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Weekly Date Picker
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: theme.primary.withOpacity(.1),
+                borderRadius: BorderRadius.circular(10),
               ),
-              const SizedBox(height: 16),
-              // Weekly Date Picker
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: theme.primary.withOpacity(.1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                            DateTimeFormatUtil()
-                                .getCurrentFormattedDateMY(selectedDate),
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: theme.onSurface)),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    WeeklyDatePicker(
-                      enableWeeknumberText: false,
-                      selectedDay: selectedDate,
-                      changeDay: (DateTime newDate) {
-                        setState(() {
-                          selectedDate = newDate;
-                        });
-                      },
-                      backgroundColor: theme.background,
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: Column(
                 children: [
-                  Text(
-                      'Reminders for ${DateFormat('MMM dd, yyyy').format(selectedDate)}',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: theme.onSurface)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                          DateTimeFormatUtil()
+                              .getCurrentFormattedDateMY(selectedDate),
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: theme.onSurface)),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  WeeklyDatePicker(
+                    weeknumberTextColor: theme.primary,
+                    weekdayTextColor: theme.primary,
+                    digitsColor: theme.onSurface,
+                    selectedDigitBackgroundColor: theme.primary,
+                    enableWeeknumberText: false,
+                    selectedDay: selectedDate,
+                    changeDay: (DateTime newDate) {
+                      setState(() {
+                        selectedDate = newDate;
+                      });
+                    },
+                    backgroundColor: theme.background,
+                  ),
                 ],
               ),
+            ),
 
-              const SizedBox(height: 16),
-              Expanded(
-                child: _getRemindersForSelectedDate().isEmpty
-                    ? const Center(
-                    child: Text('No reminders found for selected date'))
-                    : ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: _groupRemindersByTime().length,
-                  itemBuilder: (context, index) {
-                    // Get the grouped reminders
-                    final groupedReminders = _groupRemindersByTime();
-                    final timeKey =
-                    groupedReminders.keys.elementAt(index);
-                    final reminderList = groupedReminders[timeKey]!;
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                    'Reminders for ${DateFormat('MMM dd, yyyy').format(selectedDate)}',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: theme.onSurface)),
+              ],
+            ),
 
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: theme.surface,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: theme.primary.withOpacity(0.1),
-                            blurRadius: 10,
-                            offset: const Offset(0, 5),
+            const SizedBox(height: 16),
+            Expanded(
+              child: _getRemindersForSelectedDate().isEmpty
+                  ? const Center(
+                      child: Text('No reminders found for selected date'))
+                  : ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: _groupRemindersByTime().length,
+                      itemBuilder: (context, index) {
+                        // Get the grouped reminders
+                        final groupedReminders = _groupRemindersByTime();
+                        final timeKey = groupedReminders.keys.elementAt(index);
+                        final reminderList = groupedReminders[timeKey]!;
+
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: theme.primaryContainer,
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                        ],
-                      ),
-                      margin: const EdgeInsets.only(bottom: 16),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Display the common time for grouped reminders
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                          margin: const EdgeInsets.only(bottom: 16),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Time: $timeKey',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        color: theme.onSurface)),
+                                // Display the common time for grouped reminders
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text('Time: $timeKey',
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                            color: theme.onSurface)),
+                                  ],
+                                ),
+                                const SizedBox(height: 4),
+                                // Display the names of the reminders in the same time group
+                                ...reminderList.map((reminder) {
+                                  return Container(
+                                    margin: const EdgeInsets.only(top: 8),
+                                    child: Text(
+                                      reminder.medicineName,
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: theme.onSurface),
+                                    ),
+                                  );
+                                }).toList(),
                               ],
                             ),
-                            const SizedBox(height: 4),
-                            // Display the names of the reminders in the same time group
-                            ...reminderList.map((reminder) {
-                              return Container(
-                                margin: const EdgeInsets.only(top: 8),
-                                child: Text(
-                                  reminder.medicineName,
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      color: theme.onSurface),
-                                ),
-                              );
-                            }).toList(),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
+                          ),
+                        );
+                      },
+                    ),
+            ),
+          ],
         ),
       ),
     );
